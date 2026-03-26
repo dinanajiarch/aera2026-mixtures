@@ -7,7 +7,7 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "1. Intro"
-      href: 01-intro.html
+      href: 01-intro-to-mplusautomation.html
     - text: "2. Enumeration"
       href: 02-enumeration.html
 output:
