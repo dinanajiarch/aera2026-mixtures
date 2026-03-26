@@ -14,8 +14,6 @@ output:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
-[Home](./index.html) | **Introduction to MplusAutomation** 
-
 # Introduction to `MplusAutomation` {.tabset}
 
 This introduction will go through how to use Mplus and MplusAutomation in R.
