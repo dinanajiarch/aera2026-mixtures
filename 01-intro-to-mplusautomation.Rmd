@@ -2,16 +2,21 @@
 title: "Introduction to Mplus and `MplusAutomation`"
 author: "AERA 2026 Workshop"
 date: "Last Updated: `r Sys.Date()`"
-output: github_document
+output:
+  html_document:
+    theme: flatly
+    self_contained: true
+    includes:
+      before_body: _header.html
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
-[Home](./README.html) | **Introduction to MplusAutomation** 
+[Home](./index.html) | **Introduction to MplusAutomation** 
 
-# Introduction to `MplusAutomation`
+# Introduction to `MplusAutomation` {.tabset}
 
 This introduction will go through how to use Mplus and MplusAutomation in R.
 For Part 1, we will first walk through how to run basic descriptive statistics using only Mplus.

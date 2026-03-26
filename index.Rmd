@@ -2,7 +2,12 @@
 title: "The Utility of Mixture Modeling In Educational Research"
 author: "AERA 2026 Workshop"
 date: "Last Updated: `r Sys.Date()`"
-output: github_document
+output:
+  html_document:
+    theme: flatly
+    self_contained: true
+    includes:
+      before_body: _header.html
 ---
 
 ```{r setup, include=FALSE}
