@@ -1,0 +1,245 @@
+---
+title: "Introduction to Mplus and `MplusAutomation`"
+author: "AERA 2026 Workshop"
+date: "Last Updated: `r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE, warning = FALSE, message = FALSE)
+```
+
+# Introduction to `MplusAutomation` {.tabset}
+
+```{r}
+#update.packages(ask = FALSE, checkBuilt = TRUE)
+#install.packages(c("officer", "flextable"))
+#restartSession()  # RStudio: Session > Restart R
+```
+
+# Read in full LSAY data set and subset
+
+```{r}
+# Select variables from raw dataset
+#data_raw <- read_sav( here("data", "ICPSR_30263", "DS0001", "30263-0001-Data.sav"), user_na =TRUE)
+#
+#lsay_select <- data_raw %>%
+#  select(CASENUM, COHORT, RSTEMM, 
+#         GA32A, GA32H, GA32I, GA32K, GA32L, GA33A, GA33H, GA33I, GA33K, GA33L, # 10th grade
+#         KA46A, KA46H, KA46I, KA46K, KA46L, KA47A, KA47H, KA47I, KA47K, KA47L) # 12th grade
+#
+##view_df(lsay_select)
+#
+#write_csv(lsay_select, here("data","lsay_cleaned.csv"))
+```
+
+# Read in .csv
+
+```{r}
+lsay_csv <- read_csv(here("data", "lsay_cleaned.csv")) %>% 
+  mutate(
+    across(c(-CASENUM, COHORT), ~ if_else(.x %in% c(-99, -98, -96, -95), NA_real_, .x))
+  )
+```
+
+GA32A = I enjoy math - fall 10th grade
+
+GA32H = Math useful in everyday problems - fall 10th grade
+
+GA32I = Math helps logical thinking - fall 10th grade
+
+GA32K = Need math for a good job - fall 10th grade
+
+GA32L = Will use math often as an adult - fall 10th grade
+
+GA33A = I enjoy science - fall 10th grade
+
+GA33H = Science useful in everyday problems - fall 10th grade
+
+GA33I = Science helps logical thinking - fall 10th grade
+
+GA33K = Need science for a good job - fall 10th grade
+
+GA33L = Will use science often as an adult - fall 10th grade
+
+Response options:
+
+1 - Strongly AGree 2 - Agree 3 - Not Sure 4 - Disagree 5 - Strongly Disagree
+
+```{r}
+table(as.numeric(lsay_csv$RSTEMM), useNA = "ifany")
+
+psych::describe(lsay_csv)
+summary(lsay_csv)
+```
+
+# Recode variables
+
+```{r}
+lsay_cleaned <- lsay_csv %>% 
+  mutate(across(starts_with(c("GA","KA")), 
+                ~ case_when(
+                  .x %in% c(1, 2)    ~ 1,  
+                  .x %in% c(3, 4, 5) ~ 0, 
+                  TRUE               ~ NA_real_
+                ))) %>% 
+  filter(COHORT == 2) %>% # Filter Cohort 2 (N = 3116)
+  filter(RSTEMM %in% c(0, 1)) # Filter to follow-up sample 
+
+psych::describe(lsay_cleaned)
+summary(lsay_cleaned)
+```
+
+# Descriptive Statistics
+
+```{r}
+# Define survey questions
+all_questions <- c(
+  "GA32A", "GA32H", "GA32I", "GA32K", "GA32L", "GA33A", "GA33H", "GA33I", "GA33K", "GA33L", # 10th grade
+  "KA46A", "KA46H", "KA46I", "KA46K", "KA46L", "KA47A", "KA47H", "KA47I", "KA47K", "KA47L"  # 12th grade
+)
+
+# Function to compute stats (count, mean, SD, range)
+compute_stats <- function(data, question, grade, question_name) {
+  data %>%
+    summarise(
+      Grade = grade,
+      Count = sum(!is.na(.data[[question]])),
+      Mean = mean(.data[[question]], na.rm = TRUE),
+      SD = sd(.data[[question]], na.rm = TRUE),
+      Min = min(.data[[question]], na.rm = TRUE),
+      Max = max(.data[[question]], na.rm = TRUE)
+    ) %>%
+    mutate(Question = question_name)
+}
+
+# Define question names and mappings
+table_setup <- tibble(
+  question_code = all_questions,
+  grade = rep(c(10, 12), each = 10),
+  question_name = rep(
+    c(
+      "I enjoy math",
+      "Math is useful in everyday problems",
+      "Math helps a person think logically",
+      "It is important to know math to get a good job",
+      "I will use math in many ways as an adult",
+      "I enjoy science",
+      "Science is useful in everyday problems",
+      "Science helps a person think logically",
+      "It is important to know science to get a good job",
+      "I will use science in many ways as an adult"
+    ),
+    times = 2
+  )
+)
+
+# Compute stats for all questions
+table1_data <- pmap_dfr(
+  list(table_setup$question_code, table_setup$grade, table_setup$question_name),
+  ~compute_stats(lsay_cleaned, ..1, ..2, ..3)
+) %>%
+  mutate(
+    Mean = round(Mean, 2),
+    SD = round(SD, 2),
+    Min = round(Min, 2),
+    Max = round(Max, 2)
+  ) %>%
+  arrange(match(Question, table_setup$question_name), Grade) %>%
+  select(Question, Grade, Count, Mean, SD, Min, Max)
+
+# Build table
+table1_gt <- table1_data %>%
+  gt(groupname_col = "Question") %>%
+  tab_header(
+    title = "Table 1. Descriptive Statistics for Mathematics and Science Attitudinal Survey Items Included in Analyses"
+  ) %>%
+  cols_label(
+    Grade = "Grade",
+    Count = "N",
+    Mean = "M",
+    SD = "SD",
+    Min = "Min",
+    Max = "Max"
+  ) %>%
+  fmt_number(
+    columns = c(Mean, SD, Min, Max),
+    decimals = 2
+  )
+
+# Show table
+table1_gt
+```
+
+# 10th Grade Enumeration
+
+Enumeration
+
+```{r, eval = FALSE}
+lca_6  <- lapply(1:6, function(k) {
+  lca_enum  <- mplusObject(
+      
+    TITLE = glue("{k}-Class"), 
+  
+    VARIABLE = glue(
+    "categorical = GA32A - GA33L; 
+     usevar = GA32A - GA33L; 
+     classes = c({k}); "),
+  
+  ANALYSIS = 
+   "estimator = mlr; 
+    type = mixture;
+    starts = 500 100; 
+    processors = 10;",
+  
+  OUTPUT = "sampstat residual tech11 tech14;",
+  
+  usevariables = colnames(lsay_cleaned),
+  rdata = lsay_cleaned)
+
+lca_enum_fit <- mplusModeler(lca_enum, glue(here("lta_analysis","enumeration","t1","lsay_lta.dat")),
+                            modelout= glue(here("lta_analysis","enumeration","t1","c{k}_lta.inp")),
+                            check=TRUE, run = TRUE, hashfilename = FALSE)
+})
+```
+
+Model Fit Summary
+
+```{r}
+source(here("functions", "extract_mplus_info.R"))
+source(here("functions","enum_table.R"))
+
+# Define the directory where all of the .out files are located.
+output_dir <- here("lta_analysis","enumeration", "t1")
+
+# Get all .out files
+output_files <- list.files(output_dir, pattern = "\\.out$", full.names = TRUE)
+
+# Process all .out files into one dataframe
+final_data <- map_dfr(output_files, extract_mplus_info_extended)
+
+# Extract Sample_Size from final_data
+sample_size <- unique(final_data$Sample_Size)
+
+output_enum_t1 <- readModels(here("lta_analysis","enumeration", "t1"), quiet = TRUE)
+enum_table_full(output_enum_t1)
+```
+
+IC Plot
+
+```{r}
+source(here("functions","ic_plot_lca.R"))
+ic_plot(output_enum_t1)
+```
+
+Plot LCA:
+
+```{r, fig.width=20, fig.height= 7}
+source(here("functions","plot_lca.R"))
+
+t1 <- plot_lca(output_enum_t1$c4_lta.out)
+t1
+```
+
+------------------------------------------------------------------------
+
+![](figures/UCSB_Navy_mark.png)

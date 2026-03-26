@@ -1,13 +1,9 @@
 ---
 title: "Introduction to Mplus and `MplusAutomation`"
-author: "AERA 2026 Workshop"
 date: "Last Updated: `r Sys.Date()`"
 output:
   html_document:
     theme: flatly
-    self_contained: true
-    includes:
-      before_body: _header.html
 ---
 
 ```{r setup, include=FALSE}
