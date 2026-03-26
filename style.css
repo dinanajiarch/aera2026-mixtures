@@ -1,0 +1,28 @@
+/* UCSB Navy Blue for the Top Navbar */
+.navbar-inverse {
+    background-color: #003660 !important;
+    border-color: #003660 !important;
+}
+
+/* UCSB Gaucho Gold for the Active Tab and Hover */
+.navbar-inverse .navbar-nav > .active > a, 
+.navbar-inverse .navbar-nav > .active > a:hover, 
+.navbar-inverse .navbar-nav > .active > a:focus {
+    background-color: #FEB81D !important;
+    color: #003660 !important; /* Navy text on Gold background */
+    font-weight: bold;
+}
+
+/* Gold color for the Floating Table of Contents active items */
+.list-group-item.active, 
+.list-group-item.active:focus, 
+.list-group-item.active:hover {
+    background-color: #FEB81D !important;
+    border-color: #FEB81D !important;
+    color: #003660 !important;
+}
+
+/* Make links Navy Blue instead of the default Flatly green/blue */
+a {
+    color: #003660;
+}

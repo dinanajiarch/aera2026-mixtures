@@ -1,6 +1,5 @@
 ---
 title: "Introduction to Mplus and `MplusAutomation`"
-author: "AERA 2026 Workshop"
 date: "Last Updated: `r Sys.Date()`"
 ---
 

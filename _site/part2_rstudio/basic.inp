@@ -1,0 +1,11 @@
+TITLE:
+PRACTICE 01 - Explore TYPE = BASIC;
+DATA:
+FILE = "C:/Users/Dina Arch/Box/TA - ED 216B/Labs/part2_rstudio/basic.dat";
+ 
+VARIABLE:
+NAMES = item1 item2 item3 item4 item5 item6 item7 item8 item9 female; 
+ MISSING=.;
+ usevar= item1 item2 item3 item4 item5 item6 item7 item8 item9 female;
+ANALYSIS:
+type = basic; 

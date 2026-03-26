@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Introduction to Mplus and MplusAutomation</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">AERA 2026 Mixture Modeling Workshop</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="01-intro.html">1. Intro</a>
+</li>
+<li>
+  <a href="02-enumeration.html">2. Enumeration</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Introduction to Mplus and
+<code>MplusAutomation</code></h1>
+<h4 class="date">Last Updated: 2026-03-26</h4>
+
+</div>
+
+
+<div id="introduction-to-mplusautomation" class="section level1 tabset">
+<h1 class="tabset">Introduction to <code>MplusAutomation</code></h1>
+<p>This introduction will go through how to use Mplus and
+MplusAutomation in R. For Part 1, we will first walk through how to run
+basic descriptive statistics using only Mplus. In Part 2, we will use an
+R package called MplusAutomation to run the same analysis as Part 1,
+only this time using only RStudio. Part 3 will go over data cleaning in
+R.</p>
+<p>Additional MplusAutomation resources can be found <span
+style="text-decoration:underline"><a
+href="https://immerse.education.ucsb.edu/">here</a></span></p>
+<hr />
+<div id="part-1-introduction-to-mplus" class="section level2">
+<h2>PART 1: Introduction to Mplus</h2>
+<hr />
+<div id="step-1-open-mplus" class="section level3">
+<h3>Step 1: Open Mplus</h3>
+<p><img src="figures/mplus.jpg" /></p>
+<p>This is the Mplus interface. Even though we will NOT be working
+directly in Mplus, it is good to get an idea of how Mplus works.</p>
+<hr />
+</div>
+<div id="step-2-open-mplus-input-file-located-in-the-project-folder"
+class="section level3">
+<h3>Step 2: Open Mplus input file located in the project folder</h3>
+<p><img src="figures/input.jpg" /></p>
+<p>Open the file titled <code>basic_example.inp</code> located in the
+<code>part1_mplus</code> folder in Mplus. All syntax or input files for
+Mplus are a <em>.inp</em> file. You may also create a new <em>.inp</em>
+file directly in Mplus and populate the syntax there. For now, we can
+use one that is already complete.</p>
+<ul>
+<li><p>Basic skeleton of an Mplus <em>.inp</em> syntax</p>
+<ul>
+<li><p><strong>TITLE:</strong> title of our document</p></li>
+<li><p><strong>DATA:</strong> data file (must be in the same folder as
+the <em>.inp</em>)</p></li>
+<li><p><strong>VARIABLE:</strong></p>
+<ul>
+<li><p><strong>NAMES =</strong> names of each variable in order of each
+column</p></li>
+<li><p><strong>MISSING</strong> = what the missing data is labeled
+as</p></li>
+<li><p><strong>USEVAR =</strong> names of the variable actually being
+used in the analysis</p></li>
+</ul></li>
+<li><p><strong>ANALYSIS:</strong></p>
+<ul>
+<li><strong>TYPE =</strong> this section is what will change constantly
+based on your model. For now, we are running “type = basic” which will
+provide us descriptive statistics of our variables.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><strong>NOTE:</strong> Please view the data file that is provided in
+this walkthrough (basic_example.dat). Mplus works with .dat files to run
+analyses. The dataset must also be formatted in certain way in order for
+Mplus to read it (i.e., no variable names). For more information on
+Mplus commands, see <a
+href="https://stats.oarc.ucla.edu/mplus/seminars/mplus-class-notes/getting-started-with-mplus/">here</a>.</p>
+</div>
+<div id="step-3-click-run" class="section level3">
+<h3>Step 3: Click Run</h3>
+<p><img src="figures/run.jpg" /></p>
+<p>This will run our “type=basic” analysis which will provide us a
+<em>.out</em> file that contains variables descriptive statistics of our
+variables. For information on the <code>type=basic</code> output, see <a
+href="https://stats.oarc.ucla.edu/mplus/seminars/mplus-class-notes/exploring/">here</a>.
+Mplus will save this <em>.out</em> file in the folder that dataset is
+located (in our case <code>part1_mplus</code>. All <em>.out</em> and
+<em>.inp</em> files can be open as a text file if you want to access
+them off without Mplus.</p>
+<hr />
+</div>
+</div>
+<div id="part-2-introduction-to-mplusautomation-using-r"
+class="section level2">
+<h2>PART 2: Introduction to <code>MplusAutomation</code> using R</h2>
+<p>In Part II, we will obtain the same Mplus <em>.out</em> file that we
+produced in Part I using RStudio. This is done using the <a
+href="https://michaelhallquist.github.io/MplusAutomation/"><code>MplusAutomation</code></a>
+package (Hallquist &amp; Wiley, 2018). <code>MplusAutomation</code> is
+an R package communicates with Mplus to replicate the process we went
+through above using Rstudio and R language.</p>
+<div id="what-is-mplusautomation-why-should-we-use-it"
+class="section level3">
+<h3>WHAT is <code>MplusAutomation</code> &amp; WHY should we use
+it?</h3>
+<p><strong>WHAT?</strong></p>
+<ul>
+<li><code>MplusAutomation</code> is an <code>R</code> package</li>
+<li>It “wraps around” the <code>Mplus</code> program</li>
+<li>Requires both <code>R</code> &amp; <code>Mplus</code> software</li>
+<li>Requires learning some basics of 2 programming languages</li>
+<li>Car metaphor: R/Rstudio is the <em>steering wheel or dashboard</em>
+&amp; Mplus is the <em>engine</em></li>
+</ul>
+<p><strong>WHY?</strong></p>
+<ul>
+<li><code>MplusAutomation</code> can provide clearly organized work
+procedures in which every research decision can be documented in a
+single place</li>
+<li>Increase reproducibility, organization, efficiency, and
+transparency</li>
+</ul>
+<p><strong>HOW?</strong></p>
+<ul>
+<li>The interface for MplusAutomation is entirely within R-Studio. You
+do not need to open Mplus</li>
+<li>The code presented will be very repetitive by design</li>
+</ul>
+</div>
+<div id="step-1-open-rstudio" class="section level3">
+<h3>Step 1: Open RStudio</h3>
+<p><img src="figures/rstudio.jpg" /></p>
+<p>Open R studio on your desktop. You don’t need to close Mplus.
+<strong>IMPORTANT</strong>: Because we are using a package that
+communicates with Mplus, we <em>must</em> use have Mplus installed to
+run Rstudio.</p>
+</div>
+<div id="step-2-create-a-new-r-project" class="section level3">
+<h3>Step 2: Create a new R-project</h3>
+<p><img src="figures/rproject.jpg" /></p>
+<p>R-projects help us organize our folders , filepaths, and scripts. To
+create a new R project:</p>
+<ul>
+<li>File –&gt; New Project…</li>
+</ul>
+<p>Click “New Directory” –&gt; New Project –&gt; Name your project
+(Perhaps “pretraining-day2”)</p>
+<p>Before you click “Create Project,” save your project. It’ll save as a
+folder. <strong>THIS IS IMPORTANT.</strong> If your file path is too
+long (longer than 90 characters), Mplus cuts off the filepath and will
+not run your syntax. Move all the materials found on Github into this
+new project folder you created.</p>
+</div>
+<div id="step-3-create-an-r-markdown-document" class="section level3">
+<h3>Step 3: Create an R-markdown document</h3>
+<p><img src="figures/markdown.jpg" /></p>
+<p>An R-markdown file provides an authoring framework for data science
+that allows us to organize our reports using texts and code chunks. This
+document you are reading was made using R-markdown! Lets create an
+R-markdown and write script to run a “type=basic” analysis using the R
+package, <code>MplusAutomation</code>.</p>
+<p>To create an R-markdown:</p>
+<ul>
+<li>File –&gt; New File –&gt; R Markdown…</li>
+</ul>
+<p>In the window that pops up, give the R-markdown a title such as
+“<strong>Introduction to MplusAutomation</strong>” Click “OK.” You
+should see a new markdown with some example text and code chunks. We
+want a clean document to start off with so delete everything from line
+10 down. Go ahead and save this document.</p>
+</div>
+<div id="step-4-load-packages" class="section level3">
+<h3>Step 4: Load packages</h3>
+<p>Your first code chunk in any given markdown should be the packages
+you will be using. To insert a code chunk, etiher use the keyboard
+shortcut ctrl + alt + i or Code –&gt; Insert Chunk or click the green
+box with the letter C on it. There are a few packages we want our
+markdown to read in:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(MplusAutomation)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co">#collection of R packages designed for data science</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co">#helps with filepaths</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(haven) <span class="co"># read_sav()</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(psych) <span class="co"># describe()</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(ggpubr) <span class="co"># ggdensity() and ggqqplot()</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(corrplot) <span class="co"># corrplot()</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">i_am</span>(<span class="st">&quot;01-intro-to-mplusautomation.Rmd&quot;</span>)</span></code></pre></div>
+<p>As a reminder, if a function does not work and you receive an error
+like this: <code>could not find function "random_function"</code>; or if
+you try to load a package and you receive an error like this:
+<code>there is no package called `random_package`</code> , then you will
+need to install the package using
+<code>install.packages("random_package")</code> in the console (the
+bottom-left window in R studio). Once you have installed the package you
+will <em>never</em> need to install it again, however you must
+<em>always</em> load in the packages at the beginning of your R markdown
+using <code>library(random_package)</code>, as shown in this document.
+Once it is installed, it doesn’t need to be installed again.</p>
+</div>
+<div id="step-5-read-in-data-set" class="section level3">
+<h3>Step 5: Read in data set</h3>
+<p>Recall that our data set that we used earlier is a <em>.dat</em> file
+with no variable names. Remember that this is a data set specifically
+designed for Mplus. Let grab the original one (an SPSS file) in the
+<code>data</code> folder within the <code>part2_rstudio</code>
+folder.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="fu">here</span>(<span class="st">&quot;part2_rstudio&quot;</span>, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;explore_data.sav&quot;</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Ways to view data in R:</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># 1. click on the data in your Global Environment (upper right pane) or use...</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">View</span>(data)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># 2. summary() gives basic summary statistics &amp; shows number of NA values</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># *great for checking that data has been read in correctly*</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code></pre></div>
+<pre><code>##      item1            item2            item3            item4       
+##  Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000  
+##  1st Qu.: 2.000   1st Qu.: 2.000   1st Qu.: 2.000   1st Qu.: 2.000  
+##  Median : 4.000   Median : 5.000   Median : 5.000   Median : 5.000  
+##  Mean   : 4.508   Mean   : 4.856   Mean   : 4.706   Mean   : 4.815  
+##  3rd Qu.: 6.000   3rd Qu.: 7.000   3rd Qu.: 7.000   3rd Qu.: 7.000  
+##  Max.   :10.000   Max.   :10.000   Max.   :10.000   Max.   :10.000  
+##                   NA&#39;s   :1                                         
+##      item5            item6           item7            item8       
+##  Min.   : 1.000   Min.   : 1.00   Min.   : 1.000   Min.   : 1.000  
+##  1st Qu.: 2.000   1st Qu.: 2.00   1st Qu.: 1.000   1st Qu.: 1.000  
+##  Median : 3.000   Median : 5.00   Median : 3.000   Median : 3.000  
+##  Mean   : 4.169   Mean   : 4.72   Mean   : 3.689   Mean   : 3.915  
+##  3rd Qu.: 6.000   3rd Qu.: 7.00   3rd Qu.: 5.000   3rd Qu.: 6.000  
+##  Max.   :25.000   Max.   :10.00   Max.   :10.000   Max.   :10.000  
+##  NA&#39;s   :1        NA&#39;s   :1                        NA&#39;s   :1       
+##      item9            female      
+##  Min.   : 1.000   Min.   :0.0000  
+##  1st Qu.: 4.000   1st Qu.:0.0000  
+##  Median : 6.000   Median :1.0000  
+##  Mean   : 5.857   Mean   :0.6807  
+##  3rd Qu.: 8.000   3rd Qu.:1.0000  
+##  Max.   :10.000   Max.   :1.0000  
+## </code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># 3. names() provides a list of column names. Very useful if you don&#39;t have them memorized!</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">names</span>(data)</span></code></pre></div>
+<pre><code>##  [1] &quot;item1&quot;  &quot;item2&quot;  &quot;item3&quot;  &quot;item4&quot;  &quot;item5&quot;  &quot;item6&quot;  &quot;item7&quot;  &quot;item8&quot; 
+##  [9] &quot;item9&quot;  &quot;female&quot;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># 4. head() prints the top x rows of the dataframe</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">head</span>(data)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 10
+##   item1 item2 item3 item4 item5 item6 item7 item8 item9 female    
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl+lbl&gt; 
+## 1     2     1     1     1     1     1     1     1     1 1 [female]
+## 2     2     2     1     1     1     2     1     1     1 1 [female]
+## 3     3     2     3     3     1     2     1     1     1 1 [female]
+## 4     1     2     1     1     1     4     1     1     1 0 [male]  
+## 5     2     1     1     3     1     1     2     1     1 1 [female]
+## 6     3     1     2     1     3     2     2     2     1 1 [female]</code></pre>
+<p>You can also look at the dataframe with labels and response scale
+meta-data:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>sjPlot<span class="sc">::</span><span class="fu">view_df</span>(data)</span></code></pre></div>
+<table style="border-collapse:collapse; border:none;">
+<caption>
+Data frame: data
+</caption>
+<tr>
+<th style="border-bottom:double; font-style:italic; font-weight:normal; padding:0.2cm; text-align:left; vertical-align:top;">
+ID
+</th>
+<th style="border-bottom:double; font-style:italic; font-weight:normal; padding:0.2cm; text-align:left; vertical-align:top;">
+Name
+</th>
+<th style="border-bottom:double; font-style:italic; font-weight:normal; padding:0.2cm; text-align:left; vertical-align:top;">
+Label
+</th>
+<th style="border-bottom:double; font-style:italic; font-weight:normal; padding:0.2cm; text-align:left; vertical-align:top;">
+Values
+</th>
+<th style="border-bottom:double; font-style:italic; font-weight:normal; padding:0.2cm; text-align:left; vertical-align:top;">
+Value Labels
+</th>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+1
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+item1
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;" colspan="2">
+<em>range: 1.0-10.0</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+2
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+item2
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee" colspan="2">
+<em>range: 1-10</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+3
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+item3
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;" colspan="2">
+<em>range: 1-10</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+4
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+item4
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee" colspan="2">
+<em>range: 1-10</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+5
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+item5
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;" colspan="2">
+<em>range: 1-25</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+6
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+item6
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee" colspan="2">
+<em>range: 1-10</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+7
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+item7
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;" colspan="2">
+<em>range: 1-10</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+8
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+item8
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee" colspan="2">
+<em>range: 1-10</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+9
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+item9
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;">
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top;" colspan="2">
+<em>range: 1-10</em>
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+10
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+female
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+Student gender
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+0<br>1
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; background-color:#eeeeee">
+male<br>female
+</td>
+</tr>
+</table>
+<p>This SPSS dataset gives us more information than the
+<em>.dat</em> one. We are able to see the variable names, and
+descriptions.</p>
+<p><strong>Convert from <em>.sav</em> to <em>.csv</em></strong></p>
+<p>It’s a good idea to convert <em>.sav</em> files to <em>.csv</em>.
+Here is how to convert the <strong><em>.sav</em></strong> <strong>to
+<em>.csv</em></strong>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># write_csv saves a .csv version of your dataset to your working directory.</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co"># Enter the name of the object that contains your data set (in this case, &quot;exp_data.csv&quot;), then enter the name you want to save your dataset as. We can call it the same thing: &quot;screen1.csv&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">write_csv</span>(data, <span class="fu">here</span>(<span class="st">&quot;part2_rstudio&quot;</span>, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;exp_data.csv&quot;</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co"># read the unlabeled data back into R</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>data_csv <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">&quot;part2_rstudio&quot;</span>, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;exp_data.csv&quot;</span>))</span></code></pre></div>
+<p><strong>Optional: Convert from <em>.csv</em> to Mplus <em>.dat</em>
+file</strong></p>
+<p>Say you want an Mplus .dat file and don’t want to go through the
+hassle of deleting rows and manual conversion to <em>.dat</em>. You can
+use the <code>prepareMplusData()</code> function to convert from
+<em>.csv</em> to <em>.dat</em>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">prepareMplusData</span>(data_csv, <span class="fu">here</span>(<span class="st">&quot;part2_rstudio&quot;</span>, <span class="st">&quot;data&quot;</span>, <span class="st">&quot;exp_data.dat&quot;</span>))</span></code></pre></div>
+</div>
+<div id="step-6-using-mplusautomation" class="section level3">
+<h3>Step 6: Using <code>MplusAutomation</code></h3>
+<p>To run a basic model using <code>MplusAutomation</code> we used the
+<code>mplusObject()</code> function and the <code>mplusModeler()</code>
+function.</p>
+<p><strong>What does the</strong> <code>mplusObject()</code>
+<strong>function do?</strong></p>
+<p>1. It generates an Mplus input file (does not need full variable name
+list, its automated for you!) 2. It generates a datafile specific to
+each model 3. It runs or estimates the model (hopefully) producing the
+correct output. Always check!</p>
+<p><strong>What does the</strong> <code>mplusModeler()</code>
+<strong>function do?</strong></p>
+<ol style="list-style-type: decimal">
+<li>Creates, runs, and reads Mplus models created using
+<code>mplusObject()</code></li>
+<li>You can specify where you want the <em>.out</em> file saved</li>
+<li><code>check=TRUE</code> checks for missing semicolons,
+<code>run=TRUE</code> runs the model, <code>hashfilename=FALSE</code>
+does not add a hash of the raw data to the datafile name.</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>m_basic  <span class="ot">&lt;-</span> <span class="fu">mplusObject</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  </span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="at">TITLE =</span> <span class="st">&quot;PRACTICE 01 - Explore TYPE = BASIC;&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  </span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="at">VARIABLE =</span> </span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a> <span class="st">&quot;usevar= item1 item2 item3 item4 item5 item6 item7 item8 item9 female;&quot;</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  </span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>  <span class="at">ANALYSIS =</span> </span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a> <span class="st">&quot;type = basic; &quot;</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a> </span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  <span class="at">usevariables =</span> <span class="fu">colnames</span>(data_csv), </span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  <span class="at">rdata =</span> data_csv)</span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>m_basic_fit <span class="ot">&lt;-</span> <span class="fu">mplusModeler</span>(m_basic, </span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>               <span class="at">dataout=</span><span class="fu">here</span>(<span class="st">&quot;part2_rstudio&quot;</span>, <span class="st">&quot;basic.dat&quot;</span>),</span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>               <span class="at">modelout=</span><span class="fu">here</span>(<span class="st">&quot;part2_rstudio&quot;</span>, <span class="st">&quot;basic.inp&quot;</span>),</span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>               <span class="at">check=</span><span class="cn">TRUE</span>, <span class="at">run =</span> <span class="cn">TRUE</span>, <span class="at">hashfilename =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p><strong>NOTE</strong>: You don’t need to specify <code>MISSING</code>
+here since it automatically detects the missing value from the data set.
+You also don’t need <code>NAMES</code> as it detects the names from the
+data set.</p>
+<p><strong>Optional: Subsetting observations</strong></p>
+<p>You can use Mplus syntax to explore descriptives for observations
+reported as “female.”</p>
+<p>Add line of syntax: <code>useobs = female == 1;</code></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>fem_basic  <span class="ot">&lt;-</span> <span class="fu">mplusObject</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  </span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="at">TITLE =</span> <span class="st">&quot;PRACTICE 02 - Explore female observations only;&quot;</span>, </span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  </span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>  <span class="at">VARIABLE =</span> </span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>  <span class="st">&quot;usevar = item1 item2 item3 item4 item5 item6 item7 item8 item9;</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="st">  useobs = female == 1; !include observations that report female in analysis&quot;</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>  </span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>  <span class="at">ANALYSIS =</span> </span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>    <span class="st">&quot;type = basic;&quot;</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a> </span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>  <span class="at">usevariables =</span> <span class="fu">colnames</span>(data_csv), </span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>  <span class="at">rdata =</span> data_csv)</span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>fem_basic_fit <span class="ot">&lt;-</span> <span class="fu">mplusModeler</span>(fem_basic, </span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>               <span class="at">dataout=</span><span class="fu">here</span>(<span class="st">&quot;part2_rstudio&quot;</span>, <span class="st">&quot;fem_basic.dat&quot;</span>),</span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>               <span class="at">modelout=</span><span class="fu">here</span>(<span class="st">&quot;part2_rstudio&quot;</span>, <span class="st">&quot;fem_basic.inp&quot;</span>),</span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a>               <span class="at">check=</span><span class="cn">TRUE</span>, <span class="at">run =</span> <span class="cn">TRUE</span>, <span class="at">hashfilename =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>After running an <code>MplusObject</code> function, MplusAutomation
+will generate an output file (same one we did before). ALWAYS check your
+output before moving forward with your analyses. It’s easy to skip past
+checking our output since MplusAutomation doesn’t automatically present
+it to us after running the code. It’s good practice to make it a habit
+to check your output file after every run.</p>
+<hr />
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>Hallquist, M. N. &amp; Wiley, J. F. (2018). MplusAutomation: An R
+Package for Facilitating Large-Scale Latent Variable Analyses in Mplus.
+Structural Equation Modeling, 25, 621-638. doi:
+10.1080/10705511.2017.1402334.</p>
+<p>Muthén, L.K. and Muthén, B.O. (1998-2017). Mplus User’s Guide. Eighth
+Edition. Los Angeles, CA: Muthén &amp; Muthén</p>
+<p>R Core Team (2017). R: A language and environment for statistical
+computing. R Foundation for Statistical Computing, Vienna, Austria. URL
+<a href="http://www.R-project.org/"
+class="uri">http://www.R-project.org/</a></p>
+<p>Wickham et al., (2019). Welcome to the tidyverse. Journal of Open
+Source Software, 4(43), 1686, <a
+href="https://doi.org/10.21105/joss.01686"
+class="uri">https://doi.org/10.21105/joss.01686</a></p>
+<hr />
+<p><img src="figures/UCSB_Navy_mark.png" /></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

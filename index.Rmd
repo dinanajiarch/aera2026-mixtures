@@ -1,19 +1,11 @@
 ---
 title: "The Utility of Mixture Modeling In Educational Research"
-author: "AERA 2026 Workshop"
-date: "Last Updated: `r Sys.Date()`"
-output:
-  html_document:
-    theme: flatly
-    self_contained: true
-    includes:
-      before_body: _header.html
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
-This repository was made for the 2026 AERA Workshop, "The Utility of Mixture Modeling in Educational Research."
+This website was made for the 2026 AERA Workshop, "The Utility of Mixture Modeling in Educational Research."
 
 ![](figures/UCSB_Navy_mark.png)
