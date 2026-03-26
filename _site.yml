@@ -4,7 +4,9 @@ navbar:
   title: "AERA 2026 Mixture Modeling Workshop"
   type: inverse
   left:
-    - text: "1. Introduction to Mplus and MplusAutomation"
+    - text: "Home"
+      href: index.html
+    - text: "1. Intro to Mplus and MplusAutomation"
       href: 01-intro-to-mplusautomation.html
     - text: "2. Enumeration"
       href: 02-enumeration.html
