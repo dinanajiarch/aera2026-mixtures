@@ -1,4 +1,5 @@
 name: "AERA 2026 Workshop"
+output_dir: "."
 navbar:
   title: "AERA 2026 Mixture Modeling Workshop"
   type: inverse
