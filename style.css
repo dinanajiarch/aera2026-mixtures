@@ -41,6 +41,22 @@ a {
     color: #FFFFFF !important;
 }
 
+
+/* This targets the specific link state that usually turns grey on live sites */
+.navbar-inverse .navbar-nav > li > a:hover, 
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .navbar-nav .open > a:hover,
+.navbar-inverse .navbar-nav .open > a:focus {
+    color: #FEB81D !important; /* Force UCSB Gold */
+    background-color: #002b4d !important; /* Darken the navy slightly */
+    opacity: 1 !important; /* Prevents the 'greyed out' look */
+}
+
+/* Ensure the text is pure white when NOT hovering */
+.navbar-inverse .navbar-nav > li > a {
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+}
 /* 1. Force the table to take up the full width of the text area */
 table {
   width: 100% !important;
