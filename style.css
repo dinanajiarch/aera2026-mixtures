@@ -49,6 +49,21 @@ a {
     color: #003660;
 }
 
+
+/* 3. Fix the "Site Title" (Navbar Brand) color */
+.navbar-inverse .navbar-brand {
+    color: #FFFFFF !important; /* Force Title to be White */
+    opacity: 1 !important;
+    font-weight: bold;
+}
+
+/* Optional: Make the Title turn Gold when you hover over it */
+.navbar-inverse .navbar-brand:hover, 
+.navbar-inverse .navbar-brand:focus {
+    color: #FEB81D !important; 
+    background-color: transparent !important;
+}
+
 /* =========================================
    2. TABLE STYLING (THE "FIXED" LOOK)
    ========================================= */
