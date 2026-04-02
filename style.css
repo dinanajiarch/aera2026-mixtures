@@ -1,19 +1,41 @@
+/* =========================================
+   1. NAVBAR & LINK STYLING (UCSB COLORS)
+   ========================================= */
+
 /* UCSB Navy Blue for the Top Navbar */
 .navbar-inverse {
     background-color: #003660 !important;
     border-color: #003660 !important;
 }
 
-/* UCSB Gaucho Gold for the Active Tab and Hover */
+/* Ensure Navbar text is White when NOT hovering */
+.navbar-inverse .navbar-nav > li > a {
+    color: #FFFFFF !important;
+    opacity: 1 !important; /* Forces color to be solid white, not greyish */
+}
+
+/* UCSB Gaucho Gold for the Active Tab */
 .navbar-inverse .navbar-nav > .active > a, 
 .navbar-inverse .navbar-nav > .active > a:hover, 
 .navbar-inverse .navbar-nav > .active > a:focus {
     background-color: #FEB81D !important;
-    color: #003660 !important; /* Navy text on Gold background */
-    font-weight: bold;
+    color: #003660 !important;
+    font-weight: bold !important;
+    opacity: 1 !important;
 }
 
-/* Gold color for the Floating Table of Contents active items */
+/* HOVER STATE: Turn text Gold when hovering over Navy tabs */
+/* This specific selector beats the 'Flatly' grey default */
+.navbar-inverse .navbar-nav > li > a:hover, 
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .navbar-nav .open > a:hover,
+.navbar-inverse .navbar-nav .open > a:focus {
+    color: #FEB81D !important; 
+    background-color: #002b4d !important; /* Slightly darker navy for contrast */
+    opacity: 1 !important;
+}
+
+/* Sidebar/Floating TOC Active items */
 .list-group-item.active, 
 .list-group-item.active:focus, 
 .list-group-item.active:hover {
@@ -22,42 +44,16 @@
     color: #003660 !important;
 }
 
-/* Make links Navy Blue instead of the default Flatly green/blue */
+/* Global Link Color (Navy) */
 a {
     color: #003660;
 }
 
-/* 1. Fix text color for INACTIVE tabs on hover */
-/* This makes the text Gold when hovering over a blue tab */
-.navbar-inverse .navbar-nav > li > a:hover, 
-.navbar-inverse .navbar-nav > li > a:focus {
-    color: #FEB81D !important; 
-    background-color: rgba(255, 255, 255, 0.1) !important; /* Slight highlight */
-}
+/* =========================================
+   2. TABLE STYLING (THE "FIXED" LOOK)
+   ========================================= */
 
-/* 2. Ensure the default (non-hover) text is white or light gold */
-/* So it's readable against the Navy background before you even touch it */
-.navbar-inverse .navbar-nav > li > a {
-    color: #FFFFFF !important;
-}
-
-
-/* This targets the specific link state that usually turns grey on live sites */
-.navbar-inverse .navbar-nav > li > a:hover, 
-.navbar-inverse .navbar-nav > li > a:focus,
-.navbar-inverse .navbar-nav .open > a:hover,
-.navbar-inverse .navbar-nav .open > a:focus {
-    color: #FEB81D !important; /* Force UCSB Gold */
-    background-color: #002b4d !important; /* Darken the navy slightly */
-    opacity: 1 !important; /* Prevents the 'greyed out' look */
-}
-
-/* Ensure the text is pure white when NOT hovering */
-.navbar-inverse .navbar-nav > li > a {
-    color: #FFFFFF !important;
-    opacity: 1 !important;
-}
-/* 1. Force the table to take up the full width of the text area */
+/* Force table to fit text area */
 table {
   width: 100% !important;
   margin-left: auto;
@@ -66,20 +62,20 @@ table {
   margin-bottom: 1.5rem;
 }
 
-/* 2. Fix the "Missing Lines" issue in HTML */
+/* Visible grid lines */
 table, th, td {
   border: 1px solid #dee2e6 !important; 
   padding: 8px !important;
 }
 
-/* 3. Add horizontal scrolling for small screens so it doesn't break the layout */
+/* Horizontal scrolling for long item names */
 .book-body .page-inner section.normal table {
   display: block;
   overflow-x: auto;
   white-space: nowrap;
 }
 
-/* 4. Make the header look professional */
+/* Professional Headers */
 th {
   background-color: #f8f9fa;
   font-weight: bold;
