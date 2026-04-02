@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Latent Profile Analysis</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">AERA 2026 Mixture Modeling Workshop</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="01-intro-to-mplusautomation.html">1. Intro to Mplus and MplusAutomation</a>
+</li>
+<li>
+  <a href="02-enumeration.html">2. Latent Class Analysis</a>
+</li>
+<li>
+  <a href="03-lpa.html">3. Latent Profile Analysis</a>
+</li>
+<li>
+  <a href="04-regression.html">4. Latent Class Regression</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Latent Profile Analysis</h1>
+<h4 class="date">Last Updated: 2026-04-01</h4>
+
+</div>
+
+
+<div id="latent-profile-analysis" class="section level1 tabset">
+<h1 class="tabset">Latent Profile Analysis</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(MplusAutomation)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(sjPlot)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(pisaUSA15)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">library</span>(tidyLPA)</span></code></pre></div>
+<hr />
+<p><em>Example: PISA Student Data</em></p>
+<ol style="list-style-type: decimal">
+<li>The first example closely follows the vignette used to demonstrate
+the <a
+href="https://data-edu.github.io/tidyLPA/articles/Introduction_to_tidyLPA.html">tidyLPA</a>
+package (Rosenberg, 2019).</li>
+</ol>
+<ul>
+<li>This model utilizes the <code>PISA</code> data collected in the U.S.
+in 2015. To learn more about this data <a
+href="http://www.oecd.org/pisa/data/">see here</a>.</li>
+<li>To access the 2015 US <code>PISA</code> data &amp; documentation in
+R use the following code:</li>
+</ul>
+<p>Variables:</p>
+<dl>
+<dt><code>broad_interest</code></dt>
+<dd>
+<p>composite measure of students’ self reported broad interest</p>
+</dd>
+<dt><code>enjoyment</code></dt>
+<dd>
+<p>composite measure of students’ self reported enjoyment</p>
+</dd>
+<dt><code>instrumental_mot</code></dt>
+<dd>
+<p>composite measure of students’ self reported instrumental
+motivation</p>
+</dd>
+<dt><code>self_efficacy</code></dt>
+<dd>
+<p>composite measure of students’ self reported self efficacy</p>
+</dd>
+</dl>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">#devtools::install_github(&quot;jrosen48/pisaUSA15&quot;)</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#library(pisaUSA15)</span></span></code></pre></div>
+<hr />
+<div id="latent-profile-models" class="section level2">
+<h2>Latent Profile Models</h2>
+<p>Latent Profile Analysis (LPA) is a statistical modeling approach for
+estimating distinct profiles of variables and uses continuous - rather
+than categorical - indicators. Unlike latent class analysis, which uses
+categorical indicators, LPA models the means, variances, and covariances
+of continuous indicators within each latent profile.</p>
+<hr />
+<div id="terminology-for-specifying-variance-covariance-matrix"
+class="section level3">
+<h3>Terminology for specifying variance-covariance matrix</h3>
+<p>The code used to estimate LPA models in this walkthrough is from the
+<code>tidyLPA</code> package. <code>TidyLPA</code>(<a
+href="https://data-edu.github.io/tidyLPA/articles/Introduction_to_tidyLPA.html">source</a>)
+is an R package designed to estimate latent profile models using a tidy
+framework. It can interface with Mplus via the MplusAutomation package,
+enabling the estimation of latent profile models with different
+variance-covariance structures.</p>
+<ul>
+<li><code>model 1</code> Profile-invariant / Diagonal: Equal variances,
+and covariances fixed to 0</li>
+<li><code>model 2</code> Profile-varying / Diagonal: Free variances and
+covariances fixed to 0</li>
+<li><code>model 3</code> Profile-invariant / Non-Diagonal: Equal
+variances and equal covariances
+<ul>
+<li>Note: an alternative to Model 3 is freely estimating the
+covariances</li>
+</ul></li>
+<li><code>model 4</code> Free variances, and equal covariances</li>
+<li><code>model 5</code> Equal variances, and free covariances</li>
+<li><code>model 6</code> Profile Varying / Non-Diagonal: Free variances
+and free covariances</li>
+</ul>
+<div id="model-1" class="section level4">
+<h4>Model 1</h4>
+<p><em>Profile-invariant/diagonal:</em></p>
+<ul>
+<li><p><em>Equal Variances</em>: Variances are fixed to equality across
+the profiles (i.e., variances are constrained to be equal for each
+profile).</p></li>
+<li><p><em>Covariances fixed to zero</em> (i.e., the off-diagonal cells
+of the matrix are zero).</p></li>
+</ul>
+<p>The most parsimonious model and the most restricted.</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+\sigma^2_1 &amp; 0 &amp; 0 \\
+0 &amp; \sigma^2_2 &amp; 0 \\
+0 &amp; 0 &amp; \sigma^2_3 \\
+\end{pmatrix}
+\]</span></p>
+</div>
+<div id="model-2" class="section level4">
+<h4>Model 2</h4>
+<p><em>Profile-varying/diagonal:</em></p>
+<ul>
+<li><p><em>Free variances</em>: Variances parameters are freely
+estimated across the profiles (i.e., variances vary by
+profile).</p></li>
+<li><p><em>Covariances</em> <em>fixed to zero</em> (i.e., the
+off-diagonal cells of the matrix are zero).</p></li>
+</ul>
+<p>This model is more flexible and less parsimonious than model 1.</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+\sigma^2_{1p} &amp; 0 &amp; 0 \\
+0 &amp; \sigma^2_{2p} &amp; 0 \\
+0 &amp; 0 &amp; \sigma^2_{3p} \\
+\end{pmatrix}
+\]</span></p>
+</div>
+<div id="model-3" class="section level4">
+<h4>Model 3</h4>
+<p><em>Profile-invariant/ non-diagonal or unrestricted:</em></p>
+<ul>
+<li><p><em>Equal variances:</em> Variances are fixed to equality across
+profile. (i.e., variances are constrained to be same for each
+profile).</p></li>
+<li><p><em>Equal Covariances</em>: The covariances are now estimated and
+constrained to be equal.</p>
+<ul>
+<li>An alternative to Model 3 is freely estimating the covariances
+(Model 5 here).</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+\begin{pmatrix}
+\sigma^2_1 &amp; \sigma_{12} &amp; \sigma_{13} \\
+\sigma_{12} &amp; \sigma^2_2 &amp; \sigma_{23} \\
+\sigma_{13} &amp; \sigma_{23} &amp; \sigma^2_3 \\
+\end{pmatrix}
+\]</span></p>
+</div>
+<div id="model-4" class="section level4">
+<h4>Model 4</h4>
+<p>Varying means, varying variances, and equal covariances:</p>
+<ul>
+<li><p><em>Free variances</em>: Variances parameters are freely
+estimated across profiles (i.e., variances vary by profile).</p></li>
+<li><p><em>Equal Covariances</em>: Covariances are constrained to be
+equal.</p></li>
+</ul>
+<p>This model is also considered to be an extension of Model 3.</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+\sigma^2_{1p} &amp; \sigma_{12} &amp; \sigma_{13} \\
+\sigma_{12} &amp; \sigma^2_{2p} &amp; \sigma_{23} \\
+\sigma_{13} &amp; \sigma_{23} &amp; \sigma^2_{3p} \\
+\end{pmatrix}
+\]</span></p>
+</div>
+<div id="model-5" class="section level4">
+<h4>Model 5</h4>
+<p>Varying means, equal variances, and varying covariances:</p>
+<ul>
+<li><p><em>Equal variances:</em> Variances are fixed to equality across
+the profiles. (i.e., variances are constrained to be same for each
+profile).</p></li>
+<li><p><em>Free Covariances</em>: Covariances are now freely estimated
+across the profiles.</p></li>
+</ul>
+<p>This model is also considered to be an extension of Model 3.</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+\sigma^2_{1} &amp; \sigma_{12p} &amp; \sigma_{13p} \\
+\sigma_{12p} &amp; \sigma^2_{2} &amp; \sigma_{23p} \\
+\sigma_{13p} &amp; \sigma_{23p} &amp; \sigma^2_{3} \\
+\end{pmatrix}
+\]</span></p>
+</div>
+<div id="model-6" class="section level4">
+<h4>Model 6</h4>
+<p><em>Profile-varying / Non-diagonal</em>:</p>
+<ul>
+<li><p><em>Free variances</em>: Variances parameters are freely
+estimated across profiles (i.e., variances vary by profile).</p></li>
+<li><p><em>Free Covariances</em>: Covariances are now freely estimated
+across the profiles.</p></li>
+</ul>
+<p>This is the most complex and unrestricted model. It is also the least
+parsimonious</p>
+<p><em>Note</em>: The unrestricted model is also sometimes known as
+Model 4.</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+\sigma^2_{1p} &amp; \sigma_{12p} &amp; \sigma_{13p} \\
+\sigma_{12p} &amp; \sigma^2_{2p} &amp; \sigma_{23p} \\
+\sigma_{13p} &amp; \sigma_{23p} &amp; \sigma^2_{3p} \\
+\end{pmatrix}
+\]</span></p>
+<hr />
+</div>
+</div>
+</div>
+<div id="descriptive-statistics" class="section level2">
+<h2>Descriptive Statistics</h2>
+<hr />
+<div id="load-packages" class="section level3">
+<h3>Load packages</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="fu">library</span>(MplusAutomation)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="fu">library</span>(tidyLPA)</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="fu">library</span>(pisaUSA15)</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="fu">library</span>(filesstrings)</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="fu">library</span>(RcppAlgos)</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="fu">library</span>(psych)</span></code></pre></div>
+<hr />
+</div>
+<div id="prepare-data" class="section level3">
+<h3>Prepare Data</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>pisa <span class="ot">&lt;-</span> pisaUSA15[<span class="dv">1</span><span class="sc">:</span><span class="dv">500</span>,] <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(broad_interest, enjoyment, instrumental_mot, self_efficacy)</span></code></pre></div>
+<p>Quick Summary</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">describe</span>(pisa)</span></code></pre></div>
+<pre><code>##                  vars   n mean   sd median trimmed  mad min max range  skew
+## broad_interest      1 477 2.67 0.77    2.8    2.68 0.89   1   5     4 -0.14
+## enjoyment           2 486 2.82 0.72    3.0    2.85 0.59   1   4     3 -0.45
+## instrumental_mot    3 479 2.13 0.75    2.0    2.09 0.74   1   4     3  0.45
+## self_efficacy       4 477 2.12 0.64    2.0    2.11 0.56   1   4     3  0.40
+##                  kurtosis   se
+## broad_interest      -0.07 0.04
+## enjoyment            0.23 0.03
+## instrumental_mot     0.11 0.03
+## self_efficacy        0.12 0.03</code></pre>
+<p>Mean Table</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>ds <span class="ot">&lt;-</span> pisa <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(broad_interest<span class="sc">:</span>self_efficacy, <span class="at">names_to =</span> <span class="st">&quot;variable&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) </span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>ds <span class="sc">%&gt;%</span> </span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="fu">gt</span> () <span class="sc">%&gt;%</span> </span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="fu">md</span>(<span class="st">&quot;**Descriptive Summary**&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>    <span class="at">variable =</span> <span class="st">&quot;Variable&quot;</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">md</span>(<span class="st">&quot;M&quot;</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">md</span>(<span class="st">&quot;SD&quot;</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>),</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>             <span class="at">decimals =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">&quot;center&quot;</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>    <span class="at">columns =</span> mean</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>  ) </span></code></pre></div>
+<div id="mcioopmjdv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mcioopmjdv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#mcioopmjdv thead, #mcioopmjdv tbody, #mcioopmjdv tfoot, #mcioopmjdv tr, #mcioopmjdv td, #mcioopmjdv th {
+  border-style: none;
+}
+
+#mcioopmjdv p {
+  margin: 0;
+  padding: 0;
+}
+
+#mcioopmjdv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#mcioopmjdv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#mcioopmjdv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#mcioopmjdv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#mcioopmjdv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#mcioopmjdv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#mcioopmjdv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#mcioopmjdv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#mcioopmjdv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#mcioopmjdv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#mcioopmjdv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#mcioopmjdv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#mcioopmjdv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#mcioopmjdv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#mcioopmjdv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mcioopmjdv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#mcioopmjdv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#mcioopmjdv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#mcioopmjdv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mcioopmjdv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#mcioopmjdv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mcioopmjdv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#mcioopmjdv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mcioopmjdv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mcioopmjdv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mcioopmjdv .gt_left {
+  text-align: left;
+}
+
+#mcioopmjdv .gt_center {
+  text-align: center;
+}
+
+#mcioopmjdv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#mcioopmjdv .gt_font_normal {
+  font-weight: normal;
+}
+
+#mcioopmjdv .gt_font_bold {
+  font-weight: bold;
+}
+
+#mcioopmjdv .gt_font_italic {
+  font-style: italic;
+}
+
+#mcioopmjdv .gt_super {
+  font-size: 65%;
+}
+
+#mcioopmjdv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#mcioopmjdv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#mcioopmjdv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#mcioopmjdv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#mcioopmjdv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#mcioopmjdv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#mcioopmjdv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#mcioopmjdv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#mcioopmjdv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Descriptive Summary</strong></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="variable">Variable</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="mean"><span class='gt_from_md'>M</span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="sd"><span class='gt_from_md'>SD</span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="variable" class="gt_row gt_left">broad_interest</td>
+<td headers="mean" class="gt_row gt_center">2.67</td>
+<td headers="sd" class="gt_row gt_right">0.77</td></tr>
+    <tr><td headers="variable" class="gt_row gt_left">enjoyment</td>
+<td headers="mean" class="gt_row gt_center">2.82</td>
+<td headers="sd" class="gt_row gt_right">0.72</td></tr>
+    <tr><td headers="variable" class="gt_row gt_left">instrumental_mot</td>
+<td headers="mean" class="gt_row gt_center">2.13</td>
+<td headers="sd" class="gt_row gt_right">0.75</td></tr>
+    <tr><td headers="variable" class="gt_row gt_left">self_efficacy</td>
+<td headers="mean" class="gt_row gt_center">2.12</td>
+<td headers="sd" class="gt_row gt_right">0.64</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<p>Histograms</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>data_long <span class="ot">&lt;-</span> pisa <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(broad_interest<span class="sc">:</span>self_efficacy, <span class="at">names_to =</span> <span class="st">&quot;variable&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">ggplot</span>(data_long, <span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> .<span class="dv">3</span>, <span class="at">fill =</span> <span class="st">&quot;#69b3a2&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable, <span class="at">scales =</span> <span class="st">&quot;free_x&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Histograms of Variables&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Value&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Frequency&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>()</span></code></pre></div>
+<p><img src="03-lpa_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+<hr />
+</div>
+</div>
+<div id="enumeration-using-tidylpa" class="section level2">
+<h2>Enumeration using <code>tidyLPA</code></h2>
+<hr />
+<p>Enumerate using <code>estimate_profiles()</code>:</p>
+<ul>
+<li>Estimate models with profiles <span class="math inline">\(K =
+1:5\)</span></li>
+<li>Model has 4 continuous indicators</li>
+<li>Default variance-covariance specifications (model 1)</li>
+<li>Change <code>variances</code> and <code>covariances</code> to
+indicate the model you want to specify, in this example, we are
+estimating all six models.</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Run LPA models </span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>lpa_fit <span class="ot">&lt;-</span> pisa <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    <span class="fu">estimate_profiles</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>                      <span class="at">package =</span> <span class="st">&quot;MplusAutomation&quot;</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                      <span class="at">ANALYSIS =</span> <span class="st">&quot;starts = 500 100;&quot;</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>                      <span class="at">OUTPUT =</span> <span class="st">&quot;sampstat residual tech11 tech14&quot;</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>                      <span class="at">variances =</span> <span class="fu">c</span>(<span class="st">&quot;equal&quot;</span>, <span class="st">&quot;varying&quot;</span>, <span class="st">&quot;equal&quot;</span>, <span class="st">&quot;varying&quot;</span>, <span class="st">&quot;equal&quot;</span>, <span class="st">&quot;varying&quot;</span>),</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>                      <span class="at">covariances =</span> <span class="fu">c</span>(<span class="st">&quot;zero&quot;</span>, <span class="st">&quot;zero&quot;</span>, <span class="st">&quot;equal&quot;</span>, <span class="st">&quot;equal&quot;</span>, <span class="st">&quot;varying&quot;</span>, <span class="st">&quot;varying&quot;</span>),</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>                      <span class="at">keepfiles =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co"># Compare fit statistics</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="fu">get_fit</span>(lpa_fit)</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co"># Move files to folder </span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="fu">here</span>(), <span class="at">pattern =</span> <span class="st">&quot;^model&quot;</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="fu">move_files</span>(files, <span class="fu">here</span>(<span class="st">&quot;lpa_enumeration&quot;</span>), <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>For reference, here is the Mplus syntax for different
+specifications:</p>
+<p><strong>Fixed covariance to zero (DEFAULT)</strong>:</p>
+<p><code>broad_interest WITH enjoyment@0;</code></p>
+<p><strong>Free covariance</strong>:</p>
+<p><code>broad_interest WITH enjoyment;</code></p>
+<p><strong>Equal covariances</strong>:</p>
+<p><code>%c#1%</code></p>
+<p><code>broad_interest WITH enjoyment (1);</code></p>
+<p><code>%c#2%</code></p>
+<p><code>broad_interest WITH enjoyment (1);</code></p>
+<p><strong>Equal variance (DEFAULT)</strong>:</p>
+<p><code>%c#1%</code></p>
+<p><code>broad_interest (1);</code></p>
+<p><code>%c#2%</code></p>
+<p><code>broad_interest (1);</code></p>
+<p><strong>Free variance</strong>:</p>
+<p><code>mth_scor-bio_scor;</code></p>
+<p>You can also open the <code>tidyLPA</code> .inp files to see the
+specifications.</p>
+<hr />
+<div id="table-of-fit" class="section level3">
+<h3>Table of Fit</h3>
+<p>Evaluate each model specification separately using fit indices.</p>
+<p>After examining the outputs (and increasing the random starts where
+necessary), there are a few models excluded from analysis:</p>
+<p>Model 2:</p>
+<ul>
+<li><p>Profile 4</p></li>
+<li><p>Profile 5</p></li>
+</ul>
+<p>Model 3:</p>
+<ul>
+<li>Profile 5</li>
+</ul>
+<p>Model 4:</p>
+<ul>
+<li><p>Profile 4</p></li>
+<li><p>Profile 5</p></li>
+</ul>
+<p>Model 5:</p>
+<ul>
+<li><p>Profile 3</p></li>
+<li><p>Profile 4</p></li>
+<li><p>Profile 5</p></li>
+</ul>
+<p>Model 6:</p>
+<ul>
+<li><p>Profile 4</p></li>
+<li><p>Profile 5</p></li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;functions&quot;</span>, <span class="st">&quot;enum_table_lpa.R&quot;</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co"># Read in model</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>output_enum <span class="ot">&lt;-</span> <span class="fu">readModels</span>(<span class="fu">here</span>(<span class="st">&quot;lpa_enumeration&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co"># Preview with numbered rows</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="fu">enum_fit</span>(output_enum)</span></code></pre></div>
+<pre><code>## # A tibble: 29 × 12
+##      row Title             Parameters     LL   BIC  aBIC  CAIC   AWE BLRT_PValue
+##    &lt;int&gt; &lt;chr&gt;                  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+##  1     1 Model 1 With 1 C…          8 -2089. 4227. 4201. 4235. 4300.          NA
+##  2     2 Model 1 With 2 C…         13 -1997. 4074. 4032. 4087. 4193.           0
+##  3     3 Model 1 With 3 C…         18 -1953. 4017. 3960. 4035. 4183.           0
+##  4     4 Model 1 With 4 C…         23 -1889. 3921. 3848. 3944. 4133.           0
+##  5     5 Model 1 With 5 C…         28 -1871. 3915. 3826. 3943. 4172.           0
+##  6     6 Model 2 With 1 C…          8 -2089. 4227. 4201. 4235. 4300.          NA
+##  7     7 Model 2 With 2 C…         17 -1989. 4083. 4029. 4100. 4239.           0
+##  8     8 Model 2 With 3 C…         26 -1878. 3917. 3834. 3943. 4156.           0
+##  9     9 Model 2 With 4 C…         35 -1851. 3919. 3808. 3954. 4241.           0
+## 10    10 Model 2 With 5 C…         44 -1825. 3923. 3783. 3967. 4327.           0
+## # ℹ 19 more rows
+## # ℹ 3 more variables: T11_VLMR_PValue &lt;dbl&gt;, BF &lt;dbl&gt;, cmPk &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>select_models <span class="ot">&lt;-</span> <span class="fu">enum_fit</span>(output_enum) <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">slice</span>( <span class="co"># Remove the models that we don&#39;t want to consider!!!! Because we looked at every single output, we know which models did not converge, thus we exclude them.</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>    <span class="co"># Model 2</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>    <span class="sc">-</span><span class="dv">9</span>, <span class="sc">-</span><span class="dv">10</span>, </span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>    <span class="co"># Model 3</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>    <span class="sc">-</span><span class="dv">15</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>    <span class="co"># Model 4</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>    <span class="sc">-</span><span class="dv">19</span>, <span class="sc">-</span><span class="dv">20</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>    <span class="co"># Model 5</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>    <span class="sc">-</span><span class="dv">23</span>, <span class="sc">-</span><span class="dv">24</span>, <span class="sc">-</span><span class="dv">25</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>    <span class="co"># Model 6</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>    <span class="sc">-</span><span class="dv">29</span>, <span class="sc">-</span><span class="dv">30</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>  )</span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="fu">enum_table</span>(select_models, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span>, <span class="dv">9</span><span class="sc">:</span><span class="dv">12</span>, <span class="dv">13</span><span class="sc">:</span><span class="dv">15</span>, <span class="dv">16</span><span class="sc">:</span><span class="dv">17</span>, <span class="dv">18</span><span class="sc">:</span><span class="dv">20</span>)</span></code></pre></div>
+<div id="tfypnlhiqv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tfypnlhiqv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tfypnlhiqv thead, #tfypnlhiqv tbody, #tfypnlhiqv tfoot, #tfypnlhiqv tr, #tfypnlhiqv td, #tfypnlhiqv th {
+  border-style: none;
+}
+
+#tfypnlhiqv p {
+  margin: 0;
+  padding: 0;
+}
+
+#tfypnlhiqv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tfypnlhiqv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tfypnlhiqv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tfypnlhiqv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tfypnlhiqv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tfypnlhiqv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tfypnlhiqv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tfypnlhiqv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tfypnlhiqv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tfypnlhiqv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tfypnlhiqv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tfypnlhiqv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tfypnlhiqv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tfypnlhiqv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tfypnlhiqv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tfypnlhiqv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tfypnlhiqv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tfypnlhiqv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tfypnlhiqv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tfypnlhiqv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tfypnlhiqv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tfypnlhiqv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tfypnlhiqv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tfypnlhiqv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tfypnlhiqv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tfypnlhiqv .gt_left {
+  text-align: left;
+}
+
+#tfypnlhiqv .gt_center {
+  text-align: center;
+}
+
+#tfypnlhiqv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tfypnlhiqv .gt_font_normal {
+  font-weight: normal;
+}
+
+#tfypnlhiqv .gt_font_bold {
+  font-weight: bold;
+}
+
+#tfypnlhiqv .gt_font_italic {
+  font-style: italic;
+}
+
+#tfypnlhiqv .gt_super {
+  font-size: 65%;
+}
+
+#tfypnlhiqv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tfypnlhiqv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tfypnlhiqv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tfypnlhiqv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tfypnlhiqv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tfypnlhiqv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tfypnlhiqv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tfypnlhiqv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tfypnlhiqv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="11" class="gt_heading gt_title gt_font_normal gt_bottom_border" style><span class='gt_from_md'><strong>Model Fit Summary Table</strong></span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Title">Classes</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Parameters"><span class='gt_from_md'>Par</span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="LL"><span class='gt_from_md'><em>LL</em></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="BIC">BIC</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="aBIC">aBIC</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="CAIC">CAIC</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="AWE">AWE</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="BLRT_PValue">BLRT</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="T11_VLMR_PValue">VLMR</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="BF"><span class='gt_from_md'>BF</span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="cmPk"><span class='gt_from_md'><em>cmPk</em></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="11" class="gt_group_heading" scope="colgroup" id="Model 1">Model 1</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Model 1  Title" class="gt_row gt_left">Model 1 With 1 Classes</td>
+<td headers="Model 1  Parameters" class="gt_row gt_right">8</td>
+<td headers="Model 1  LL" class="gt_row gt_right">−2,088.66</td>
+<td headers="Model 1  BIC" class="gt_row gt_right">4,226.84</td>
+<td headers="Model 1  aBIC" class="gt_row gt_right">4,201.45</td>
+<td headers="Model 1  CAIC" class="gt_row gt_right">4,234.84</td>
+<td headers="Model 1  AWE" class="gt_row gt_right">4,300.36</td>
+<td headers="Model 1  BLRT_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 1  T11_VLMR_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 1  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 1  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 1  Title" class="gt_row gt_left">Model 1 With 2 Classes</td>
+<td headers="Model 1  Parameters" class="gt_row gt_right">13</td>
+<td headers="Model 1  LL" class="gt_row gt_right">−1,996.51</td>
+<td headers="Model 1  BIC" class="gt_row gt_right">4,073.50</td>
+<td headers="Model 1  aBIC" class="gt_row gt_right">4,032.24</td>
+<td headers="Model 1  CAIC" class="gt_row gt_right">4,086.50</td>
+<td headers="Model 1  AWE" class="gt_row gt_right">4,192.97</td>
+<td headers="Model 1  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 1  T11_VLMR_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 1  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 1  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 1  Title" class="gt_row gt_left">Model 1 With 3 Classes</td>
+<td headers="Model 1  Parameters" class="gt_row gt_right">18</td>
+<td headers="Model 1  LL" class="gt_row gt_right">−1,952.98</td>
+<td headers="Model 1  BIC" class="gt_row gt_right">4,017.38</td>
+<td headers="Model 1  aBIC" class="gt_row gt_right">3,960.25</td>
+<td headers="Model 1  CAIC" class="gt_row gt_right">4,035.38</td>
+<td headers="Model 1  AWE" class="gt_row gt_right">4,182.81</td>
+<td headers="Model 1  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 1  T11_VLMR_PValue" class="gt_row gt_right">0.009</td>
+<td headers="Model 1  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 1  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 1  Title" class="gt_row gt_left">Model 1 With 4 Classes</td>
+<td headers="Model 1  Parameters" class="gt_row gt_right">23</td>
+<td headers="Model 1  LL" class="gt_row gt_right">−1,889.43</td>
+<td headers="Model 1  BIC" class="gt_row gt_right">3,921.23</td>
+<td headers="Model 1  aBIC" class="gt_row gt_right">3,848.23</td>
+<td headers="Model 1  CAIC" class="gt_row gt_right">3,944.23</td>
+<td headers="Model 1  AWE" class="gt_row gt_right" style="font-weight: bold;">4,132.61</td>
+<td headers="Model 1  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 1  T11_VLMR_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 1  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 1  cmPk" class="gt_row gt_right">0.046</td></tr>
+    <tr><td headers="Model 1  Title" class="gt_row gt_left">Model 1 With 5 Classes</td>
+<td headers="Model 1  Parameters" class="gt_row gt_right">28</td>
+<td headers="Model 1  LL" class="gt_row gt_right">−1,870.91</td>
+<td headers="Model 1  BIC" class="gt_row gt_right" style="font-weight: bold;">3,915.16</td>
+<td headers="Model 1  aBIC" class="gt_row gt_right" style="font-weight: bold;">3,826.28</td>
+<td headers="Model 1  CAIC" class="gt_row gt_right" style="font-weight: bold;">3,943.15</td>
+<td headers="Model 1  AWE" class="gt_row gt_right">4,172.48</td>
+<td headers="Model 1  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 1  T11_VLMR_PValue" class="gt_row gt_right">0.018</td>
+<td headers="Model 1  BF" class="gt_row gt_right">–</td>
+<td headers="Model 1  cmPk" class="gt_row gt_right" style="font-weight: bold;">0.954</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="11" class="gt_group_heading" scope="colgroup" id="Model 2">Model 2</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Model 2  Title" class="gt_row gt_left">Model 2 With 1 Classes</td>
+<td headers="Model 2  Parameters" class="gt_row gt_right">8</td>
+<td headers="Model 2  LL" class="gt_row gt_right">−2,088.66</td>
+<td headers="Model 2  BIC" class="gt_row gt_right">4,226.84</td>
+<td headers="Model 2  aBIC" class="gt_row gt_right">4,201.45</td>
+<td headers="Model 2  CAIC" class="gt_row gt_right">4,234.84</td>
+<td headers="Model 2  AWE" class="gt_row gt_right">4,300.36</td>
+<td headers="Model 2  BLRT_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 2  T11_VLMR_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 2  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 2  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 2  Title" class="gt_row gt_left">Model 2 With 2 Classes</td>
+<td headers="Model 2  Parameters" class="gt_row gt_right">17</td>
+<td headers="Model 2  LL" class="gt_row gt_right">−1,988.99</td>
+<td headers="Model 2  BIC" class="gt_row gt_right">4,083.22</td>
+<td headers="Model 2  aBIC" class="gt_row gt_right">4,029.26</td>
+<td headers="Model 2  CAIC" class="gt_row gt_right">4,100.22</td>
+<td headers="Model 2  AWE" class="gt_row gt_right">4,239.45</td>
+<td headers="Model 2  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 2  T11_VLMR_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 2  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 2  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 2  Title" class="gt_row gt_left">Model 2 With 3 Classes</td>
+<td headers="Model 2  Parameters" class="gt_row gt_right">26</td>
+<td headers="Model 2  LL" class="gt_row gt_right">−1,877.96</td>
+<td headers="Model 2  BIC" class="gt_row gt_right" style="font-weight: bold;">3,916.88</td>
+<td headers="Model 2  aBIC" class="gt_row gt_right" style="font-weight: bold;">3,834.35</td>
+<td headers="Model 2  CAIC" class="gt_row gt_right" style="font-weight: bold;">3,942.88</td>
+<td headers="Model 2  AWE" class="gt_row gt_right" style="font-weight: bold;">4,155.83</td>
+<td headers="Model 2  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 2  T11_VLMR_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 2  BF" class="gt_row gt_right">3.4</td>
+<td headers="Model 2  cmPk" class="gt_row gt_right" style="font-weight: bold;">1.000</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="11" class="gt_group_heading" scope="colgroup" id="Model 3">Model 3</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Model 3  Title" class="gt_row gt_left">Model 3 With 1 Classes</td>
+<td headers="Model 3  Parameters" class="gt_row gt_right">14</td>
+<td headers="Model 3  LL" class="gt_row gt_right">−1,968.35</td>
+<td headers="Model 3  BIC" class="gt_row gt_right">4,023.36</td>
+<td headers="Model 3  aBIC" class="gt_row gt_right">3,978.93</td>
+<td headers="Model 3  CAIC" class="gt_row gt_right">4,037.36</td>
+<td headers="Model 3  AWE" class="gt_row gt_right">4,152.02</td>
+<td headers="Model 3  BLRT_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 3  T11_VLMR_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 3  BF" class="gt_row gt_right">0.1</td>
+<td headers="Model 3  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 3  Title" class="gt_row gt_left">Model 3 With 2 Classes</td>
+<td headers="Model 3  Parameters" class="gt_row gt_right">19</td>
+<td headers="Model 3  LL" class="gt_row gt_right">−1,950.11</td>
+<td headers="Model 3  BIC" class="gt_row gt_right">4,017.84</td>
+<td headers="Model 3  aBIC" class="gt_row gt_right">3,957.53</td>
+<td headers="Model 3  CAIC" class="gt_row gt_right">4,036.84</td>
+<td headers="Model 3  AWE" class="gt_row gt_right">4,192.45</td>
+<td headers="Model 3  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 3  T11_VLMR_PValue" class="gt_row gt_right" style="font-weight: bold;">0.002</td>
+<td headers="Model 3  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 3  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 3  Title" class="gt_row gt_left">Model 3 With 3 Classes</td>
+<td headers="Model 3  Parameters" class="gt_row gt_right">24</td>
+<td headers="Model 3  LL" class="gt_row gt_right">−1,930.36</td>
+<td headers="Model 3  BIC" class="gt_row gt_right">4,009.29</td>
+<td headers="Model 3  aBIC" class="gt_row gt_right">3,933.12</td>
+<td headers="Model 3  CAIC" class="gt_row gt_right">4,033.29</td>
+<td headers="Model 3  AWE" class="gt_row gt_right">4,229.86</td>
+<td headers="Model 3  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 3  T11_VLMR_PValue" class="gt_row gt_right">0.171</td>
+<td headers="Model 3  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 3  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 3  Title" class="gt_row gt_left">Model 3 With 4 Classes</td>
+<td headers="Model 3  Parameters" class="gt_row gt_right">29</td>
+<td headers="Model 3  LL" class="gt_row gt_right">−1,840.85</td>
+<td headers="Model 3  BIC" class="gt_row gt_right" style="font-weight: bold;">3,861.23</td>
+<td headers="Model 3  aBIC" class="gt_row gt_right" style="font-weight: bold;">3,769.18</td>
+<td headers="Model 3  CAIC" class="gt_row gt_right" style="font-weight: bold;">3,890.23</td>
+<td headers="Model 3  AWE" class="gt_row gt_right" style="font-weight: bold;">4,127.75</td>
+<td headers="Model 3  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 3  T11_VLMR_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 3  BF" class="gt_row gt_right" style="font-weight: bold;">>100</td>
+<td headers="Model 3  cmPk" class="gt_row gt_right" style="font-weight: bold;">1.000</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="11" class="gt_group_heading" scope="colgroup" id="Model 4">Model 4</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Model 4  Title" class="gt_row gt_left">Model 4 With 1 Classes</td>
+<td headers="Model 4  Parameters" class="gt_row gt_right">14</td>
+<td headers="Model 4  LL" class="gt_row gt_right">−1,968.35</td>
+<td headers="Model 4  BIC" class="gt_row gt_right">4,023.36</td>
+<td headers="Model 4  aBIC" class="gt_row gt_right">3,978.93</td>
+<td headers="Model 4  CAIC" class="gt_row gt_right">4,037.36</td>
+<td headers="Model 4  AWE" class="gt_row gt_right" style="font-weight: bold;">4,152.02</td>
+<td headers="Model 4  BLRT_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 4  T11_VLMR_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 4  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 4  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 4  Title" class="gt_row gt_left">Model 4 With 2 Classes</td>
+<td headers="Model 4  Parameters" class="gt_row gt_right">23</td>
+<td headers="Model 4  LL" class="gt_row gt_right">−1,930.96</td>
+<td headers="Model 4  BIC" class="gt_row gt_right">4,004.30</td>
+<td headers="Model 4  aBIC" class="gt_row gt_right">3,931.30</td>
+<td headers="Model 4  CAIC" class="gt_row gt_right">4,027.30</td>
+<td headers="Model 4  AWE" class="gt_row gt_right">4,215.67</td>
+<td headers="Model 4  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 4  T11_VLMR_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 4  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 4  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 4  Title" class="gt_row gt_left">Model 4 With 3 Classes</td>
+<td headers="Model 4  Parameters" class="gt_row gt_right">32</td>
+<td headers="Model 4  LL" class="gt_row gt_right">−1,859.47</td>
+<td headers="Model 4  BIC" class="gt_row gt_right" style="font-weight: bold;">3,917.02</td>
+<td headers="Model 4  aBIC" class="gt_row gt_right" style="font-weight: bold;">3,815.45</td>
+<td headers="Model 4  CAIC" class="gt_row gt_right" style="font-weight: bold;">3,949.02</td>
+<td headers="Model 4  AWE" class="gt_row gt_right">4,211.11</td>
+<td headers="Model 4  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 4  T11_VLMR_PValue" class="gt_row gt_right">0.033</td>
+<td headers="Model 4  BF" class="gt_row gt_right" style="font-weight: bold;">>100</td>
+<td headers="Model 4  cmPk" class="gt_row gt_right" style="font-weight: bold;">1.000</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="11" class="gt_group_heading" scope="colgroup" id="Model 5">Model 5</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Model 5  Title" class="gt_row gt_left">Model 5 With 1 Classes</td>
+<td headers="Model 5  Parameters" class="gt_row gt_right">14</td>
+<td headers="Model 5  LL" class="gt_row gt_right">−1,968.35</td>
+<td headers="Model 5  BIC" class="gt_row gt_right">4,023.36</td>
+<td headers="Model 5  aBIC" class="gt_row gt_right">3,978.93</td>
+<td headers="Model 5  CAIC" class="gt_row gt_right">4,037.36</td>
+<td headers="Model 5  AWE" class="gt_row gt_right" style="font-weight: bold;">4,152.02</td>
+<td headers="Model 5  BLRT_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 5  T11_VLMR_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 5  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 5  cmPk" class="gt_row gt_right"><.001</td></tr>
+    <tr><td headers="Model 5  Title" class="gt_row gt_left">Model 5 With 2 Classes</td>
+<td headers="Model 5  Parameters" class="gt_row gt_right">25</td>
+<td headers="Model 5  LL" class="gt_row gt_right">−1,927.10</td>
+<td headers="Model 5  BIC" class="gt_row gt_right" style="font-weight: bold;">4,008.95</td>
+<td headers="Model 5  aBIC" class="gt_row gt_right" style="font-weight: bold;">3,929.60</td>
+<td headers="Model 5  CAIC" class="gt_row gt_right" style="font-weight: bold;">4,033.95</td>
+<td headers="Model 5  AWE" class="gt_row gt_right">4,238.71</td>
+<td headers="Model 5  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 5  T11_VLMR_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 5  BF" class="gt_row gt_right" style="font-weight: bold;">20.7</td>
+<td headers="Model 5  cmPk" class="gt_row gt_right" style="font-weight: bold;">0.999</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="11" class="gt_group_heading" scope="colgroup" id="Model 6">Model 6</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Model 6  Title" class="gt_row gt_left">Model 6 With 1 Classes</td>
+<td headers="Model 6  Parameters" class="gt_row gt_right">14</td>
+<td headers="Model 6  LL" class="gt_row gt_right">−1,968.35</td>
+<td headers="Model 6  BIC" class="gt_row gt_right">4,023.36</td>
+<td headers="Model 6  aBIC" class="gt_row gt_right">3,978.93</td>
+<td headers="Model 6  CAIC" class="gt_row gt_right" style="font-weight: bold;">4,037.36</td>
+<td headers="Model 6  AWE" class="gt_row gt_right" style="font-weight: bold;">4,152.02</td>
+<td headers="Model 6  BLRT_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 6  T11_VLMR_PValue" class="gt_row gt_right">–</td>
+<td headers="Model 6  BF" class="gt_row gt_right">0.0</td>
+<td headers="Model 6  cmPk" class="gt_row gt_right">0.044</td></tr>
+    <tr><td headers="Model 6  Title" class="gt_row gt_left">Model 6 With 2 Classes</td>
+<td headers="Model 6  Parameters" class="gt_row gt_right">29</td>
+<td headers="Model 6  LL" class="gt_row gt_right">−1,918.84</td>
+<td headers="Model 6  BIC" class="gt_row gt_right" style="font-weight: bold;">4,017.19</td>
+<td headers="Model 6  aBIC" class="gt_row gt_right">3,925.15</td>
+<td headers="Model 6  CAIC" class="gt_row gt_right">4,046.19</td>
+<td headers="Model 6  AWE" class="gt_row gt_right">4,283.71</td>
+<td headers="Model 6  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 6  T11_VLMR_PValue" class="gt_row gt_right">0.004</td>
+<td headers="Model 6  BF" class="gt_row gt_right" style="font-weight: bold;">>100</td>
+<td headers="Model 6  cmPk" class="gt_row gt_right" style="font-weight: bold;">0.956</td></tr>
+    <tr><td headers="Model 6  Title" class="gt_row gt_left">Model 6 With 3 Classes</td>
+<td headers="Model 6  Parameters" class="gt_row gt_right">44</td>
+<td headers="Model 6  LL" class="gt_row gt_right">−1,885.73</td>
+<td headers="Model 6  BIC" class="gt_row gt_right">4,043.84</td>
+<td headers="Model 6  aBIC" class="gt_row gt_right" style="font-weight: bold;">3,904.18</td>
+<td headers="Model 6  CAIC" class="gt_row gt_right">4,087.83</td>
+<td headers="Model 6  AWE" class="gt_row gt_right">4,448.21</td>
+<td headers="Model 6  BLRT_PValue" class="gt_row gt_right"><.001</td>
+<td headers="Model 6  T11_VLMR_PValue" class="gt_row gt_right">0.009</td>
+<td headers="Model 6  BF" class="gt_row gt_right" style="font-weight: bold;">>100</td>
+<td headers="Model 6  cmPk" class="gt_row gt_right"><.001</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="11"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> <span class='gt_from_md'><em>Note.</em> Par = Parameters; <em>LL</em> = model log likelihood;
+BIC = Bayesian information criterion; aBIC = sample size adjusted BIC;
+CAIC = consistent Akaike information criterion; AWE = approximate weight of evidence;
+BLRT = bootstrapped LRT p-value; cmPk = approximate model probability.</span></td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<hr />
+</div>
+<div id="information-criteria-plot" class="section level3">
+<h3>Information Criteria Plot</h3>
+<p>Look for “elbow” to help with profile selection</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;functions&quot;</span>,<span class="st">&quot;ic_plot_lpa.R&quot;</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">ic_plot</span>(select_models)</span></code></pre></div>
+<p><img src="03-lpa_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Based on fit indices, I am choosing the following candidate
+models:</p>
+<ol style="list-style-type: decimal">
+<li>Model 1: 2 Profile</li>
+<li>Model 2: 3 Profile</li>
+<li>Model 3: 4 Profile</li>
+<li>Model 4: 3 Profile</li>
+<li>Model 5: 2 Profile</li>
+<li>Model 6: 2 Profile</li>
+</ol>
+<hr />
+</div>
+<div id="compare-models" class="section level3">
+<h3>Compare models</h3>
+<div id="correct-model-probability-cmpk-recalculation"
+class="section level4">
+<h4>Correct Model Probability (cmpK) recalculation</h4>
+<p>Take the candidate models and recalculate the approximate correct
+model probabilities (Masyn, 2013)</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># CmpK recalculation:</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>enum_fit1 <span class="ot">&lt;-</span> <span class="fu">enum_fit</span>(output_enum)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>stage2_cmpk <span class="ot">&lt;-</span> enum_fit1 <span class="sc">%&gt;%</span> </span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">2</span>, <span class="dv">8</span>, <span class="dv">14</span>, <span class="dv">18</span>, <span class="dv">22</span>, <span class="dv">27</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SIC =</span> <span class="sc">-</span>.<span class="dv">5</span> <span class="sc">*</span> BIC,</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>         <span class="at">expSIC =</span> <span class="fu">exp</span>(SIC <span class="sc">-</span> <span class="fu">max</span>(SIC)),</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>         <span class="at">cmPk =</span> expSIC <span class="sc">/</span> <span class="fu">sum</span>(expSIC),</span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>         <span class="at">BF =</span> <span class="fu">exp</span>(SIC <span class="sc">-</span> <span class="fu">lead</span>(SIC))) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>  <span class="fu">select</span>(Title, Parameters, BIC<span class="sc">:</span>AWE, cmPk, BF)</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a> </span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co"># Format Fit Table</span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>stage2_cmpk <span class="sc">%&gt;%</span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">column_labels.font.weight =</span> <span class="st">&quot;bold&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a>    <span class="dv">7</span>,</span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">2</span>,</span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a>    <span class="at">drop_trailing_zeros =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>    <span class="at">suffixing =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>),</span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>             <span class="at">decimals =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="dv">8</span>,<span class="at">decimals =</span> <span class="dv">2</span>,</span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a>             <span class="at">drop_trailing_zeros=</span><span class="cn">TRUE</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a>             <span class="at">suffixing =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a>  <span class="fu">fmt</span>(<span class="dv">8</span>, <span class="at">fns =</span> <span class="cf">function</span>(x) </span>
+<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a>    <span class="fu">ifelse</span>(x<span class="sc">&gt;</span><span class="dv">100</span>, <span class="st">&quot;&gt;100&quot;</span>,</span>
+<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a>           scales<span class="sc">::</span><span class="fu">number</span>(x, <span class="at">accuracy =</span> .<span class="dv">1</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb14-32"><a href="#cb14-32" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">list</span>(</span>
+<span id="cb14-33"><a href="#cb14-33" tabindex="-1"></a>      <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb14-34"><a href="#cb14-34" tabindex="-1"></a>      ),</span>
+<span id="cb14-35"><a href="#cb14-35" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">list</span>(<span class="fu">cells_body</span>(</span>
+<span id="cb14-36"><a href="#cb14-36" tabindex="-1"></a>     <span class="at">columns =</span> BIC,</span>
+<span id="cb14-37"><a href="#cb14-37" tabindex="-1"></a>     <span class="at">row =</span> BIC <span class="sc">==</span> <span class="fu">min</span>(BIC[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(stage2_cmpk)]) </span>
+<span id="cb14-38"><a href="#cb14-38" tabindex="-1"></a>    ),</span>
+<span id="cb14-39"><a href="#cb14-39" tabindex="-1"></a>    <span class="fu">cells_body</span>(</span>
+<span id="cb14-40"><a href="#cb14-40" tabindex="-1"></a>     <span class="at">columns =</span> aBIC,</span>
+<span id="cb14-41"><a href="#cb14-41" tabindex="-1"></a>     <span class="at">row =</span> aBIC <span class="sc">==</span> <span class="fu">min</span>(aBIC[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(stage2_cmpk)])</span>
+<span id="cb14-42"><a href="#cb14-42" tabindex="-1"></a>    ),</span>
+<span id="cb14-43"><a href="#cb14-43" tabindex="-1"></a>    <span class="fu">cells_body</span>(</span>
+<span id="cb14-44"><a href="#cb14-44" tabindex="-1"></a>     <span class="at">columns =</span> CAIC,</span>
+<span id="cb14-45"><a href="#cb14-45" tabindex="-1"></a>     <span class="at">row =</span> CAIC <span class="sc">==</span> <span class="fu">min</span>(CAIC[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(stage2_cmpk)])</span>
+<span id="cb14-46"><a href="#cb14-46" tabindex="-1"></a>    ),</span>
+<span id="cb14-47"><a href="#cb14-47" tabindex="-1"></a>    <span class="fu">cells_body</span>(</span>
+<span id="cb14-48"><a href="#cb14-48" tabindex="-1"></a>     <span class="at">columns =</span> AWE,</span>
+<span id="cb14-49"><a href="#cb14-49" tabindex="-1"></a>     <span class="at">row =</span> AWE <span class="sc">==</span> <span class="fu">min</span>(AWE[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(stage2_cmpk)])</span>
+<span id="cb14-50"><a href="#cb14-50" tabindex="-1"></a>    ),</span>
+<span id="cb14-51"><a href="#cb14-51" tabindex="-1"></a>    <span class="fu">cells_body</span>(</span>
+<span id="cb14-52"><a href="#cb14-52" tabindex="-1"></a>     <span class="at">columns =</span> cmPk,</span>
+<span id="cb14-53"><a href="#cb14-53" tabindex="-1"></a>     <span class="at">row =</span>  cmPk <span class="sc">==</span> <span class="fu">max</span>(cmPk[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(stage2_cmpk)])</span>
+<span id="cb14-54"><a href="#cb14-54" tabindex="-1"></a>     ),</span>
+<span id="cb14-55"><a href="#cb14-55" tabindex="-1"></a>    <span class="fu">cells_body</span>(</span>
+<span id="cb14-56"><a href="#cb14-56" tabindex="-1"></a>     <span class="at">columns =</span> BF, </span>
+<span id="cb14-57"><a href="#cb14-57" tabindex="-1"></a>     <span class="at">row =</span>  BF <span class="sc">&gt;</span> <span class="dv">10</span>)</span>
+<span id="cb14-58"><a href="#cb14-58" tabindex="-1"></a>  )</span>
+<span id="cb14-59"><a href="#cb14-59" tabindex="-1"></a>)</span></code></pre></div>
+<div id="unavbjxisz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#unavbjxisz table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#unavbjxisz thead, #unavbjxisz tbody, #unavbjxisz tfoot, #unavbjxisz tr, #unavbjxisz td, #unavbjxisz th {
+  border-style: none;
+}
+
+#unavbjxisz p {
+  margin: 0;
+  padding: 0;
+}
+
+#unavbjxisz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#unavbjxisz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#unavbjxisz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#unavbjxisz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#unavbjxisz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#unavbjxisz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#unavbjxisz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#unavbjxisz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#unavbjxisz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#unavbjxisz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#unavbjxisz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#unavbjxisz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#unavbjxisz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#unavbjxisz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#unavbjxisz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#unavbjxisz .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#unavbjxisz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#unavbjxisz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#unavbjxisz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#unavbjxisz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#unavbjxisz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#unavbjxisz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#unavbjxisz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#unavbjxisz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#unavbjxisz .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#unavbjxisz .gt_left {
+  text-align: left;
+}
+
+#unavbjxisz .gt_center {
+  text-align: center;
+}
+
+#unavbjxisz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#unavbjxisz .gt_font_normal {
+  font-weight: normal;
+}
+
+#unavbjxisz .gt_font_bold {
+  font-weight: bold;
+}
+
+#unavbjxisz .gt_font_italic {
+  font-style: italic;
+}
+
+#unavbjxisz .gt_super {
+  font-size: 65%;
+}
+
+#unavbjxisz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#unavbjxisz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#unavbjxisz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#unavbjxisz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#unavbjxisz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#unavbjxisz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#unavbjxisz .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#unavbjxisz .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#unavbjxisz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Title">Title</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Parameters">Parameters</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="BIC">BIC</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="aBIC">aBIC</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="CAIC">CAIC</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="AWE">AWE</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="cmPk">cmPk</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="BF">BF</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Title" class="gt_row gt_left">Model 1 With 2 Classes</td>
+<td headers="Parameters" class="gt_row gt_right">13</td>
+<td headers="BIC" class="gt_row gt_right">4,073.50</td>
+<td headers="aBIC" class="gt_row gt_right">4,032.24</td>
+<td headers="CAIC" class="gt_row gt_right">4,086.50</td>
+<td headers="AWE" class="gt_row gt_right">4,192.97</td>
+<td headers="cmPk" class="gt_row gt_right">0</td>
+<td headers="BF" class="gt_row gt_right">0.0</td></tr>
+    <tr><td headers="Title" class="gt_row gt_left">Model 2 With 3 Classes</td>
+<td headers="Parameters" class="gt_row gt_right">26</td>
+<td headers="BIC" class="gt_row gt_right">3,916.88</td>
+<td headers="aBIC" class="gt_row gt_right">3,834.35</td>
+<td headers="CAIC" class="gt_row gt_right">3,942.88</td>
+<td headers="AWE" class="gt_row gt_right">4,155.83</td>
+<td headers="cmPk" class="gt_row gt_right">0</td>
+<td headers="BF" class="gt_row gt_right">0.0</td></tr>
+    <tr><td headers="Title" class="gt_row gt_left">Model 3 With 4 Classes</td>
+<td headers="Parameters" class="gt_row gt_right">29</td>
+<td headers="BIC" class="gt_row gt_right" style="font-weight: bold;">3,861.23</td>
+<td headers="aBIC" class="gt_row gt_right" style="font-weight: bold;">3,769.18</td>
+<td headers="CAIC" class="gt_row gt_right" style="font-weight: bold;">3,890.23</td>
+<td headers="AWE" class="gt_row gt_right" style="font-weight: bold;">4,127.75</td>
+<td headers="cmPk" class="gt_row gt_right" style="font-weight: bold;">1</td>
+<td headers="BF" class="gt_row gt_right" style="font-weight: bold;">>100</td></tr>
+    <tr><td headers="Title" class="gt_row gt_left">Model 4 With 3 Classes</td>
+<td headers="Parameters" class="gt_row gt_right">32</td>
+<td headers="BIC" class="gt_row gt_right">3,917.02</td>
+<td headers="aBIC" class="gt_row gt_right">3,815.45</td>
+<td headers="CAIC" class="gt_row gt_right">3,949.02</td>
+<td headers="AWE" class="gt_row gt_right">4,211.11</td>
+<td headers="cmPk" class="gt_row gt_right">0</td>
+<td headers="BF" class="gt_row gt_right" style="font-weight: bold;">>100</td></tr>
+    <tr><td headers="Title" class="gt_row gt_left">Model 5 With 2 Classes</td>
+<td headers="Parameters" class="gt_row gt_right">25</td>
+<td headers="BIC" class="gt_row gt_right">4,008.95</td>
+<td headers="aBIC" class="gt_row gt_right">3,929.60</td>
+<td headers="CAIC" class="gt_row gt_right">4,033.95</td>
+<td headers="AWE" class="gt_row gt_right">4,238.71</td>
+<td headers="cmPk" class="gt_row gt_right">0</td>
+<td headers="BF" class="gt_row gt_right" style="font-weight: bold;">61.7</td></tr>
+    <tr><td headers="Title" class="gt_row gt_left">Model 6 With 2 Classes</td>
+<td headers="Parameters" class="gt_row gt_right">29</td>
+<td headers="BIC" class="gt_row gt_right">4,017.19</td>
+<td headers="aBIC" class="gt_row gt_right">3,925.15</td>
+<td headers="CAIC" class="gt_row gt_right">4,046.19</td>
+<td headers="AWE" class="gt_row gt_right">4,283.71</td>
+<td headers="cmPk" class="gt_row gt_right">0</td>
+<td headers="BF" class="gt_row gt_right">NA</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<div id="compare-loglikelihood" class="section level4">
+<h4>Compare loglikelihood</h4>
+<p>You can also compare models using nested model testing directly with
+MplusAutomation. Note that you can only compare across models but the
+profiles must stay the same.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># MplusAutomation Method using `compareModels` </span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">capture.output</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  comparison <span class="ot">&lt;-</span> <span class="fu">compareModels</span>(output_enum[[<span class="st">&quot;model_2_class_3.out&quot;</span>]],</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  output_enum[[<span class="st">&quot;model_4_class_3.out&quot;</span>]], <span class="at">diffTest =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>))</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co"># p-value</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>comparison<span class="sc">$</span>diffTest<span class="sc">$</span>MLR_LL<span class="sc">$</span>p</span></code></pre></div>
+<pre><code>## [1] 2.098231e-05</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co">#BIC</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>comparison<span class="sc">$</span>summaries</span></code></pre></div>
+<pre><code>##                    Title Observations Estimator Parameters        LL      AIC
+## 1 model 2 with 3 classes          488       MLR         26 -1877.965 3807.929
+## 2 model 4 with 3 classes          488       MLR         32 -1859.466 3782.932
+##        BIC
+## 1 3916.877
+## 2 3917.022</code></pre>
+<p>Here, Model 1 (restricted, fewer parameters) is nested in Model 2.
+The chi-square difference test, assuming nested models, shows a
+significant improvement in fit for Model 2 over Model 1, despite the
+added parameters.</p>
+<hr />
+</div>
+</div>
+</div>
+<div id="visualization" class="section level2">
+<h2>Visualization</h2>
+<div id="latent-profile-plot" class="section level3">
+<h3>Latent Profile Plot</h3>
+<p>Using R Code</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;functions&quot;</span>, <span class="st">&quot;plot_lpa.R&quot;</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="co"># Read in models</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>output_enum <span class="ot">&lt;-</span> <span class="fu">readModels</span>(<span class="fu">here</span>(<span class="st">&quot;lpa_enumeration&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="fu">plot_lpa</span>(<span class="at">model_name =</span> output_enum<span class="sc">$</span>model_3_class_4.out)</span></code></pre></div>
+<p><img src="03-lpa_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Using <code>MplusAutomation</code> code (NOTE: The
+<code>plotMixtures()</code> function is used for plotting LPA models
+only (i.e., means &amp; variances))</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">plotMixtures</span>(output_enum<span class="sc">$</span>model_3_class_4.out, <span class="at">ci =</span> <span class="fl">0.95</span>, <span class="at">bw =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Model 3: Equal Variances, Equal Covariances&quot;</span>)</span></code></pre></div>
+<p><img src="03-lpa_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<hr />
+</div>
+<div id="plot-comparison" class="section level3">
+<h3>Plot comparison</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">plotMixtures</span>(output_enum<span class="sc">$</span>model_2_class_3.out,</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  <span class="at">ci =</span> <span class="fl">0.95</span>, <span class="at">bw =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">plotMixtures</span>(output_enum<span class="sc">$</span>model_4_class_3.out,</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>  <span class="at">ci =</span> <span class="fl">0.95</span>, <span class="at">bw =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>a <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Model 2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>b <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Model 4&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span></code></pre></div>
+<p><img src="03-lpa_files/figure-html/unnamed-chunk-15-1.png" width="960" /></p>
+<hr />
+<p><img src="figures/UCSB_Navy_mark.png" /></p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

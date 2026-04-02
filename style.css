@@ -26,3 +26,46 @@
 a {
     color: #003660;
 }
+
+/* 1. Fix text color for INACTIVE tabs on hover */
+/* This makes the text Gold when hovering over a blue tab */
+.navbar-inverse .navbar-nav > li > a:hover, 
+.navbar-inverse .navbar-nav > li > a:focus {
+    color: #FEB81D !important; 
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Slight highlight */
+}
+
+/* 2. Ensure the default (non-hover) text is white or light gold */
+/* So it's readable against the Navy background before you even touch it */
+.navbar-inverse .navbar-nav > li > a {
+    color: #FFFFFF !important;
+}
+
+/* 1. Force the table to take up the full width of the text area */
+table {
+  width: 100% !important;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+/* 2. Fix the "Missing Lines" issue in HTML */
+table, th, td {
+  border: 1px solid #dee2e6 !important; 
+  padding: 8px !important;
+}
+
+/* 3. Add horizontal scrolling for small screens so it doesn't break the layout */
+.book-body .page-inner section.normal table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* 4. Make the header look professional */
+th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  text-align: center;
+}

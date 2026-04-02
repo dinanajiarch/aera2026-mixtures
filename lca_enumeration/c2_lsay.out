@@ -1,0 +1,684 @@
+Mplus VERSION 9
+MUTHEN & MUTHEN
+04/01/2026  11:07 AM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  2-Class
+  DATA:
+  FILE = "C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/enumeration/
+  lsay.dat";
+  VARIABLE:
+  NAMES = CASENUM COHORT RSTEMM CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;
+   MISSING=.;
+   categorical = CB28A - CB28L;
+  usevar = CB28A - CB28L;
+  classes = c(2);
+  ANALYSIS:
+  estimator = mlr;
+      type = mixture;
+      starts = 500 100;
+      processors = 10;
+  OUTPUT:
+  sampstat residual tech11 tech14;
+
+
+
+*** WARNING in OUTPUT command
+  SAMPSTAT option is not available when all outcomes are censored, ordered
+  categorical, unordered categorical (nominal), count or continuous-time
+  survival variables.  Request for SAMPSTAT is ignored.
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  441
+   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+2-Class
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2675
+
+Number of dependent variables                                    9
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Binary and ordered categorical (ordinal)
+   CB28A       CB28B       CB28C       CB28E       CB28G       CB28H
+   CB28I       CB28K       CB28L
+
+Categorical latent variables
+   C
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent Variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Random Starts Specifications
+  Number of initial stage random starts                        500
+  Number of final stage optimizations                          100
+  Number of initial stage iterations                            10
+  Initial stage convergence criterion                    0.100D+01
+  Random starts scale                                    0.500D+01
+  Random seed for generating random starts                       0
+Link                                                         LOGIT
+
+Input data file(s)
+  C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/enumeration/lsay.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            30
+     Number of y missing data patterns           0
+     Number of u missing data patterns          30
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR U
+
+
+           Covariance Coverage
+              CB28A         CB28B         CB28C         CB28E         CB28G
+              ________      ________      ________      ________      ________
+ CB28A          0.997
+ CB28B          0.996         0.998
+ CB28C          0.987         0.988         0.990
+ CB28E          0.978         0.979         0.971         0.980
+ CB28G          0.988         0.990         0.982         0.973         0.991
+ CB28H          0.985         0.986         0.978         0.970         0.981
+ CB28I          0.982         0.983         0.976         0.966         0.978
+ CB28K          0.977         0.978         0.971         0.962         0.973
+ CB28L          0.987         0.988         0.981         0.972         0.983
+
+
+           Covariance Coverage
+              CB28H         CB28I         CB28K         CB28L
+              ________      ________      ________      ________
+ CB28H          0.988
+ CB28I          0.975         0.985
+ CB28K          0.970         0.969         0.980
+ CB28L          0.979         0.977         0.975         0.990
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    CB28A
+      Category 1    0.331          884.000
+      Category 2    0.669         1784.000
+    CB28B
+      Category 1    0.307          820.000
+      Category 2    0.693         1850.000
+    CB28C
+      Category 1    0.237          628.000
+      Category 2    0.763         2020.000
+    CB28E
+      Category 1    0.410         1076.000
+      Category 2    0.590         1546.000
+    CB28G
+      Category 1    0.313          830.000
+      Category 2    0.687         1821.000
+    CB28H
+      Category 1    0.305          807.000
+      Category 2    0.695         1835.000
+    CB28I
+      Category 1    0.360          949.000
+      Category 2    0.640         1686.000
+    CB28K
+      Category 1    0.257          674.000
+      Category 2    0.743         1947.000
+    CB28L
+      Category 1    0.298          790.000
+      Category 2    0.702         1858.000
+
+
+RANDOM STARTS RESULTS RANKED FROM THE BEST TO THE WORST LOGLIKELIHOOD VALUES
+
+Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:
+
+          -13249.006  695155           150
+          -13249.006  137305           379
+          -13249.006  354624           448
+          -13249.006  354208           196
+          -13249.006  575700           100
+          -13249.006  220454           288
+          -13249.006  769907           457
+          -13249.006  875667           367
+          -13249.006  193042           316
+          -13249.006  22089            143
+          -13249.006  824126           287
+          -13249.006  762461           425
+          -13249.006  321390           133
+          -13249.006  801717           364
+          -13249.006  761633           50
+          -13249.006  391179           78
+          -13249.006  422103           62
+          -13249.006  466971           109
+          -13249.006  349360           464
+          -13249.006  359578           458
+          -13249.006  928287           197
+          -13249.006  438144           271
+          -13249.006  136842           58
+          -13249.006  181293           212
+          -13249.006  366533           484
+          -13249.006  462953           7
+          -13249.006  415502           194
+          -13249.006  614535           449
+          -13249.006  514326           325
+          -13249.006  393232           152
+          -13249.006  479273           156
+          -13249.006  617243           237
+          -13249.006  802256           477
+          -13249.006  592219           119
+          -13249.006  568859           49
+          -13249.006  545140           278
+          -13249.006  173191           422
+          -13249.006  168762           200
+          -13249.006  349562           359
+          -13249.006  965994           396
+          -13249.006  978061           488
+          -13249.006  320494           465
+          -13249.006  674171           195
+          -13249.006  253358           2
+          -13249.006  596257           405
+          -13249.006  414828           322
+          -13249.006  193847           354
+          -13249.006  529496           343
+          -13249.006  871722           355
+          -13249.006  534483           290
+          -13249.006  370466           41
+          -13249.006  526324           178
+          -13249.006  529455           268
+          -13249.006  66276            217
+          -13249.006  650371           14
+          -13249.006  391949           295
+          -13249.006  782821           272
+          -13249.006  30098            209
+          -13249.006  59674            240
+          -13249.006  358488           264
+          -13249.006  76337            76
+          -13249.006  156536           245
+          -13249.006  259507           53
+          -13249.006  354559           73
+          -13249.006  918558           412
+          -13249.006  751054           117
+          -13249.006  170118           238
+          -13249.006  unperturbed      0
+          -13249.006  216565           474
+          -13249.006  483369           270
+          -13249.006  68985            17
+          -13249.006  484687           306
+          -13249.006  802682           419
+          -13249.006  848969           173
+          -13249.006  535804           111
+          -13249.006  794236           127
+          -13249.006  267983           228
+          -13249.006  185071           370
+          -13249.006  405079           68
+          -13249.006  39136            226
+          -13249.006  967237           48
+          -13249.006  644297           340
+          -13249.006  791396           243
+          -13249.006  372176           23
+          -13249.006  50887            389
+          -13249.006  640833           434
+          -13249.006  937885           426
+          -13249.006  278692           342
+          -13249.006  801065           393
+          -13249.006  192071           142
+          -13249.006  836515           341
+          -13249.006  464179           106
+          -13249.006  40340            188
+          -13249.006  408713           450
+          -13249.006  625191           350
+          -13249.006  569833           85
+          -13249.006  478421           311
+          -13249.006  972430           491
+          -13249.006  915107           54
+          -13249.006  140442           500
+
+
+
+THE BEST LOGLIKELIHOOD VALUE HAS BEEN REPLICATED.  RERUN WITH AT LEAST TWICE THE
+RANDOM STARTS TO CHECK THAT THE BEST LOGLIKELIHOOD IS STILL OBTAINED AND REPLICATED.
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       19
+
+Loglikelihood
+
+          H0 Value                      -13249.006
+          H0 Scaling Correction Factor      1.1352
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   26536.012
+          Bayesian (BIC)                 26647.954
+          Sample-Size Adjusted BIC       26587.585
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit for the Binary and Ordered Categorical
+(Ordinal) Outcomes**
+
+          Pearson Chi-Square
+
+          Value                           2990.977
+          Degrees of Freedom                   485
+          P-Value                           0.0000
+
+          Likelihood Ratio Chi-Square
+
+          Value                           1998.693
+          Degrees of Freedom                   485
+          P-Value                           0.0000
+
+** Of the 4352 cells in the latent class indicator table, 7
+   were deleted in the calculation of chi-square due to extreme values.
+
+Chi-Square Test for MCAR under the Unrestricted Latent Class Indicator Model
+
+          Pearson Chi-Square
+
+          Value                           2565.002
+          Degrees of Freedom                  3811
+          P-Value                           1.0000
+
+          Likelihood Ratio Chi-Square
+
+          Value                            727.428
+          Degrees of Freedom                  3811
+          P-Value                           1.0000
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1       1673.93338          0.62577
+       2       1001.06662          0.37423
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1       1673.93338          0.62577
+       2       1001.06662          0.37423
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1             1704          0.63701
+       2              971          0.36299
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         0.756
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2
+
+    1   0.937    0.063
+    2   0.080    0.920
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2
+
+    1   0.954    0.046
+    2   0.107    0.893
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2
+
+    1      3.027    0.000
+    2     -2.119    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Thresholds
+    CB28A$1           -2.011      0.107    -18.782      0.000
+    CB28B$1           -2.161      0.124    -17.395      0.000
+    CB28C$1           -2.682      0.137    -19.517      0.000
+    CB28E$1           -0.959      0.068    -14.139      0.000
+    CB28G$1           -1.387      0.073    -18.996      0.000
+    CB28H$1           -1.802      0.114    -15.771      0.000
+    CB28I$1           -1.411      0.087    -16.177      0.000
+    CB28K$1           -2.240      0.129    -17.311      0.000
+    CB28L$1           -1.964      0.126    -15.566      0.000
+
+Latent Class 2
+
+ Thresholds
+    CB28A$1            0.791      0.115      6.867      0.000
+    CB28B$1            0.613      0.114      5.367      0.000
+    CB28C$1            0.105      0.098      1.079      0.281
+    CB28E$1            0.541      0.092      5.863      0.000
+    CB28G$1            0.012      0.083      0.147      0.883
+    CB28H$1            0.327      0.092      3.565      0.000
+    CB28I$1            0.552      0.092      6.015      0.000
+    CB28K$1            0.110      0.089      1.236      0.217
+    CB28L$1            0.375      0.090      4.144      0.000
+
+Categorical Latent Variables
+
+ Means
+    C#1                0.514      0.075      6.825      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.747E-01
+       (ratio of smallest to largest eigenvalue)
+
+
+LATENT CLASS INDICATOR MEANS AND PROBABILITIES FOR EACH LATENT CLASS
+
+     MEAN/PROBABILITY PROFILES FOR C
+                   Latent class
+                     1      2
+     CB28A
+       Category 1  0.118  0.688
+       Category 2  0.882  0.312
+     CB28B
+       Category 1  0.103  0.649
+       Category 2  0.897  0.351
+     CB28C
+       Category 1  0.064  0.526
+       Category 2  0.936  0.474
+     CB28E
+       Category 1  0.277  0.632
+       Category 2  0.723  0.368
+     CB28G
+       Category 1  0.200  0.503
+       Category 2  0.800  0.497
+     CB28H
+       Category 1  0.142  0.581
+       Category 2  0.858  0.419
+     CB28I
+       Category 1  0.196  0.635
+       Category 2  0.804  0.365
+     CB28K
+       Category 1  0.096  0.527
+       Category 2  0.904  0.473
+     CB28L
+       Category 1  0.123  0.593
+       Category 2  0.877  0.407
+
+
+RESULTS IN PROBABILITY SCALE
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ CB28A
+    Category 1         0.118      0.011     10.592      0.000
+    Category 2         0.882      0.011     79.101      0.000
+ CB28B
+    Category 1         0.103      0.012      8.977      0.000
+    Category 2         0.897      0.012     77.918      0.000
+ CB28C
+    Category 1         0.064      0.008      7.776      0.000
+    Category 2         0.936      0.008    113.612      0.000
+ CB28E
+    Category 1         0.277      0.014     20.384      0.000
+    Category 2         0.723      0.014     53.204      0.000
+ CB28G
+    Category 1         0.200      0.012     17.121      0.000
+    Category 2         0.800      0.012     68.517      0.000
+ CB28H
+    Category 1         0.142      0.014     10.197      0.000
+    Category 2         0.858      0.014     61.798      0.000
+ CB28I
+    Category 1         0.196      0.014     14.267      0.000
+    Category 2         0.804      0.014     58.470      0.000
+ CB28K
+    Category 1         0.096      0.011      8.551      0.000
+    Category 2         0.904      0.011     80.320      0.000
+ CB28L
+    Category 1         0.123      0.014      9.037      0.000
+    Category 2         0.877      0.014     64.420      0.000
+
+Latent Class 2
+
+ CB28A
+    Category 1         0.688      0.025     27.828      0.000
+    Category 2         0.312      0.025     12.616      0.000
+ CB28B
+    Category 1         0.649      0.026     24.922      0.000
+    Category 2         0.351      0.026     13.503      0.000
+ CB28C
+    Category 1         0.526      0.024     21.618      0.000
+    Category 2         0.474      0.024     19.456      0.000
+ CB28E
+    Category 1         0.632      0.021     29.450      0.000
+    Category 2         0.368      0.021     17.143      0.000
+ CB28G
+    Category 1         0.503      0.021     24.283      0.000
+    Category 2         0.497      0.021     23.988      0.000
+ CB28H
+    Category 1         0.581      0.022     26.053      0.000
+    Category 2         0.419      0.022     18.795      0.000
+ CB28I
+    Category 1         0.635      0.021     29.811      0.000
+    Category 2         0.365      0.021     17.160      0.000
+ CB28K
+    Category 1         0.527      0.022     23.786      0.000
+    Category 2         0.473      0.022     21.310      0.000
+ CB28L
+    Category 1         0.593      0.022     27.155      0.000
+    Category 2         0.407      0.022     18.671      0.000
+
+
+EQUALITY TESTS OF PROBABILITIES ACROSS THE LATENT CLASSES
+
+                    Chi-Square     P-Value   Degrees of Freedom
+
+
+CB28A
+  Overall test        343.086      0.000        1
+
+CB28B
+  Overall test        259.884      0.000        1
+
+CB28C
+  Overall test        290.249      0.000        1
+
+CB28E
+  Overall test        153.605      0.000        1
+
+CB28G
+  Overall test        146.032      0.000        1
+
+CB28H
+  Overall test        181.992      0.000        1
+
+CB28I
+  Overall test        223.541      0.000        1
+
+CB28K
+  Overall test        208.606      0.000        1
+
+CB28L
+  Overall test        204.082      0.000        1
+
+
+LATENT CLASS INDICATOR ODDS RATIOS FOR THE LATENT CLASSES
+
+                                                95% C.I.
+                    Estimate       S.E.  Lower 2.5% Upper 2.5%
+
+Latent Class 1 Compared to Latent Class 2
+
+ CB28A
+    Category > 1      16.472      2.492     12.246     22.156
+ CB28B
+    Category > 1      16.021      2.757     11.435     22.447
+ CB28C
+    Category > 1      16.235      2.656     11.781     22.372
+ CB28E
+    Category > 1       4.484      0.543      3.537      5.685
+ CB28G
+    Category > 1       4.051      0.469      3.229      5.083
+ CB28H
+    Category > 1       8.401      1.325      6.166     11.445
+ CB28I
+    Category > 1       7.120      0.935      5.504      9.209
+ CB28K
+    Category > 1      10.485      1.706      7.622     14.423
+ CB28L
+    Category > 1      10.367      1.697      7.521     14.289
+
+
+RESIDUAL OUTPUT
+
+
+     RESIDUAL OUTPUT IS NOT AVAILABLE FOR THIS MODEL.  ADDITIONAL OUTPUT FOR
+     CATEGORICAL, COUNT, AND NOMINAL VARIABLES MAY BE AVAILABLE USING TECH10.
+
+
+TECHNICAL 11 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                 500
+        Number of final stage optimizations                   100
+
+
+
+     VUONG-LO-MENDELL-RUBIN LIKELIHOOD RATIO TEST FOR 1 (H0) VERSUS 2 CLASSES
+
+          H0 Loglikelihood Value                       -14670.479
+          2 Times the Loglikelihood Difference           2842.946
+          Difference in the Number of Parameters               10
+          Mean                                             21.562
+          Standard Deviation                               24.336
+          P-Value                                          0.0000
+
+     LO-MENDELL-RUBIN ADJUSTED LRT TEST
+
+          Value                                          2807.372
+          P-Value                                          0.0000
+
+
+TECHNICAL 14 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                 500
+        Number of final stage optimizations                   100
+
+     Random Starts Specification for the k-1 Class Model for Generated Data
+        Number of initial stage random starts                   0
+        Number of final stage optimizations for the
+           initial stage random starts                          0
+     Random Starts Specification for the k Class Model for Generated Data
+        Number of initial stage random starts                  40
+        Number of final stage optimizations                     8
+     Number of bootstrap draws requested                   Varies
+
+
+     PARAMETRIC BOOTSTRAPPED LIKELIHOOD RATIO TEST FOR 1 (H0) VERSUS 2 CLASSES
+
+          H0 Loglikelihood Value                       -14670.479
+          2 Times the Loglikelihood Difference           2842.946
+          Difference in the Number of Parameters               10
+          Approximate P-Value                              0.0000
+          Successful Bootstrap Draws                            5
+
+     WARNING:  OF THE 5 BOOTSTRAP DRAWS, 3 DRAWS HAD BOTH A SMALLER LRT VALUE THAN THE
+     OBSERVED LRT VALUE AND NOT A REPLICATED BEST LOGLIKELIHOOD VALUE FOR THE 2-CLASS MODEL.
+     THIS MEANS THAT THE P-VALUE MAY NOT BE TRUSTWORTHY DUE TO LOCAL MAXIMA.
+     INCREASE THE NUMBER OF RANDOM STARTS USING THE LRTSTARTS OPTION.
+
+
+
+     Beginning Time:  11:07:17
+        Ending Time:  11:07:29
+       Elapsed Time:  00:00:12
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2025 Muthen & Muthen

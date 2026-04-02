@@ -1,13 +1,13 @@
 ---
-title: "Latent Class Analysis"
+title: "Latent Class Regression"
 date: "Last Updated: `r Sys.Date()`"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(eval = FALSE, warning = FALSE, message = FALSE)
 ```
 
-# Enumeration {.tabset}
+# Latent Class Regression {.tabset}
 
 ```{r}
 library(tidyverse)
@@ -18,8 +18,6 @@ library(sjPlot)
 library(glue)
 library(cowplot)
 ```
-All functions and datasets used in this walkthrough can be found [here](https://github.com/dinanajiarch/aera2026-mixtures)
-
 
 ## Data Wrangling
 
@@ -96,7 +94,7 @@ ggplot(data_long, aes(x = factor(value))) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.25))) +
   labs(
     title = "Binary Indicator Distributions",
-    x = "Value (1 = Strongly Agree, 5 = Strongly Disagree)",
+    x = "Value (1 = Strongly Agree - 5 = Strongly Disagree)",
     y = "Count"
   ) +
   theme_cowplot()
@@ -182,8 +180,8 @@ lca_6  <- lapply(1:8, function(k) {
   usevariables = colnames(lsay_cleaned),
   rdata = lsay_cleaned)
 
-lca_enum_fit <- mplusModeler(lca_enum, glue(here("lca_enumeration","lsay.dat")),
-                            modelout= glue(here("lca_enumeration","c{k}_lsay.inp")),
+lca_enum_fit <- mplusModeler(lca_enum, glue(here("enumeration","lsay.dat")),
+                            modelout= glue(here("enumeration","c{k}_lsay.inp")),
                             check=TRUE, run = TRUE, hashfilename = FALSE)
 })
 ```
@@ -195,7 +193,7 @@ source(here("functions", "extract_mplus_info.R"))
 source(here("functions","enum_table.R"))
 
 # Define the directory where all of the .out files are located.
-output_dir <- here("lca_enumeration")
+output_dir <- here("enumeration")
 
 # Get all .out files
 output_files <- list.files(output_dir, pattern = "\\.out$", full.names = TRUE)
@@ -206,7 +204,7 @@ final_data <- map_dfr(output_files, extract_mplus_info_extended)
 # Extract Sample_Size from final_data
 sample_size <- unique(final_data$Sample_Size)
 
-output_enum <- readModels(here("lca_enumeration"), quiet = TRUE)
+output_enum <- readModels(here("enumeration"), quiet = TRUE)
 enum_table_full(output_enum)
 ```
 
@@ -240,8 +238,8 @@ model_output <- output_enum$c5_lsay.out
 item_labels <- c("CB28A" = "I enjoy math",
                  "CB28B" = "I am good at math",
                  "CB28C" = "I usually understand what we are doing in math",
-                 "CB28E" = "Doing math often makes me nervous or upset (R)",
-                 "CB28G" = "I often get scared when I open my math book and see a page of problems (R)",
+                 "CB28E" = "Doing math often makes me nervous or upset",
+                 "CB28G" = "I often get scared when I open my math book and see a page of problems",
                  "CB28H" = "Math is useful in everyday problems",
                  "CB28I" = "Math helps a person think logically",
                  "CB28K" = "It is important to know math to get a good job",

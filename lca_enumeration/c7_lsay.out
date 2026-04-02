@@ -1,0 +1,1481 @@
+Mplus VERSION 9
+MUTHEN & MUTHEN
+04/01/2026  11:09 AM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  7-Class
+  DATA:
+  FILE = "C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/enumeration/
+  lsay.dat";
+  VARIABLE:
+  NAMES = CASENUM COHORT RSTEMM CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;
+   MISSING=.;
+   categorical = CB28A - CB28L;
+  usevar = CB28A - CB28L;
+  classes = c(7);
+  ANALYSIS:
+  estimator = mlr;
+      type = mixture;
+      starts = 500 100;
+      processors = 10;
+  OUTPUT:
+  sampstat residual tech11 tech14;
+
+
+
+*** WARNING in OUTPUT command
+  SAMPSTAT option is not available when all outcomes are censored, ordered
+  categorical, unordered categorical (nominal), count or continuous-time
+  survival variables.  Request for SAMPSTAT is ignored.
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  441
+   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+7-Class
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2675
+
+Number of dependent variables                                    9
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Binary and ordered categorical (ordinal)
+   CB28A       CB28B       CB28C       CB28E       CB28G       CB28H
+   CB28I       CB28K       CB28L
+
+Categorical latent variables
+   C
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent Variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Random Starts Specifications
+  Number of initial stage random starts                        500
+  Number of final stage optimizations                          100
+  Number of initial stage iterations                            10
+  Initial stage convergence criterion                    0.100D+01
+  Random starts scale                                    0.500D+01
+  Random seed for generating random starts                       0
+Link                                                         LOGIT
+
+Input data file(s)
+  C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/enumeration/lsay.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            30
+     Number of y missing data patterns           0
+     Number of u missing data patterns          30
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR U
+
+
+           Covariance Coverage
+              CB28A         CB28B         CB28C         CB28E         CB28G
+              ________      ________      ________      ________      ________
+ CB28A          0.997
+ CB28B          0.996         0.998
+ CB28C          0.987         0.988         0.990
+ CB28E          0.978         0.979         0.971         0.980
+ CB28G          0.988         0.990         0.982         0.973         0.991
+ CB28H          0.985         0.986         0.978         0.970         0.981
+ CB28I          0.982         0.983         0.976         0.966         0.978
+ CB28K          0.977         0.978         0.971         0.962         0.973
+ CB28L          0.987         0.988         0.981         0.972         0.983
+
+
+           Covariance Coverage
+              CB28H         CB28I         CB28K         CB28L
+              ________      ________      ________      ________
+ CB28H          0.988
+ CB28I          0.975         0.985
+ CB28K          0.970         0.969         0.980
+ CB28L          0.979         0.977         0.975         0.990
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    CB28A
+      Category 1    0.331          884.000
+      Category 2    0.669         1784.000
+    CB28B
+      Category 1    0.307          820.000
+      Category 2    0.693         1850.000
+    CB28C
+      Category 1    0.237          628.000
+      Category 2    0.763         2020.000
+    CB28E
+      Category 1    0.410         1076.000
+      Category 2    0.590         1546.000
+    CB28G
+      Category 1    0.313          830.000
+      Category 2    0.687         1821.000
+    CB28H
+      Category 1    0.305          807.000
+      Category 2    0.695         1835.000
+    CB28I
+      Category 1    0.360          949.000
+      Category 2    0.640         1686.000
+    CB28K
+      Category 1    0.257          674.000
+      Category 2    0.743         1947.000
+    CB28L
+      Category 1    0.298          790.000
+      Category 2    0.702         1858.000
+
+
+RANDOM STARTS RESULTS RANKED FROM THE BEST TO THE WORST LOGLIKELIHOOD VALUES
+
+Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:
+
+          -12455.105  804660           260
+          -12455.105  136842           58
+          -12455.105  673496           218
+          -12455.105  399671           13
+          -12455.105  350608           334
+          -12455.273  22362            365
+          -12456.155  923437           398
+          -12456.155  425982           485
+          -12456.155  891531           206
+          -12461.104  319144           176
+          -12461.104  502532           445
+          -12461.104  34346            330
+          -12461.104  170954           86
+          -12461.104  872743           374
+          -12461.104  315029           471
+          -12461.104  931874           141
+          -12461.104  576726           280
+          -12461.104  802256           477
+          -12461.104  217744           326
+          -12461.104  484406           421
+          -12461.104  387701           275
+          -12461.104  871722           355
+          -12461.104  73576            213
+          -12461.104  836515           341
+          -12461.104  499150           216
+          -12461.318  375590           438
+          -12461.318  414284           158
+          -12462.112  190339           102
+          -12469.368  846194           93
+
+71 perturbed starting value run(s) did not converge or were rejected in the third stage.
+
+
+
+THE BEST LOGLIKELIHOOD VALUE HAS BEEN REPLICATED.  RERUN WITH AT LEAST TWICE THE
+RANDOM STARTS TO CHECK THAT THE BEST LOGLIKELIHOOD IS STILL OBTAINED AND REPLICATED.
+
+     IN THE OPTIMIZATION, ONE OR MORE LOGIT THRESHOLDS APPROACHED EXTREME VALUES
+     OF -15.000 AND 15.000 AND WERE FIXED TO STABILIZE MODEL ESTIMATION.  THESE
+     VALUES IMPLY PROBABILITIES OF 0 AND 1.  IN THE MODEL RESULTS SECTION, THESE
+     PARAMETERS HAVE 0 STANDARD ERRORS AND 999 IN THE Z-SCORE AND P-VALUE COLUMNS.
+
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       69
+
+Loglikelihood
+
+          H0 Value                      -12455.105
+          H0 Scaling Correction Factor      1.1325
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   25048.210
+          Bayesian (BIC)                 25454.738
+          Sample-Size Adjusted BIC       25235.504
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit for the Binary and Ordered Categorical
+(Ordinal) Outcomes**
+
+          Pearson Chi-Square
+
+          Value                            666.603
+          Degrees of Freedom                   432
+          P-Value                           0.0000
+
+          Likelihood Ratio Chi-Square
+
+          Value                            672.168
+          Degrees of Freedom                   432
+          P-Value                           0.0000
+
+** Of the 4352 cells in the latent class indicator table, 10
+   were deleted in the calculation of chi-square due to extreme values.
+
+Chi-Square Test for MCAR under the Unrestricted Latent Class Indicator Model
+
+          Pearson Chi-Square
+
+          Value                           2264.449
+          Degrees of Freedom                  3811
+          P-Value                           1.0000
+
+          Likelihood Ratio Chi-Square
+
+          Value                            698.685
+          Degrees of Freedom                  3811
+          P-Value                           1.0000
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1        188.90306          0.07062
+       2        430.74750          0.16103
+       3        139.83727          0.05228
+       4        426.37632          0.15939
+       5        125.39712          0.04688
+       6        881.54584          0.32955
+       7        482.19290          0.18026
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1        188.90306          0.07062
+       2        430.74750          0.16103
+       3        139.83727          0.05228
+       4        426.37632          0.15939
+       5        125.39712          0.04688
+       6        881.54584          0.32955
+       7        482.19290          0.18026
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1              169          0.06318
+       2              379          0.14168
+       3              127          0.04748
+       4              434          0.16224
+       5              125          0.04673
+       6             1004          0.37533
+       7              437          0.16336
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         0.741
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3        4        5        6        7
+
+    1   0.726    0.066    0.008    0.057    0.051    0.000    0.092
+    2   0.042    0.817    0.000    0.065    0.000    0.034    0.041
+    3   0.030    0.000    0.862    0.049    0.004    0.000    0.056
+    4   0.030    0.034    0.025    0.813    0.015    0.039    0.045
+    5   0.064    0.000    0.026    0.031    0.879    0.000    0.000
+    6   0.001    0.084    0.000    0.011    0.000    0.821    0.082
+    7   0.056    0.024    0.034    0.042    0.000    0.062    0.782
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3        4        5        6        7
+
+    1   0.650    0.085    0.020    0.068    0.042    0.006    0.129
+    2   0.026    0.719    0.000    0.034    0.000    0.196    0.025
+    3   0.010    0.000    0.783    0.078    0.023    0.000    0.107
+    4   0.022    0.058    0.014    0.828    0.009    0.026    0.043
+    5   0.069    0.000    0.004    0.052    0.876    0.000    0.000
+    6   0.000    0.014    0.000    0.019    0.000    0.936    0.031
+    7   0.032    0.033    0.015    0.040    0.000    0.172    0.709
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3        4        5        6        7
+
+    1      1.613   -0.422   -1.854   -0.646   -1.114   -3.157    0.000
+    2      0.060    3.379   -7.417    0.327   -7.140    2.080    0.000
+    3     -2.399   -8.203    1.993   -0.315   -1.539   -6.296    0.000
+    4     -0.638    0.307   -1.077    2.968   -1.546   -0.506    0.000
+    5      9.537    2.129    6.648    9.249   12.082    0.125    0.000
+    6     -6.441   -0.754   -8.975   -0.477  -10.335    3.414    0.000
+    7     -3.094   -3.080   -3.879   -2.872   -8.630   -1.419    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Thresholds
+    CB28A$1           -1.137      0.500     -2.274      0.023
+    CB28B$1           -1.174      0.771     -1.524      0.128
+    CB28C$1           -0.758      0.438     -1.732      0.083
+    CB28E$1            1.004      0.737      1.363      0.173
+    CB28G$1            1.538      1.079      1.425      0.154
+    CB28H$1            0.598      0.311      1.923      0.054
+    CB28I$1            0.925      0.451      2.052      0.040
+    CB28K$1            0.837      0.545      1.537      0.124
+    CB28L$1            0.843      0.484      1.742      0.081
+
+Latent Class 2
+
+ Thresholds
+    CB28A$1           -2.549      0.562     -4.536      0.000
+    CB28B$1           -2.055      0.260     -7.912      0.000
+    CB28C$1           -2.310      0.270     -8.551      0.000
+    CB28E$1            1.048      0.178      5.892      0.000
+    CB28G$1            0.920      1.011      0.910      0.363
+    CB28H$1           -2.072      0.278     -7.439      0.000
+    CB28I$1           -1.840      0.239     -7.684      0.000
+    CB28K$1           -2.697      0.334     -8.078      0.000
+    CB28L$1           -2.520      0.338     -7.450      0.000
+
+Latent Class 3
+
+ Thresholds
+    CB28A$1            4.002      1.902      2.104      0.035
+    CB28B$1            1.612      0.411      3.922      0.000
+    CB28C$1            0.371      0.300      1.237      0.216
+    CB28E$1           -0.363      0.230     -1.584      0.113
+    CB28G$1           -3.049      2.133     -1.430      0.153
+    CB28H$1            2.385      0.782      3.049      0.002
+    CB28I$1            2.398      0.585      4.097      0.000
+    CB28K$1            1.356      0.509      2.665      0.008
+    CB28L$1            1.975      0.622      3.175      0.001
+
+Latent Class 4
+
+ Thresholds
+    CB28A$1            1.541      0.275      5.608      0.000
+    CB28B$1            1.864      0.342      5.458      0.000
+    CB28C$1            0.420      0.169      2.486      0.013
+    CB28E$1            0.888      0.173      5.122      0.000
+    CB28G$1            0.046      0.166      0.279      0.780
+    CB28H$1           -1.322      0.211     -6.280      0.000
+    CB28I$1           -0.779      0.179     -4.349      0.000
+    CB28K$1           -1.699      0.205     -8.302      0.000
+    CB28L$1           -1.223      0.181     -6.739      0.000
+
+Latent Class 5
+
+ Thresholds
+    CB28A$1            2.126      0.663      3.207      0.001
+    CB28B$1            2.488      0.689      3.613      0.000
+    CB28C$1            2.412      0.998      2.416      0.016
+    CB28E$1            2.737      0.827      3.308      0.001
+    CB28G$1           15.000      0.000    999.000    999.000
+    CB28H$1            2.303      0.758      3.039      0.002
+    CB28I$1            2.736      0.494      5.542      0.000
+    CB28K$1            2.497      0.721      3.463      0.001
+    CB28L$1            2.504      0.515      4.860      0.000
+
+Latent Class 6
+
+ Thresholds
+    CB28A$1           -2.188      0.172    -12.755      0.000
+    CB28B$1           -2.634      0.224    -11.755      0.000
+    CB28C$1           -2.991      0.209    -14.288      0.000
+    CB28E$1           -2.234      0.896     -2.494      0.013
+    CB28G$1          -15.000      0.000    999.000    999.000
+    CB28H$1           -3.133      0.414     -7.576      0.000
+    CB28I$1           -1.942      0.174    -11.161      0.000
+    CB28K$1           -3.111      0.307    -10.130      0.000
+    CB28L$1           -3.459      0.560     -6.176      0.000
+
+Latent Class 7
+
+ Thresholds
+    CB28A$1           -1.102      0.247     -4.468      0.000
+    CB28B$1           -1.805      0.387     -4.666      0.000
+    CB28C$1           -2.472      0.403     -6.140      0.000
+    CB28E$1           -1.621      0.405     -4.007      0.000
+    CB28G$1           -2.827      1.515     -1.865      0.062
+    CB28H$1            0.333      0.249      1.335      0.182
+    CB28I$1            0.306      0.188      1.633      0.102
+    CB28K$1           -0.361      0.191     -1.893      0.058
+    CB28L$1            0.254      0.225      1.130      0.258
+
+Categorical Latent Variables
+
+ Means
+    C#1               -0.937      0.458     -2.048      0.041
+    C#2               -0.113      0.383     -0.295      0.768
+    C#3               -1.238      0.252     -4.908      0.000
+    C#4               -0.123      0.218     -0.563      0.573
+    C#5               -1.347      0.340     -3.963      0.000
+    C#6                0.603      0.236      2.551      0.011
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.484E-03
+       (ratio of smallest to largest eigenvalue)
+
+
+LATENT CLASS INDICATOR MEANS AND PROBABILITIES FOR EACH LATENT CLASS
+
+     MEAN/PROBABILITY PROFILES FOR C
+                       Latent class
+                     1      2      3      4      5      6      7
+     CB28A
+       Category 1  0.243  0.072  0.982  0.824  0.893  0.101  0.249
+       Category 2  0.757  0.928  0.018  0.176  0.107  0.899  0.751
+     CB28B
+       Category 1  0.236  0.114  0.834  0.866  0.923  0.067  0.141
+       Category 2  0.764  0.886  0.166  0.134  0.077  0.933  0.859
+     CB28C
+       Category 1  0.319  0.090  0.592  0.604  0.918  0.048  0.078
+       Category 2  0.681  0.910  0.408  0.396  0.082  0.952  0.922
+     CB28E
+       Category 1  0.732  0.740  0.410  0.709  0.939  0.097  0.165
+       Category 2  0.268  0.260  0.590  0.291  0.061  0.903  0.835
+     CB28G
+       Category 1  0.823  0.715  0.045  0.512  1.000  0.000  0.056
+       Category 2  0.177  0.285  0.955  0.488  0.000  1.000  0.944
+     CB28H
+       Category 1  0.645  0.112  0.916  0.211  0.909  0.042  0.582
+       Category 2  0.355  0.888  0.084  0.789  0.091  0.958  0.418
+     CB28I
+       Category 1  0.716  0.137  0.917  0.314  0.939  0.125  0.576
+       Category 2  0.284  0.863  0.083  0.686  0.061  0.875  0.424
+     CB28K
+       Category 1  0.698  0.063  0.795  0.155  0.924  0.043  0.411
+       Category 2  0.302  0.937  0.205  0.845  0.076  0.957  0.589
+     CB28L
+       Category 1  0.699  0.074  0.878  0.227  0.924  0.031  0.563
+       Category 2  0.301  0.926  0.122  0.773  0.076  0.969  0.437
+
+
+RESULTS IN PROBABILITY SCALE
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ CB28A
+    Category 1         0.243      0.092      2.641      0.008
+    Category 2         0.757      0.092      8.234      0.000
+ CB28B
+    Category 1         0.236      0.139      1.698      0.089
+    Category 2         0.764      0.139      5.496      0.000
+ CB28C
+    Category 1         0.319      0.095      3.356      0.001
+    Category 2         0.681      0.095      7.161      0.000
+ CB28E
+    Category 1         0.732      0.145      5.063      0.000
+    Category 2         0.268      0.145      1.854      0.064
+ CB28G
+    Category 1         0.823      0.157      5.241      0.000
+    Category 2         0.177      0.157      1.126      0.260
+ CB28H
+    Category 1         0.645      0.071      9.062      0.000
+    Category 2         0.355      0.071      4.983      0.000
+ CB28I
+    Category 1         0.716      0.092      7.813      0.000
+    Category 2         0.284      0.092      3.098      0.002
+ CB28K
+    Category 1         0.698      0.115      6.075      0.000
+    Category 2         0.302      0.115      2.629      0.009
+ CB28L
+    Category 1         0.699      0.102      6.870      0.000
+    Category 2         0.301      0.102      2.958      0.003
+
+Latent Class 2
+
+ CB28A
+    Category 1         0.072      0.038      1.918      0.055
+    Category 2         0.928      0.038     24.544      0.000
+ CB28B
+    Category 1         0.114      0.026      4.344      0.000
+    Category 2         0.886      0.026     33.903      0.000
+ CB28C
+    Category 1         0.090      0.022      4.069      0.000
+    Category 2         0.910      0.022     40.991      0.000
+ CB28E
+    Category 1         0.740      0.034     21.656      0.000
+    Category 2         0.260      0.034      7.595      0.000
+ CB28G
+    Category 1         0.715      0.206      3.472      0.001
+    Category 2         0.285      0.206      1.384      0.166
+ CB28H
+    Category 1         0.112      0.028      4.043      0.000
+    Category 2         0.888      0.028     32.098      0.000
+ CB28I
+    Category 1         0.137      0.028      4.839      0.000
+    Category 2         0.863      0.028     30.470      0.000
+ CB28K
+    Category 1         0.063      0.020      3.197      0.001
+    Category 2         0.937      0.020     47.431      0.000
+ CB28L
+    Category 1         0.074      0.023      3.194      0.001
+    Category 2         0.926      0.023     39.700      0.000
+
+Latent Class 3
+
+ CB28A
+    Category 1         0.982      0.034     29.273      0.000
+    Category 2         0.018      0.034      0.535      0.592
+ CB28B
+    Category 1         0.834      0.057     14.630      0.000
+    Category 2         0.166      0.057      2.919      0.004
+ CB28C
+    Category 1         0.592      0.072      8.166      0.000
+    Category 2         0.408      0.072      5.634      0.000
+ CB28E
+    Category 1         0.410      0.056      7.387      0.000
+    Category 2         0.590      0.056     10.624      0.000
+ CB28G
+    Category 1         0.045      0.092      0.491      0.623
+    Category 2         0.955      0.092     10.359      0.000
+ CB28H
+    Category 1         0.916      0.060     15.166      0.000
+    Category 2         0.084      0.060      1.396      0.163
+ CB28I
+    Category 1         0.917      0.045     20.507      0.000
+    Category 2         0.083      0.045      1.863      0.062
+ CB28K
+    Category 1         0.795      0.083      9.591      0.000
+    Category 2         0.205      0.083      2.471      0.013
+ CB28L
+    Category 1         0.878      0.067     13.193      0.000
+    Category 2         0.122      0.067      1.831      0.067
+
+Latent Class 4
+
+ CB28A
+    Category 1         0.824      0.040     20.630      0.000
+    Category 2         0.176      0.040      4.418      0.000
+ CB28B
+    Category 1         0.866      0.040     21.812      0.000
+    Category 2         0.134      0.040      3.382      0.001
+ CB28C
+    Category 1         0.604      0.040     14.919      0.000
+    Category 2         0.396      0.040      9.799      0.000
+ CB28E
+    Category 1         0.709      0.036     19.782      0.000
+    Category 2         0.291      0.036      8.138      0.000
+ CB28G
+    Category 1         0.512      0.041     12.369      0.000
+    Category 2         0.488      0.041     11.811      0.000
+ CB28H
+    Category 1         0.211      0.035      6.017      0.000
+    Category 2         0.789      0.035     22.567      0.000
+ CB28I
+    Category 1         0.314      0.039      8.142      0.000
+    Category 2         0.686      0.039     17.749      0.000
+ CB28K
+    Category 1         0.155      0.027      5.780      0.000
+    Category 2         0.845      0.027     31.606      0.000
+ CB28L
+    Category 1         0.227      0.032      7.134      0.000
+    Category 2         0.773      0.032     24.231      0.000
+
+Latent Class 5
+
+ CB28A
+    Category 1         0.893      0.063     14.152      0.000
+    Category 2         0.107      0.063      1.688      0.091
+ CB28B
+    Category 1         0.923      0.049     18.935      0.000
+    Category 2         0.077      0.049      1.573      0.116
+ CB28C
+    Category 1         0.918      0.075     12.175      0.000
+    Category 2         0.082      0.075      1.091      0.275
+ CB28E
+    Category 1         0.939      0.047     19.874      0.000
+    Category 2         0.061      0.047      1.287      0.198
+ CB28G
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+ CB28H
+    Category 1         0.909      0.063     14.520      0.000
+    Category 2         0.091      0.063      1.452      0.147
+ CB28I
+    Category 1         0.939      0.028     33.275      0.000
+    Category 2         0.061      0.028      2.157      0.031
+ CB28K
+    Category 1         0.924      0.051     18.234      0.000
+    Category 2         0.076      0.051      1.500      0.133
+ CB28L
+    Category 1         0.924      0.036     25.686      0.000
+    Category 2         0.076      0.036      2.099      0.036
+
+Latent Class 6
+
+ CB28A
+    Category 1         0.101      0.016      6.483      0.000
+    Category 2         0.899      0.016     57.813      0.000
+ CB28B
+    Category 1         0.067      0.014      4.783      0.000
+    Category 2         0.933      0.014     66.641      0.000
+ CB28C
+    Category 1         0.048      0.010      5.017      0.000
+    Category 2         0.952      0.010     99.875      0.000
+ CB28E
+    Category 1         0.097      0.078      1.236      0.217
+    Category 2         0.903      0.078     11.537      0.000
+ CB28G
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+ CB28H
+    Category 1         0.042      0.017      2.524      0.012
+    Category 2         0.958      0.017     57.883      0.000
+ CB28I
+    Category 1         0.125      0.019      6.573      0.000
+    Category 2         0.875      0.019     45.815      0.000
+ CB28K
+    Category 1         0.043      0.013      3.401      0.001
+    Category 2         0.957      0.013     76.331      0.000
+ CB28L
+    Category 1         0.031      0.017      1.842      0.066
+    Category 2         0.969      0.017     58.532      0.000
+
+Latent Class 7
+
+ CB28A
+    Category 1         0.249      0.046      5.401      0.000
+    Category 2         0.751      0.046     16.260      0.000
+ CB28B
+    Category 1         0.141      0.047      3.011      0.003
+    Category 2         0.859      0.047     18.302      0.000
+ CB28C
+    Category 1         0.078      0.029      2.693      0.007
+    Category 2         0.922      0.029     31.914      0.000
+ CB28E
+    Category 1         0.165      0.056      2.960      0.003
+    Category 2         0.835      0.056     14.975      0.000
+ CB28G
+    Category 1         0.056      0.080      0.699      0.485
+    Category 2         0.944      0.080     11.806      0.000
+ CB28H
+    Category 1         0.582      0.061      9.606      0.000
+    Category 2         0.418      0.061      6.887      0.000
+ CB28I
+    Category 1         0.576      0.046     12.568      0.000
+    Category 2         0.424      0.046      9.250      0.000
+ CB28K
+    Category 1         0.411      0.046      8.906      0.000
+    Category 2         0.589      0.046     12.774      0.000
+ CB28L
+    Category 1         0.563      0.055     10.168      0.000
+    Category 2         0.437      0.055      7.884      0.000
+
+
+EQUALITY TESTS OF PROBABILITIES ACROSS THE LATENT CLASSES
+
+                    Chi-Square     P-Value   Degrees of Freedom
+
+
+CB28A
+  Overall test        225.307      0.000        6
+  Class 1 vs. 2         3.552      0.059        1
+  Class 1 vs. 3         7.229      0.007        1
+  Class 1 vs. 4        25.905      0.000        1
+  Class 1 vs. 5        29.312      0.000        1
+  Class 1 vs. 6         4.222      0.040        1
+  Class 1 vs. 7         0.003      0.955        1
+  Class 2 vs. 3        11.207      0.001        1
+  Class 2 vs. 4        61.176      0.000        1
+  Class 2 vs. 5        27.755      0.000        1
+  Class 2 vs. 6         0.311      0.577        1
+  Class 2 vs. 7         6.038      0.014        1
+  Class 3 vs. 4         1.682      0.195        1
+  Class 3 vs. 5         0.875      0.350        1
+  Class 3 vs. 6        10.440      0.001        1
+  Class 3 vs. 7         7.515      0.006        1
+  Class 4 vs. 5         0.734      0.392        1
+  Class 4 vs. 6       117.664      0.000        1
+  Class 4 vs. 7        57.793      0.000        1
+  Class 5 vs. 6        42.197      0.000        1
+  Class 5 vs. 7        17.171      0.000        1
+  Class 6 vs. 7        10.864      0.001        1
+
+CB28B
+  Overall test        248.987      0.000        6
+  Class 1 vs. 2         1.222      0.269        1
+  Class 1 vs. 3        10.374      0.001        1
+  Class 1 vs. 4        13.094      0.000        1
+  Class 1 vs. 5        24.055      0.000        1
+  Class 1 vs. 6         3.688      0.055        1
+  Class 1 vs. 7         0.374      0.541        1
+  Class 2 vs. 3        57.455      0.000        1
+  Class 2 vs. 4       108.030      0.000        1
+  Class 2 vs. 5        39.093      0.000        1
+  Class 2 vs. 6         2.464      0.116        1
+  Class 2 vs. 7         0.299      0.585        1
+  Class 3 vs. 4         0.233      0.630        1
+  Class 3 vs. 5         1.195      0.274        1
+  Class 3 vs. 6        84.763      0.000        1
+  Class 3 vs. 7        40.576      0.000        1
+  Class 4 vs. 5         0.685      0.408        1
+  Class 4 vs. 6       105.843      0.000        1
+  Class 4 vs. 7        61.871      0.000        1
+  Class 5 vs. 6        52.091      0.000        1
+  Class 5 vs. 7        25.102      0.000        1
+  Class 6 vs. 7         2.806      0.094        1
+
+CB28C
+  Overall test        293.667      0.000        6
+  Class 1 vs. 2         9.885      0.002        1
+  Class 1 vs. 3         4.028      0.045        1
+  Class 1 vs. 4         6.055      0.014        1
+  Class 1 vs. 5        13.639      0.000        1
+  Class 1 vs. 6        21.322      0.000        1
+  Class 1 vs. 7         8.966      0.003        1
+  Class 2 vs. 3        44.006      0.000        1
+  Class 2 vs. 4        77.715      0.000        1
+  Class 2 vs. 5        23.309      0.000        1
+  Class 2 vs. 6         3.286      0.070        1
+  Class 2 vs. 7         0.125      0.723        1
+  Class 3 vs. 4         0.021      0.886        1
+  Class 3 vs. 5         3.697      0.055        1
+  Class 3 vs. 6        86.961      0.000        1
+  Class 3 vs. 7        30.084      0.000        1
+  Class 4 vs. 5         3.820      0.051        1
+  Class 4 vs. 6       155.251      0.000        1
+  Class 4 vs. 7        45.978      0.000        1
+  Class 5 vs. 6        27.431      0.000        1
+  Class 5 vs. 7        24.467      0.000        1
+  Class 6 vs. 7         1.145      0.285        1
+
+CB28E
+  Overall test         72.281      0.000        6
+  Class 1 vs. 2         0.004      0.950        1
+  Class 1 vs. 3         2.897      0.089        1
+  Class 1 vs. 4         0.022      0.883        1
+  Class 1 vs. 5         2.685      0.101        1
+  Class 1 vs. 6         8.443      0.004        1
+  Class 1 vs. 7        11.623      0.001        1
+  Class 2 vs. 3        21.805      0.000        1
+  Class 2 vs. 4         0.353      0.552        1
+  Class 2 vs. 5         4.003      0.045        1
+  Class 2 vs. 6        12.439      0.000        1
+  Class 2 vs. 7        36.785      0.000        1
+  Class 3 vs. 4        20.559      0.000        1
+  Class 3 vs. 5        13.508      0.000        1
+  Class 3 vs. 6         4.029      0.045        1
+  Class 3 vs. 7         7.770      0.005        1
+  Class 4 vs. 5         4.681      0.030        1
+  Class 4 vs. 6        12.361      0.000        1
+  Class 4 vs. 7        36.983      0.000        1
+  Class 5 vs. 6        16.589      0.000        1
+  Class 5 vs. 7        23.046      0.000        1
+  Class 6 vs. 7         0.569      0.451        1
+
+CB28G
+  Overall test  *************      0.000        6
+  Class 1 vs. 2         0.242      0.622        1
+  Class 1 vs. 3         3.972      0.046        1
+  Class 1 vs. 4         1.925      0.165        1
+  Class 1 vs. 5       155.667      0.000        1
+  Class 1 vs. 6       234.923      0.000        1
+  Class 1 vs. 7         7.235      0.007        1
+  Class 2 vs. 3         2.845      0.092        1
+  Class 2 vs. 4         0.733      0.392        1
+  Class 2 vs. 5       194.067      0.000        1
+  Class 2 vs. 6       248.092      0.000        1
+  Class 2 vs. 7         4.655      0.031        1
+  Class 3 vs. 4         2.066      0.151        1
+  Class 3 vs. 5        71.608      0.000        1
+  Class 3 vs. 6        31.395      0.000        1
+  Class 3 vs. 7         0.007      0.931        1
+  Class 4 vs. 5      8162.301      0.000        1
+  Class 4 vs. 6      8263.367      0.000        1
+  Class 4 vs. 7         3.415      0.065        1
+  Class 5 vs. 6  ************      0.000        1
+  Class 5 vs. 7       138.398      0.000        1
+  Class 6 vs. 7        64.536      0.000        1
+
+CB28H
+  Overall test        195.083      0.000        6
+  Class 1 vs. 2        37.361      0.000        1
+  Class 1 vs. 3         4.576      0.032        1
+  Class 1 vs. 4        25.910      0.000        1
+  Class 1 vs. 5         3.704      0.054        1
+  Class 1 vs. 6        54.280      0.000        1
+  Class 1 vs. 7         0.347      0.556        1
+  Class 2 vs. 3        29.769      0.000        1
+  Class 2 vs. 4         4.496      0.034        1
+  Class 2 vs. 5        32.689      0.000        1
+  Class 2 vs. 6         4.631      0.031        1
+  Class 2 vs. 7        46.904      0.000        1
+  Class 3 vs. 4        24.571      0.000        1
+  Class 3 vs. 5         0.006      0.940        1
+  Class 3 vs. 6        41.468      0.000        1
+  Class 3 vs. 7         6.024      0.014        1
+  Class 4 vs. 5        21.870      0.000        1
+  Class 4 vs. 6        15.465      0.000        1
+  Class 4 vs. 7        27.957      0.000        1
+  Class 5 vs. 6        35.416      0.000        1
+  Class 5 vs. 7         7.417      0.006        1
+  Class 6 vs. 7        61.721      0.000        1
+
+CB28I
+  Overall test        230.463      0.000        6
+  Class 1 vs. 2        28.244      0.000        1
+  Class 1 vs. 3         3.762      0.052        1
+  Class 1 vs. 4        12.429      0.000        1
+  Class 1 vs. 5         7.434      0.006        1
+  Class 1 vs. 6        36.374      0.000        1
+  Class 1 vs. 7         1.443      0.230        1
+  Class 2 vs. 3        46.927      0.000        1
+  Class 2 vs. 4        12.140      0.000        1
+  Class 2 vs. 5        71.734      0.000        1
+  Class 2 vs. 6         0.111      0.739        1
+  Class 2 vs. 7        55.069      0.000        1
+  Class 3 vs. 4        30.502      0.000        1
+  Class 3 vs. 5         0.194      0.660        1
+  Class 3 vs. 6        50.414      0.000        1
+  Class 3 vs. 7        11.790      0.001        1
+  Class 4 vs. 5        45.385      0.000        1
+  Class 4 vs. 6        22.119      0.000        1
+  Class 4 vs. 7        19.545      0.000        1
+  Class 5 vs. 6        79.646      0.000        1
+  Class 5 vs. 7        22.490      0.000        1
+  Class 6 vs. 7        89.336      0.000        1
+
+CB28K
+  Overall test        201.951      0.000        6
+  Class 1 vs. 2        38.402      0.000        1
+  Class 1 vs. 3         0.465      0.495        1
+  Class 1 vs. 4        18.329      0.000        1
+  Class 1 vs. 5         3.997      0.046        1
+  Class 1 vs. 6        44.319      0.000        1
+  Class 1 vs. 7         4.373      0.037        1
+  Class 2 vs. 3        44.466      0.000        1
+  Class 2 vs. 4         6.428      0.011        1
+  Class 2 vs. 5        48.551      0.000        1
+  Class 2 vs. 6         0.777      0.378        1
+  Class 2 vs. 7        38.779      0.000        1
+  Class 3 vs. 4        35.569      0.000        1
+  Class 3 vs. 5         1.838      0.175        1
+  Class 3 vs. 6        56.409      0.000        1
+  Class 3 vs. 7         9.829      0.002        1
+  Class 4 vs. 5        32.069      0.000        1
+  Class 4 vs. 6        14.370      0.000        1
+  Class 4 vs. 7        24.334      0.000        1
+  Class 5 vs. 6        50.747      0.000        1
+  Class 5 vs. 7        14.954      0.000        1
+  Class 6 vs. 7        71.580      0.000        1
+
+CB28L
+  Overall test        227.812      0.000        6
+  Class 1 vs. 2        37.386      0.000        1
+  Class 1 vs. 3         2.060      0.151        1
+  Class 1 vs. 4        16.369      0.000        1
+  Class 1 vs. 5         6.541      0.011        1
+  Class 1 vs. 6        42.289      0.000        1
+  Class 1 vs. 7         1.024      0.311        1
+  Class 2 vs. 3        41.238      0.000        1
+  Class 2 vs. 4        11.327      0.001        1
+  Class 2 vs. 5        71.579      0.000        1
+  Class 2 vs. 6         1.832      0.176        1
+  Class 2 vs. 7        47.484      0.000        1
+  Class 3 vs. 4        27.597      0.000        1
+  Class 3 vs. 5         0.450      0.502        1
+  Class 3 vs. 6        41.070      0.000        1
+  Class 3 vs. 7         6.627      0.010        1
+  Class 4 vs. 5        48.296      0.000        1
+  Class 4 vs. 6        15.291      0.000        1
+  Class 4 vs. 7        28.901      0.000        1
+  Class 5 vs. 6        63.742      0.000        1
+  Class 5 vs. 7        15.866      0.000        1
+  Class 6 vs. 7        44.256      0.000        1
+
+
+LATENT CLASS INDICATOR ODDS RATIOS FOR THE LATENT CLASSES
+
+                                                95% C.I.
+                    Estimate       S.E.  Lower 2.5% Upper 2.5%
+
+Latent Class 1 Compared to Latent Class 2
+
+ CB28A
+    Category > 1       0.244      0.183      0.056      1.058
+ CB28B
+    Category > 1       0.415      0.330      0.087      1.975
+ CB28C
+    Category > 1       0.212      0.105      0.081      0.557
+ CB28E
+    Category > 1       1.044      0.716      0.272      4.001
+ CB28G
+    Category > 1       0.539      0.676      0.046      6.308
+ CB28H
+    Category > 1       0.069      0.030      0.029      0.163
+ CB28I
+    Category > 1       0.063      0.033      0.023      0.175
+ CB28K
+    Category > 1       0.029      0.017      0.010      0.089
+ CB28L
+    Category > 1       0.035      0.019      0.012      0.102
+
+Latent Class 1 Compared to Latent Class 3
+
+ CB28A
+    Category > 1     170.496    325.864      4.025   7221.383
+ CB28B
+    Category > 1      16.221     14.033      2.977     88.402
+ CB28C
+    Category > 1       3.093      1.740      1.027      9.315
+ CB28E
+    Category > 1       0.255      0.205      0.053      1.230
+ CB28G
+    Category > 1       0.010      0.023      0.000      0.927
+ CB28H
+    Category > 1       5.973      4.990      1.161     30.715
+ CB28I
+    Category > 1       4.364      3.315      0.985     19.343
+ CB28K
+    Category > 1       1.680      1.278      0.378      7.460
+ CB28L
+    Category > 1       3.103      2.447      0.661     14.560
+
+Latent Class 1 Compared to Latent Class 4
+
+ CB28A
+    Category > 1      14.559      7.661      5.191     40.838
+ CB28B
+    Category > 1      20.872     17.526      4.026    108.220
+ CB28C
+    Category > 1       3.249      1.556      1.271      8.304
+ CB28E
+    Category > 1       0.890      0.705      0.189      4.201
+ CB28G
+    Category > 1       0.225      0.242      0.027      1.851
+ CB28H
+    Category > 1       0.147      0.055      0.070      0.307
+ CB28I
+    Category > 1       0.182      0.088      0.071      0.469
+ CB28K
+    Category > 1       0.079      0.047      0.025      0.253
+ CB28L
+    Category > 1       0.127      0.065      0.047      0.345
+
+Latent Class 1 Compared to Latent Class 5
+
+ CB28A
+    Category > 1      26.140     15.756      8.021     85.190
+ CB28B
+    Category > 1      38.963     29.097      9.015    168.391
+ CB28C
+    Category > 1      23.804     20.432      4.426    128.020
+ CB28E
+    Category > 1       5.656      5.981      0.712     44.940
+ CB28G
+    Category > 1   *********      0.000  *********  *********
+ CB28H
+    Category > 1       5.500      4.872      0.969     31.212
+ CB28I
+    Category > 1       6.119      4.065      1.664     22.498
+ CB28K
+    Category > 1       5.259      4.367      1.033     26.771
+ CB28L
+    Category > 1       5.268      3.423      1.474     18.823
+
+Latent Class 1 Compared to Latent Class 6
+
+ CB28A
+    Category > 1       0.350      0.179      0.128      0.953
+ CB28B
+    Category > 1       0.232      0.177      0.052      1.030
+ CB28C
+    Category > 1       0.107      0.052      0.042      0.277
+ CB28E
+    Category > 1       0.039      0.044      0.004      0.349
+ CB28G
+    Category > 1       0.000      0.000      0.000      0.000
+ CB28H
+    Category > 1       0.024      0.012      0.009      0.065
+ CB28I
+    Category > 1       0.057      0.027      0.022      0.144
+ CB28K
+    Category > 1       0.019      0.011      0.006      0.062
+ CB28L
+    Category > 1       0.014      0.009      0.004      0.050
+
+Latent Class 1 Compared to Latent Class 7
+
+ CB28A
+    Category > 1       1.036      0.643      0.307      3.494
+ CB28B
+    Category > 1       0.532      0.549      0.071      4.014
+ CB28C
+    Category > 1       0.180      0.103      0.059      0.553
+ CB28E
+    Category > 1       0.072      0.056      0.016      0.328
+ CB28G
+    Category > 1       0.013      0.021      0.001      0.306
+ CB28H
+    Category > 1       0.767      0.346      0.317      1.855
+ CB28I
+    Category > 1       0.539      0.277      0.196      1.478
+ CB28K
+    Category > 1       0.302      0.173      0.098      0.928
+ CB28L
+    Category > 1       0.555      0.323      0.178      1.735
+
+Latent Class 2 Compared to Latent Class 3
+
+ CB28A
+    Category > 1     699.606   1368.947     15.109  32393.918
+ CB28B
+    Category > 1      39.125     18.926     15.159    100.978
+ CB28C
+    Category > 1      14.600      5.900      6.612     32.237
+ CB28E
+    Category > 1       0.244      0.074      0.135      0.441
+ CB28G
+    Category > 1       0.019      0.044      0.000      1.903
+ CB28H
+    Category > 1      86.245     70.455     17.392    427.672
+ CB28I
+    Category > 1      69.290     42.869     20.607    232.979
+ CB28K
+    Category > 1      57.578     34.998     17.493    189.518
+ CB28L
+    Category > 1      89.559     62.688     22.714    353.122
+
+Latent Class 2 Compared to Latent Class 4
+
+ CB28A
+    Category > 1      59.742     31.241     21.437    166.496
+ CB28B
+    Category > 1      50.342     18.981     24.043    105.407
+ CB28C
+    Category > 1      15.336      4.750      8.358     28.142
+ CB28E
+    Category > 1       0.853      0.229      0.504      1.442
+ CB28G
+    Category > 1       0.417      0.426      0.057      3.083
+ CB28H
+    Category > 1       2.117      0.749      1.058      4.234
+ CB28I
+    Category > 1       2.888      0.879      1.590      5.245
+ CB28K
+    Category > 1       2.713      1.068      1.254      5.868
+ CB28L
+    Category > 1       3.659      1.410      1.719      7.788
+
+Latent Class 2 Compared to Latent Class 5
+
+ CB28A
+    Category > 1     107.260     95.186     18.839    610.705
+ CB28B
+    Category > 1      93.974     68.281     22.621    390.392
+ CB28C
+    Category > 1     112.374    109.905     16.525    764.150
+ CB28E
+    Category > 1       5.416      4.573      1.035     28.342
+ CB28G
+    Category > 1   *********      0.000  *********  *********
+ CB28H
+    Category > 1      79.416     60.765     17.726    355.807
+ CB28I
+    Category > 1      97.146     52.489     33.690    280.122
+ CB28K
+    Category > 1     180.265    134.385     41.816    777.112
+ CB28L
+    Category > 1     152.063     90.304     47.481    486.999
+
+Latent Class 2 Compared to Latent Class 6
+
+ CB28A
+    Category > 1       1.435      0.928      0.404      5.100
+ CB28B
+    Category > 1       0.560      0.207      0.272      1.155
+ CB28C
+    Category > 1       0.506      0.190      0.242      1.057
+ CB28E
+    Category > 1       0.038      0.035      0.006      0.233
+ CB28G
+    Category > 1       0.000      0.000      0.000      0.000
+ CB28H
+    Category > 1       0.346      0.171      0.132      0.910
+ CB28I
+    Category > 1       0.903      0.275      0.497      1.642
+ CB28K
+    Category > 1       0.661      0.310      0.263      1.660
+ CB28L
+    Category > 1       0.391      0.271      0.100      1.523
+
+Latent Class 2 Compared to Latent Class 7
+
+ CB28A
+    Category > 1       4.250      2.503      1.340     13.478
+ CB28B
+    Category > 1       1.284      0.588      0.524      3.149
+ CB28C
+    Category > 1       0.850      0.390      0.346      2.089
+ CB28E
+    Category > 1       0.069      0.031      0.029      0.164
+ CB28G
+    Category > 1       0.024      0.041      0.001      0.710
+ CB28H
+    Category > 1      11.073      3.888      5.564     22.036
+ CB28I
+    Category > 1       8.554      2.474      4.853     15.080
+ CB28K
+    Category > 1      10.342      3.880      4.958     21.575
+ CB28L
+    Category > 1      16.030      6.454      7.281     35.289
+
+Latent Class 3 Compared to Latent Class 4
+
+ CB28A
+    Category > 1       0.085      0.162      0.002      3.520
+ CB28B
+    Category > 1       1.287      0.672      0.462      3.584
+ CB28C
+    Category > 1       1.050      0.361      0.536      2.060
+ CB28E
+    Category > 1       3.496      0.965      2.035      6.006
+ CB28G
+    Category > 1      22.091     47.572      0.324   1504.157
+ CB28H
+    Category > 1       0.025      0.018      0.006      0.106
+ CB28I
+    Category > 1       0.042      0.024      0.013      0.129
+ CB28K
+    Category > 1       0.047      0.024      0.017      0.129
+ CB28L
+    Category > 1       0.041      0.025      0.012      0.135
+
+Latent Class 3 Compared to Latent Class 5
+
+ CB28A
+    Category > 1       0.153      0.307      0.003      7.806
+ CB28B
+    Category > 1       2.402      1.926      0.499     11.562
+ CB28C
+    Category > 1       7.697      8.170      0.961     61.638
+ CB28E
+    Category > 1      22.211     18.737      4.251    116.055
+ CB28G
+    Category > 1   *********      0.000  *********  *********
+ CB28H
+    Category > 1       0.921      1.012      0.107      7.944
+ CB28I
+    Category > 1       1.402      1.077      0.311      6.315
+ CB28K
+    Category > 1       3.131      2.636      0.601     16.305
+ CB28L
+    Category > 1       1.698      1.339      0.362      7.967
+
+Latent Class 3 Compared to Latent Class 6
+
+ CB28A
+    Category > 1       0.002      0.004      0.000      0.088
+ CB28B
+    Category > 1       0.014      0.007      0.006      0.035
+ CB28C
+    Category > 1       0.035      0.012      0.017      0.070
+ CB28E
+    Category > 1       0.154      0.144      0.025      0.957
+ CB28G
+    Category > 1       0.000      0.000      0.000      0.000
+ CB28H
+    Category > 1       0.004      0.003      0.001      0.022
+ CB28I
+    Category > 1       0.013      0.008      0.004      0.043
+ CB28K
+    Category > 1       0.011      0.007      0.004      0.037
+ CB28L
+    Category > 1       0.004      0.004      0.001      0.023
+
+Latent Class 3 Compared to Latent Class 7
+
+ CB28A
+    Category > 1       0.006      0.011      0.000      0.233
+ CB28B
+    Category > 1       0.033      0.018      0.011      0.094
+ CB28C
+    Category > 1       0.058      0.030      0.021      0.161
+ CB28E
+    Category > 1       0.284      0.128      0.117      0.688
+ CB28G
+    Category > 1       1.249      3.213      0.008    193.465
+ CB28H
+    Category > 1       0.128      0.107      0.025      0.661
+ CB28I
+    Category > 1       0.123      0.075      0.037      0.407
+ CB28K
+    Category > 1       0.180      0.098      0.061      0.525
+ CB28L
+    Category > 1       0.179      0.120      0.048      0.663
+
+Latent Class 4 Compared to Latent Class 5
+
+ CB28A
+    Category > 1       1.795      1.226      0.471      6.849
+ CB28B
+    Category > 1       1.867      1.408      0.426      8.186
+ CB28C
+    Category > 1       7.327      7.467      0.994     53.995
+ CB28E
+    Category > 1       6.353      5.428      1.190     33.910
+ CB28G
+    Category > 1   *********      0.000  *********  *********
+ CB28H
+    Category > 1      37.515     29.077      8.212    171.382
+ CB28I
+    Category > 1      33.633     17.551     12.094     93.534
+ CB28K
+    Category > 1      66.448     49.240     15.549    283.959
+ CB28L
+    Category > 1      41.560     22.290     14.526    118.906
+
+Latent Class 4 Compared to Latent Class 6
+
+ CB28A
+    Category > 1       0.024      0.008      0.012      0.047
+ CB28B
+    Category > 1       0.011      0.005      0.005      0.026
+ CB28C
+    Category > 1       0.033      0.009      0.019      0.056
+ CB28E
+    Category > 1       0.044      0.039      0.008      0.251
+ CB28G
+    Category > 1       0.000      0.000      0.000      0.000
+ CB28H
+    Category > 1       0.164      0.075      0.066      0.403
+ CB28I
+    Category > 1       0.313      0.077      0.193      0.508
+ CB28K
+    Category > 1       0.244      0.091      0.117      0.506
+ CB28L
+    Category > 1       0.107      0.061      0.035      0.328
+
+Latent Class 4 Compared to Latent Class 7
+
+ CB28A
+    Category > 1       0.071      0.025      0.036      0.141
+ CB28B
+    Category > 1       0.026      0.012      0.010      0.064
+ CB28C
+    Category > 1       0.055      0.024      0.024      0.128
+ CB28E
+    Category > 1       0.081      0.034      0.036      0.183
+ CB28G
+    Category > 1       0.057      0.088      0.003      1.190
+ CB28H
+    Category > 1       5.231      1.637      2.833      9.659
+ CB28I
+    Category > 1       2.962      0.727      1.830      4.793
+ CB28K
+    Category > 1       3.812      1.034      2.240      6.488
+ CB28L
+    Category > 1       4.381      1.204      2.557      7.507
+
+Latent Class 5 Compared to Latent Class 6
+
+ CB28A
+    Category > 1       0.013      0.009      0.004      0.049
+ CB28B
+    Category > 1       0.006      0.004      0.001      0.024
+ CB28C
+    Category > 1       0.005      0.005      0.001      0.034
+ CB28E
+    Category > 1       0.007      0.008      0.001      0.076
+ CB28G
+    Category > 1       0.000      0.000      0.000      0.000
+ CB28H
+    Category > 1       0.004      0.004      0.001      0.026
+ CB28I
+    Category > 1       0.009      0.005      0.003      0.026
+ CB28K
+    Category > 1       0.004      0.003      0.001      0.017
+ CB28L
+    Category > 1       0.003      0.002      0.001      0.011
+
+Latent Class 5 Compared to Latent Class 7
+
+ CB28A
+    Category > 1       0.040      0.031      0.009      0.182
+ CB28B
+    Category > 1       0.014      0.012      0.003      0.073
+ CB28C
+    Category > 1       0.008      0.007      0.001      0.052
+ CB28E
+    Category > 1       0.013      0.012      0.002      0.076
+ CB28G
+    Category > 1       0.000      0.000      0.000      0.000
+ CB28H
+    Category > 1       0.139      0.101      0.034      0.576
+ CB28I
+    Category > 1       0.088      0.045      0.032      0.240
+ CB28K
+    Category > 1       0.057      0.042      0.013      0.244
+ CB28L
+    Category > 1       0.105      0.060      0.035      0.319
+
+Latent Class 6 Compared to Latent Class 7
+
+ CB28A
+    Category > 1       2.962      0.976      1.553      5.650
+ CB28B
+    Category > 1       2.293      1.135      0.868      6.052
+ CB28C
+    Category > 1       1.680      0.815      0.649      4.346
+ CB28E
+    Category > 1       1.845      1.498      0.376      9.064
+ CB28G
+    Category > 1   *********      0.000  *********  *********
+ CB28H
+    Category > 1      31.990     14.111     13.475     75.944
+ CB28I
+    Category > 1       9.470      2.253      5.942     15.095
+ CB28K
+    Category > 1      15.645      5.086      8.273     29.585
+ CB28L
+    Category > 1      40.993     22.882     13.727    122.420
+
+
+RESIDUAL OUTPUT
+
+
+     RESIDUAL OUTPUT IS NOT AVAILABLE FOR THIS MODEL.  ADDITIONAL OUTPUT FOR
+     CATEGORICAL, COUNT, AND NOMINAL VARIABLES MAY BE AVAILABLE USING TECH10.
+
+
+TECHNICAL 11 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                 500
+        Number of final stage optimizations                   100
+
+
+
+     VUONG-LO-MENDELL-RUBIN LIKELIHOOD RATIO TEST FOR 6 (H0) VERSUS 7 CLASSES
+
+          H0 Loglikelihood Value                       -12495.201
+          2 Times the Loglikelihood Difference             80.191
+          Difference in the Number of Parameters               10
+          Mean                                             -1.875
+          Standard Deviation                               47.061
+          P-Value                                          0.0249
+
+     LO-MENDELL-RUBIN ADJUSTED LRT TEST
+
+          Value                                            79.188
+          P-Value                                          0.0259
+
+
+TECHNICAL 14 OUTPUT
+
+     Random Starts Specifications for the k-1 Class Analysis Model
+        Number of initial stage random starts                 500
+        Number of final stage optimizations                   100
+
+     Random Starts Specification for the k-1 Class Model for Generated Data
+        Number of initial stage random starts                   0
+        Number of final stage optimizations for the
+           initial stage random starts                          0
+     Random Starts Specification for the k Class Model for Generated Data
+        Number of initial stage random starts                  40
+        Number of final stage optimizations                     8
+     Number of bootstrap draws requested                   Varies
+
+
+     PARAMETRIC BOOTSTRAPPED LIKELIHOOD RATIO TEST FOR 6 (H0) VERSUS 7 CLASSES
+
+          H0 Loglikelihood Value                       -12495.201
+          2 Times the Loglikelihood Difference             80.191
+          Difference in the Number of Parameters               10
+          Approximate P-Value                              0.0000
+          Successful Bootstrap Draws                           10
+
+     WARNING:  OF THE 10 BOOTSTRAP DRAWS, 8 DRAWS HAD BOTH A SMALLER LRT VALUE THAN THE
+     OBSERVED LRT VALUE AND NOT A REPLICATED BEST LOGLIKELIHOOD VALUE FOR THE 7-CLASS MODEL.
+     THIS MEANS THAT THE P-VALUE MAY NOT BE TRUSTWORTHY DUE TO LOCAL MAXIMA.
+     INCREASE THE NUMBER OF RANDOM STARTS USING THE LRTSTARTS OPTION.
+
+
+
+     Beginning Time:  11:09:12
+        Ending Time:  11:09:37
+       Elapsed Time:  00:00:25
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2025 Muthen & Muthen

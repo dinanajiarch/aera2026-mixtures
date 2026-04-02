@@ -1,0 +1,479 @@
+Mplus VERSION 9
+MUTHEN & MUTHEN
+04/01/2026  11:07 AM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  1-Class
+  DATA:
+  FILE = "C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/enumeration/
+  lsay.dat";
+  VARIABLE:
+  NAMES = CASENUM COHORT RSTEMM CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;
+   MISSING=.;
+   categorical = CB28A - CB28L;
+  usevar = CB28A - CB28L;
+  classes = c(1);
+  ANALYSIS:
+  estimator = mlr;
+      type = mixture;
+      starts = 500 100;
+      processors = 10;
+  OUTPUT:
+  sampstat residual tech11 tech14;
+
+
+
+*** WARNING in OUTPUT command
+  SAMPSTAT option is not available when all outcomes are censored, ordered
+  categorical, unordered categorical (nominal), count or continuous-time
+  survival variables.  Request for SAMPSTAT is ignored.
+*** WARNING in OUTPUT command
+  TECH11 option is not available for TYPE=MIXTURE with only one class.
+  Request for TECH11 is ignored.
+*** WARNING in OUTPUT command
+  TECH14 option is not available for TYPE=MIXTURE with only one class.
+  Request for TECH14 is ignored.
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  441
+   4 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+1-Class
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2675
+
+Number of dependent variables                                    9
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Binary and ordered categorical (ordinal)
+   CB28A       CB28B       CB28C       CB28E       CB28G       CB28H
+   CB28I       CB28K       CB28L
+
+Categorical latent variables
+   C
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent Variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Random Starts Specifications
+  Number of initial stage random starts                        500
+  Number of final stage optimizations                          100
+  Number of initial stage iterations                            10
+  Initial stage convergence criterion                    0.100D+01
+  Random starts scale                                    0.500D+01
+  Random seed for generating random starts                       0
+Link                                                         LOGIT
+
+Input data file(s)
+  C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/enumeration/lsay.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            30
+     Number of y missing data patterns           0
+     Number of u missing data patterns          30
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR U
+
+
+           Covariance Coverage
+              CB28A         CB28B         CB28C         CB28E         CB28G
+              ________      ________      ________      ________      ________
+ CB28A          0.997
+ CB28B          0.996         0.998
+ CB28C          0.987         0.988         0.990
+ CB28E          0.978         0.979         0.971         0.980
+ CB28G          0.988         0.990         0.982         0.973         0.991
+ CB28H          0.985         0.986         0.978         0.970         0.981
+ CB28I          0.982         0.983         0.976         0.966         0.978
+ CB28K          0.977         0.978         0.971         0.962         0.973
+ CB28L          0.987         0.988         0.981         0.972         0.983
+
+
+           Covariance Coverage
+              CB28H         CB28I         CB28K         CB28L
+              ________      ________      ________      ________
+ CB28H          0.988
+ CB28I          0.975         0.985
+ CB28K          0.970         0.969         0.980
+ CB28L          0.979         0.977         0.975         0.990
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    CB28A
+      Category 1    0.331          884.000
+      Category 2    0.669         1784.000
+    CB28B
+      Category 1    0.307          820.000
+      Category 2    0.693         1850.000
+    CB28C
+      Category 1    0.237          628.000
+      Category 2    0.763         2020.000
+    CB28E
+      Category 1    0.410         1076.000
+      Category 2    0.590         1546.000
+    CB28G
+      Category 1    0.313          830.000
+      Category 2    0.687         1821.000
+    CB28H
+      Category 1    0.305          807.000
+      Category 2    0.695         1835.000
+    CB28I
+      Category 1    0.360          949.000
+      Category 2    0.640         1686.000
+    CB28K
+      Category 1    0.257          674.000
+      Category 2    0.743         1947.000
+    CB28L
+      Category 1    0.298          790.000
+      Category 2    0.702         1858.000
+
+
+RANDOM STARTS RESULTS RANKED FROM THE BEST TO THE WORST LOGLIKELIHOOD VALUES
+
+Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:
+
+          -14670.479  342019           301
+          -14670.479  606576           151
+          -14670.479  21132            351
+          -14670.479  700349           401
+          -14670.479  36714            201
+          -14670.479  371246           101
+          -14670.479  85462            51
+          -14670.479  188640           451
+          -14670.479  642909           251
+          -14670.479  unperturbed      0
+          -14670.479  462953           7
+          -14670.479  27071            15
+          -14670.479  153942           31
+          -14670.479  7959             256
+          -14670.479  164305           128
+          -14670.479  871851           257
+          -14670.479  188498           258
+          -14670.479  311214           64
+          -14670.479  814975           129
+          -14670.479  622860           259
+          -14670.479  804660           260
+          -14670.479  509733           130
+          -14670.479  616917           261
+          -14670.479  520177           262
+          -14670.479  626891           32
+          -14670.479  565819           65
+          -14670.479  468036           131
+          -14670.479  349263           263
+          -14670.479  358488           264
+          -14670.479  313407           132
+          -14670.479  467339           66
+          -14670.479  321390           133
+          -14670.479  903369           134
+          -14670.479  76974            16
+          -14670.479  749453           33
+          -14670.479  789985           67
+          -14670.479  437181           135
+          -14670.479  232559           136
+          -14670.479  405079           68
+          -14670.479  341041           34
+          -14670.479  685657           69
+          -14670.479  987090           70
+          -14670.479  285380           1
+          -14670.479  359578           458
+          -14670.479  475420           71
+          -14670.479  783110           72
+          -14670.479  679832           302
+          -14670.479  93468            3
+          -14670.479  790452           303
+          -14670.479  92689            304
+          -14670.479  393232           152
+          -14670.479  81117            305
+          -14670.479  484687           306
+          -14670.479  46437            153
+          -14670.479  534864           307
+          -14670.479  692169           308
+          -14670.479  150531           154
+          -14670.479  879338           309
+          -14670.479  996231           310
+          -14670.479  12477            155
+          -14670.479  479273           156
+          -14670.479  972873           157
+          -14670.479  414284           158
+          -14670.479  383986           159
+          -14670.479  456213           160
+          -14670.479  23012            352
+          -14670.479  374219           353
+          -14670.479  193847           354
+          -14670.479  871722           355
+          -14670.479  360419           356
+          -14670.479  850545           357
+          -14670.479  195763           358
+          -14670.479  349562           359
+          -14670.479  563002           360
+          -14670.479  971853           402
+          -14670.479  471040           403
+          -14670.479  605565           404
+          -14670.479  973369           202
+          -14670.479  596257           405
+          -14670.479  926797           406
+          -14670.479  840078           203
+          -14670.479  772131           407
+          -14670.479  55115            408
+          -14670.479  748692           204
+          -14670.479  605161           409
+          -14670.479  746978           410
+          -14670.479  97158            205
+          -14670.479  891531           206
+          -14670.479  637095           207
+          -14670.479  57226            208
+          -14670.479  30098            209
+          -14670.479  835767           210
+          -14670.479  582296           452
+          -14670.479  879211           453
+          -14670.479  263049           454
+          -14670.479  224950           455
+          -14670.479  922596           456
+          -14670.479  769907           457
+          -14670.479  539751           459
+          -14670.479  112586           494
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        9
+
+Loglikelihood
+
+          H0 Value                      -14670.479
+          H0 Scaling Correction Factor      1.0000
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   29358.958
+          Bayesian (BIC)                 29411.983
+          Sample-Size Adjusted BIC       29383.387
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit for the Binary and Ordered Categorical
+(Ordinal) Outcomes**
+
+          Pearson Chi-Square
+
+          Value                           4801.314
+          Degrees of Freedom                   486
+          P-Value                           0.0000
+
+          Likelihood Ratio Chi-Square
+
+          Value                           2489.124
+          Degrees of Freedom                   486
+          P-Value                           0.0000
+
+** Of the 4352 cells in the latent class indicator table, 16
+   were deleted in the calculation of chi-square due to extreme values.
+
+Chi-Square Test for MCAR under the Unrestricted Latent Class Indicator Model
+
+          Pearson Chi-Square
+
+          Value                           2308.063
+          Degrees of Freedom                  3811
+          P-Value                           1.0000
+
+          Likelihood Ratio Chi-Square
+
+          Value                            675.986
+          Degrees of Freedom                  3811
+          P-Value                           1.0000
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1       2675.00000          1.00000
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1       2675.00000          1.00000
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1             2675          1.00000
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1
+
+    1   1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1
+
+    1   1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1
+
+    1      0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Thresholds
+    CB28A$1           -0.702      0.041    -17.071      0.000
+    CB28B$1           -0.814      0.042    -19.394      0.000
+    CB28C$1           -1.168      0.046    -25.571      0.000
+    CB28E$1           -0.362      0.040     -9.129      0.000
+    CB28G$1           -0.786      0.042    -18.761      0.000
+    CB28H$1           -0.821      0.042    -19.448      0.000
+    CB28I$1           -0.575      0.041    -14.162      0.000
+    CB28K$1           -1.061      0.045    -23.737      0.000
+    CB28L$1           -0.855      0.042    -20.135      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.154E+00
+       (ratio of smallest to largest eigenvalue)
+
+
+RESULTS IN PROBABILITY SCALE
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ CB28A
+    Category 1         0.331      0.009     36.360      0.000
+    Category 2         0.669      0.009     73.378      0.000
+ CB28B
+    Category 1         0.307      0.009     34.401      0.000
+    Category 2         0.693      0.009     77.613      0.000
+ CB28C
+    Category 1         0.237      0.008     28.692      0.000
+    Category 2         0.763      0.008     92.290      0.000
+ CB28E
+    Category 1         0.410      0.010     42.719      0.000
+    Category 2         0.590      0.010     61.378      0.000
+ CB28G
+    Category 1         0.313      0.009     34.761      0.000
+    Category 2         0.687      0.009     76.264      0.000
+ CB28H
+    Category 1         0.305      0.009     34.087      0.000
+    Category 2         0.695      0.009     77.508      0.000
+ CB28I
+    Category 1         0.360      0.009     38.512      0.000
+    Category 2         0.640      0.009     68.420      0.000
+ CB28K
+    Category 1         0.257      0.009     30.122      0.000
+    Category 2         0.743      0.009     87.013      0.000
+ CB28L
+    Category 1         0.298      0.009     33.554      0.000
+    Category 2         0.702      0.009     78.917      0.000
+
+
+RESIDUAL OUTPUT
+
+
+     RESIDUAL OUTPUT IS NOT AVAILABLE FOR THIS MODEL.  ADDITIONAL OUTPUT FOR
+     CATEGORICAL, COUNT, AND NOMINAL VARIABLES MAY BE AVAILABLE USING TECH10.
+
+
+     Beginning Time:  11:07:03
+        Ending Time:  11:07:08
+       Elapsed Time:  00:00:05
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2025 Muthen & Muthen

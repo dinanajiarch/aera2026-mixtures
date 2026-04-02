@@ -1,0 +1,570 @@
+---
+title: "Latent Profile Analysis"
+date: "Last Updated: `r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Latent Profile Analysis {.tabset}
+
+```{r}
+library(tidyverse)
+library(MplusAutomation)
+library(haven)
+library(here)
+library(sjPlot)
+library(glue)
+library(cowplot)
+library(pisaUSA15)
+library(tidyLPA)
+```
+
+-----------------------------------------------------------------------
+
+*Example: PISA Student Data*
+
+1.  The first example closely follows the vignette used to demonstrate the [tidyLPA](https://data-edu.github.io/tidyLPA/articles/Introduction_to_tidyLPA.html) package (Rosenberg, 2019).
+
+-   This model utilizes the `PISA` data collected in the U.S. in 2015. To learn more about this data [see here](http://www.oecd.org/pisa/data/).
+-   To access the 2015 US `PISA` data & documentation in R use the following code:
+
+Variables:
+
+`broad_interest`
+
+:   composite measure of students' self reported broad interest
+
+`enjoyment`
+
+:   composite measure of students' self reported enjoyment
+
+`instrumental_mot`
+
+:   composite measure of students' self reported instrumental motivation
+
+`self_efficacy`
+
+:   composite measure of students' self reported self efficacy
+
+```{r, eval = FALSE}
+#devtools::install_github("jrosen48/pisaUSA15")
+#library(pisaUSA15)
+```
+
+------------------------------------------------------------------------
+
+## Latent Profile Models
+
+Latent Profile Analysis (LPA) is a statistical modeling approach for estimating distinct profiles of variables and uses continuous - rather than
+categorical - indicators. Unlike latent class analysis, which uses categorical indicators, LPA models the means, variances, and covariances of continuous indicators within each latent profile.
+
+------------------------------------------------------------------------
+
+### Terminology for specifying variance-covariance matrix
+
+The code used to estimate LPA models in this walkthrough is from the `tidyLPA` package.
+`TidyLPA`([source](https://data-edu.github.io/tidyLPA/articles/Introduction_to_tidyLPA.html)) is an R package designed to estimate latent profile models using a tidy framework.
+It can interface with Mplus via the MplusAutomation package, enabling the estimation of latent profile models with different variance-covariance structures.
+
+-   `model 1` Profile-invariant / Diagonal: Equal variances, and covariances fixed to 0
+-   `model 2` Profile-varying / Diagonal: Free variances and covariances fixed to 0
+-   `model 3` Profile-invariant / Non-Diagonal: Equal variances and equal covariances
+    -   Note: an alternative to Model 3 is freely estimating the covariances
+-   `model 4` Free variances, and equal covariances
+-   `model 5` Equal variances, and free covariances
+-   `model 6` Profile Varying / Non-Diagonal: Free variances and free covariances
+
+#### Model 1
+
+*Profile-invariant/diagonal:*
+
+-   *Equal Variances*: Variances are fixed to equality across the profiles (i.e., variances are constrained to be equal for each profile).
+
+-   *Covariances fixed to zero* (i.e., the off-diagonal cells of the matrix are zero).
+
+The most parsimonious model and the most restricted.
+
+$$
+\begin{pmatrix}
+\sigma^2_1 & 0 & 0 \\
+0 & \sigma^2_2 & 0 \\
+0 & 0 & \sigma^2_3 \\
+\end{pmatrix}
+$$
+
+#### Model 2
+
+*Profile-varying/diagonal:*
+
+-   *Free variances*: Variances parameters are freely estimated across the profiles (i.e., variances vary by profile).
+
+-   *Covariances* *fixed to zero* (i.e., the off-diagonal cells of the matrix are zero).
+
+This model is more flexible and less parsimonious than model 1.
+
+$$
+\begin{pmatrix}
+\sigma^2_{1p} & 0 & 0 \\
+0 & \sigma^2_{2p} & 0 \\
+0 & 0 & \sigma^2_{3p} \\
+\end{pmatrix}
+$$
+
+#### Model 3
+
+*Profile-invariant/ non-diagonal or unrestricted:*
+
+-   *Equal variances:* Variances are fixed to equality across profile.
+    (i.e., variances are constrained to be same for each profile).
+
+-   *Equal Covariances*: The covariances are now estimated and constrained to be equal.
+
+    -   An alternative to Model 3 is freely estimating the covariances (Model 5 here).
+
+$$
+\begin{pmatrix}
+\sigma^2_1 & \sigma_{12} & \sigma_{13} \\
+\sigma_{12} & \sigma^2_2 & \sigma_{23} \\
+\sigma_{13} & \sigma_{23} & \sigma^2_3 \\
+\end{pmatrix}
+$$
+
+#### Model 4 
+
+Varying means, varying variances, and equal covariances:
+
+-   *Free variances*: Variances parameters are freely estimated across profiles (i.e., variances vary by profile).
+
+-   *Equal Covariances*: Covariances are constrained to be equal.
+
+This model is also considered to be an extension of Model 3.
+
+$$
+\begin{pmatrix}
+\sigma^2_{1p} & \sigma_{12} & \sigma_{13} \\
+\sigma_{12} & \sigma^2_{2p} & \sigma_{23} \\
+\sigma_{13} & \sigma_{23} & \sigma^2_{3p} \\
+\end{pmatrix}
+$$
+
+#### Model 5
+
+Varying means, equal variances, and varying covariances:
+
+-   *Equal variances:* Variances are fixed to equality across the profiles.
+    (i.e., variances are constrained to be same for each profile).
+
+-   *Free Covariances*: Covariances are now freely estimated across the profiles.
+
+This model is also considered to be an extension of Model 3.
+
+$$
+\begin{pmatrix}
+\sigma^2_{1} & \sigma_{12p} & \sigma_{13p} \\
+\sigma_{12p} & \sigma^2_{2} & \sigma_{23p} \\
+\sigma_{13p} & \sigma_{23p} & \sigma^2_{3} \\
+\end{pmatrix}
+$$
+
+#### Model 6
+
+*Profile-varying / Non-diagonal*:
+
+-   *Free variances*: Variances parameters are freely estimated across profiles (i.e., variances vary by profile).
+
+-   *Free Covariances*: Covariances are now freely estimated across the profiles.
+
+This is the most complex and unrestricted model.
+It is also the least parsimonious
+
+*Note*: The unrestricted model is also sometimes known as Model 4.
+
+$$
+\begin{pmatrix}
+\sigma^2_{1p} & \sigma_{12p} & \sigma_{13p} \\
+\sigma_{12p} & \sigma^2_{2p} & \sigma_{23p} \\
+\sigma_{13p} & \sigma_{23p} & \sigma^2_{3p} \\
+\end{pmatrix}
+$$
+
+
+------------------------------------------------------------------------
+
+## Descriptive Statistics
+
+-------------------------------------------------------------------
+
+### Load packages
+
+```{r}
+library(naniar)
+library(tidyverse)
+library(haven)
+library(glue)
+library(MplusAutomation)
+library(here)
+library(janitor)
+library(gt)
+library(tidyLPA)
+library(pisaUSA15)
+library(cowplot)
+library(filesstrings)
+library(patchwork)
+library(RcppAlgos)
+library(psych)
+```
+
+------------------------------------------------------------------------
+
+### Prepare Data
+
+```{r, eval=TRUE}
+pisa <- pisaUSA15[1:500,] %>%
+  dplyr::select(broad_interest, enjoyment, instrumental_mot, self_efficacy)
+```
+
+Quick Summary
+
+```{r}
+describe(pisa)
+```
+
+
+Mean Table
+
+```{r}
+ds <- pisa %>% 
+  pivot_longer(broad_interest:self_efficacy, names_to = "variable") %>% 
+  group_by(variable) %>% 
+  summarise(mean = mean(value, na.rm = TRUE),
+            sd = sd(value, na.rm = TRUE)) 
+
+ds %>% 
+  gt () %>% 
+  tab_header(title = md("**Descriptive Summary**")) %>%
+  cols_label(
+    variable = "Variable",
+    mean = md("M"),
+    sd = md("SD")
+  ) %>%
+  fmt_number(c(2:3),
+             decimals = 2) %>% 
+  cols_align(
+    align = "center",
+    columns = mean
+  ) 
+```
+
+Histograms
+
+```{r out.width="90%"}
+data_long <- pisa %>%
+  pivot_longer(broad_interest:self_efficacy, names_to = "variable")
+
+ggplot(data_long, aes(x = value)) +
+  geom_histogram(binwidth = .3, fill = "#69b3a2", color = "black") +
+  facet_wrap(~ variable, scales = "free_x") +
+  labs(title = "Histograms of Variables", x = "Value", y = "Frequency") +
+  theme_cowplot()
+```
+
+
+------------------------------------------------------------------------
+
+## Enumeration using `tidyLPA`
+
+------------------------------------------------------------------------
+
+Enumerate using `estimate_profiles()`:
+
+-   Estimate models with profiles $K = 1:5$
+-   Model has 4 continuous indicators
+-   Default variance-covariance specifications (model 1)
+-   Change `variances` and `covariances` to indicate the model you want to specify, in this example, we are estimating all six models.
+
+```{r, eval=FALSE}
+
+# Run LPA models 
+lpa_fit <- pisa %>% 
+    estimate_profiles(1:5,
+                      package = "MplusAutomation",
+                      ANALYSIS = "starts = 500 100;",
+                      OUTPUT = "sampstat residual tech11 tech14",
+                      variances = c("equal", "varying", "equal", "varying", "equal", "varying"),
+                      covariances = c("zero", "zero", "equal", "equal", "varying", "varying"),
+                      keepfiles = TRUE)
+
+# Compare fit statistics
+get_fit(lpa_fit)
+
+
+# Move files to folder 
+files <- list.files(here(), pattern = "^model")
+move_files(files, here("lpa_enumeration"), overwrite = TRUE)
+```
+
+
+For reference, here is the Mplus syntax for different specifications:
+
+**Fixed covariance to zero (DEFAULT)**:
+
+`broad_interest WITH enjoyment@0;`
+
+**Free covariance**:
+
+`broad_interest WITH enjoyment;`
+
+**Equal covariances**:
+
+`%c#1%`
+
+`broad_interest WITH enjoyment (1);`
+
+`%c#2%`
+
+`broad_interest WITH enjoyment (1);`
+
+**Equal variance (DEFAULT)**:
+
+`%c#1%`
+
+`broad_interest (1);`
+
+`%c#2%`
+
+`broad_interest (1);`
+
+**Free variance**:
+
+`mth_scor-bio_scor;`
+
+You can also open the `tidyLPA` .inp files to see the specifications.
+
+
+------------------------------------------------------------------------
+
+### Table of Fit
+
+Evaluate each model specification separately using fit indices.
+
+After examining the outputs (and increasing the random starts where necessary), there are a few models excluded from analysis:
+
+Model 2:
+
+-   Profile 4
+
+-   Profile 5
+
+Model 3:
+
+-   Profile 5
+
+Model 4:
+
+-   Profile 4
+
+-   Profile 5
+
+Model 5:
+
+-   Profile 3
+
+-   Profile 4
+
+-   Profile 5
+
+Model 6:
+
+-   Profile 4
+
+-   Profile 5
+
+```{r}
+source(here("functions", "enum_table_lpa.R"))
+
+# Read in model
+output_enum <- readModels(here("lpa_enumeration"), quiet = TRUE)
+
+# Preview with numbered rows
+enum_fit(output_enum)
+
+
+select_models <- enum_fit(output_enum) %>%
+  slice( # Remove the models that we don't want to consider!!!! Because we looked at every single output, we know which models did not converge, thus we exclude them.
+    # Model 2
+    -9, -10, 
+    # Model 3
+    -15,
+    # Model 4
+    -19, -20,
+    # Model 5
+    -23, -24, -25,
+    # Model 6
+    -29, -30
+  )
+
+
+enum_table(select_models, 1:5, 6:8, 9:12, 13:15, 16:17, 18:20)
+```
+
+------------------------------------------------------------------------
+
+### Information Criteria Plot
+
+Look for "elbow" to help with profile selection
+
+```{r}
+source(here("functions","ic_plot_lpa.R"))
+ic_plot(select_models)
+```
+
+Based on fit indices, I am choosing the following candidate models:
+
+1.  Model 1: 2 Profile
+2.  Model 2: 3 Profile
+3.  Model 3: 4 Profile
+4.  Model 4: 3 Profile
+5.  Model 5: 2 Profile
+6.  Model 6: 2 Profile
+
+------------------------------------------------------------------------
+
+### Compare models
+
+#### Correct Model Probability (cmpK) recalculation
+
+Take the candidate models and recalculate the approximate correct model probabilities (Masyn, 2013)
+
+```{r, eval=TRUE}
+# CmpK recalculation:
+enum_fit1 <- enum_fit(output_enum)
+
+stage2_cmpk <- enum_fit1 %>% 
+  slice(2, 8, 14, 18, 22, 27) %>% 
+  mutate(SIC = -.5 * BIC,
+         expSIC = exp(SIC - max(SIC)),
+         cmPk = expSIC / sum(expSIC),
+         BF = exp(SIC - lead(SIC))) %>% 
+  select(Title, Parameters, BIC:AWE, cmPk, BF)
+
+ 
+# Format Fit Table
+stage2_cmpk %>%
+  gt() %>% 
+  tab_options(column_labels.font.weight = "bold") %>%
+  fmt_number(
+    7,
+    decimals = 2,
+    drop_trailing_zeros = TRUE,
+    suffixing = TRUE
+  ) %>%
+  fmt_number(c(3:6),
+             decimals = 2) %>% 
+    fmt_number(8,decimals = 2,
+             drop_trailing_zeros=TRUE,
+             suffixing = TRUE) %>% 
+  fmt(8, fns = function(x) 
+    ifelse(x>100, ">100",
+           scales::number(x, accuracy = .1))) %>% 
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+      ),
+    locations = list(cells_body(
+     columns = BIC,
+     row = BIC == min(BIC[1:nrow(stage2_cmpk)]) 
+    ),
+    cells_body(
+     columns = aBIC,
+     row = aBIC == min(aBIC[1:nrow(stage2_cmpk)])
+    ),
+    cells_body(
+     columns = CAIC,
+     row = CAIC == min(CAIC[1:nrow(stage2_cmpk)])
+    ),
+    cells_body(
+     columns = AWE,
+     row = AWE == min(AWE[1:nrow(stage2_cmpk)])
+    ),
+    cells_body(
+     columns = cmPk,
+     row =  cmPk == max(cmPk[1:nrow(stage2_cmpk)])
+     ),
+    cells_body(
+     columns = BF, 
+     row =  BF > 10)
+  )
+)
+
+```
+
+#### Compare loglikelihood
+
+You can also compare models using nested model testing directly with MplusAutomation.
+Note that you can only compare across models but the profiles must stay the same.
+
+```{r}
+# MplusAutomation Method using `compareModels` 
+invisible(capture.output(
+  comparison <- compareModels(output_enum[["model_2_class_3.out"]],
+  output_enum[["model_4_class_3.out"]], diffTest = TRUE)
+))
+
+# p-value
+comparison$diffTest$MLR_LL$p
+
+#BIC
+comparison$summaries
+
+```
+
+Here, Model 1 (restricted, fewer parameters) is nested in Model 2.
+The chi-square difference test, assuming nested models, shows a significant improvement in fit for Model 2 over Model 1, despite the added parameters.
+
+------------------------------------------------------------------------
+
+## Visualization
+
+### Latent Profile Plot
+
+Using R Code
+
+```{r}
+source(here("functions", "plot_lpa.R"))
+
+# Read in models
+output_enum <- readModels(here("lpa_enumeration"), quiet = TRUE)
+
+plot_lpa(model_name = output_enum$model_3_class_4.out)
+```
+
+Using `MplusAutomation` code (NOTE: The `plotMixtures()` function is used for plotting LPA models only (i.e., means & variances))
+
+```{r}
+plotMixtures(output_enum$model_3_class_4.out, ci = 0.95, bw = FALSE) + 
+  labs(title = "Model 3: Equal Variances, Equal Covariances")
+```
+
+------------------------------------------------------------------------
+
+### Plot comparison
+
+```{r, fig.width= 10}
+a <- plotMixtures(output_enum$model_2_class_3.out,
+  ci = 0.95, bw = FALSE) 
+
+b <- plotMixtures(output_enum$model_4_class_3.out,
+  ci = 0.95, bw = FALSE) 
+
+a + labs(title = "Model 2") +
+    theme(plot.title = element_text(size = 12)) +
+b + labs(title = "Model 4") +
+    theme(plot.title = element_text(size = 12))
+```
+
+------------------------------------------------------------------------
+
+
+![](figures/UCSB_Navy_mark.png)

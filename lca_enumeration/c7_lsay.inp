@@ -1,0 +1,18 @@
+TITLE:
+7-Class
+DATA:
+FILE = "C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/enumeration/
+lsay.dat"; 
+VARIABLE:
+NAMES = CASENUM COHORT RSTEMM CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L; 
+ MISSING=.;
+ categorical = CB28A - CB28L; 
+usevar = CB28A - CB28L; 
+classes = c(7); 
+ANALYSIS:
+estimator = mlr; 
+    type = mixture;
+    starts = 500 100; 
+    processors = 10;
+OUTPUT:
+sampstat residual tech11 tech14;
