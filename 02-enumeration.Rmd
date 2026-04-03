@@ -17,6 +17,7 @@ library(here)
 library(sjPlot)
 library(glue)
 library(cowplot)
+library(gt)
 library(DiagrammeR)
 ```
 
@@ -38,7 +39,10 @@ grViz(" digraph lca_model {
  
 # One for latent variables (circle) 
  
-    node [shape=circle]
+    node [shape=circle,  
+          fixedsize=true,
+          width=1,   
+          height=1]
     math [label=<C>];
     
 # `edge` statements
@@ -55,18 +59,18 @@ grViz(" digraph lca_model {
 
 ```{r, eval = FALSE}
 # Read in raw dataset
-data_raw <- read_sav(here("data", "ICPSR_30263", "DS0001", "30263-0001-Data.sav"), user_na =TRUE)
+#data_raw <- read_sav(here("data", "ICPSR_30263", "DS0001", "30263-0001-Data.sav"), user_na =TRUE)
 
 #Select variables from raw dataset
-lsay_select <- data_raw %>%
-  select(CASENUM, COHORT, RSTEMM, EMTHIRT, FEMALE,
-         CB28A, CB28B, CB28C, CB28E, CB28G, CB28H, CB28I, CB28K, CB28L) # 12th grade
+#lsay_select <- data_raw %>%
+#  select(CASENUM, COHORT, RSTEMM, EMTHIRT, FEMALE,
+#         CB28A, CB28B, CB28C, CB28E, CB28G, CB28H, CB28I, CB28K, CB28L) # 12th grade
 
 # View value labels
-view_df(lsay_select)
+#view_df(lsay_select)
 
 # write as .csv
-write_csv(lsay_select, here("data","lsay_cleaned.csv"))
+#write_csv(lsay_select, here("data","lsay_cleaned.csv"))
 ```
 
 ### Read in .csv
@@ -246,6 +250,151 @@ enum_table_full(output_enum)
 ```{r}
 source(here("functions","ic_plot_lca.R"))
 ic_plot(output_enum)
+```
+
+## Observed Response Patterns
+
+Save response frequencies for the 5-class model with response is _____.dat under SAVEDATA.
+
+```{r, eval = FALSE}
+patterns  <- mplusObject(
+  TITLE = "C5 LCA - Save response patterns", 
+  
+  VARIABLE = 
+  "categorical = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L; 
+   usevar = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;
+    
+   classes = c(5);",
+  
+  ANALYSIS = 
+   "estimator = mlr; 
+    type = mixture;
+    starts = 0;
+    optseed = 345726;", # Find the seed for the best log likelihood value in the 5-class solution
+  
+  SAVEDATA = 
+   "File=save_resp.dat;
+    Save=cprob;
+    
+    ! Code to save response frequency data 
+    
+    response is resp_patterns.dat;",
+  
+  OUTPUT = "residual patterns tech11 tech14",
+  
+  usevariables = colnames(lsay_cleaned),
+  rdata = lsay_cleaned)
+
+patterns_fit <- mplusModeler(patterns,
+                            dataout=here("resp_patterns", "patterns.dat"),
+                            modelout=here("resp_patterns", "patterns.inp") ,
+                            check=TRUE, run = TRUE, hashfilename = FALSE)
+```
+
+Check that log-likelihood values are the same
+
+```{r}
+output_patterns <- readModels(here("resp_patterns", "patterns.out"))
+output_patterns$summaries$LL
+
+enumeration_c5 <- readModels(here("lca_enumeration", "c5_lsay.out"))
+enumeration_c5$summaries$LL
+```
+
+Read in observed response pattern data and relabel the columns
+
+```{r}
+# Read in response frequency data that we just created:
+patterns <- read_table(here("resp_patterns", "resp_patterns.dat"),
+                        col_names=FALSE, na = "*") 
+
+# Extract the column names
+names <- names(readModels(here("resp_patterns", "patterns.out"))[['savedata']]) 
+
+# Add the names back to the dataset
+colnames(patterns) <- c("Frequency", names) 
+
+# Rename the variable 
+patterns <- patterns %>% 
+  rename(C = dplyr::any_of(c("C", "MLCC")))
+```
+
+Create a table with the top 5 unconditional response pattern, then top of conditional response pattern for each modal class assignment
+
+```{r}
+# Order responses by highest frequency
+order_highest <- patterns %>% 
+  rename(C = dplyr::any_of(c("C", "MLCC"))) %>% 
+  arrange(desc(Frequency))
+
+# Loop `patterns` data to list top 5 conditional response patterns for each class
+loop_cond  <- lapply(1:max(patterns$C), function(k) {       
+order_cond <- patterns %>%                    
+  filter(C == k) %>%                    
+  arrange(desc(Frequency)) %>%                
+  head(5)                                     
+  })                                          
+
+# Convert loop into data frame
+table_data <- as.data.frame(bind_rows(loop_cond))
+
+# Combine unconditional and conditional responses patterns
+response_patterns <-  rbind(order_highest[1:5,], table_data)
+```
+
+Finally, use `gt` to make a nicely formatted table
+
+```{r}
+resp_table <- response_patterns %>% 
+  gt() %>%
+    tab_header(
+    title = "Observed Response Patterns",
+    subtitle = html("Response patterns, estimated frequencies, estimated posterior class probabilities and modal assignments")) %>% 
+    tab_source_note(
+    source_note = md("Data Source: **Longitudinal Study of American Youth (LSAY))**")) %>%
+    cols_label(
+      Frequency = html("<i>f</i><sub>r</sub>"),
+    CPROB1 = html("P<sub><i>k</i></sub>=1"),
+    CPROB2 = html("P<sub><i>k</i></sub>=2"),
+    CPROB3 = html("P<sub><i>k</i></sub>=3"),
+    CPROB4 = html("P<sub><i>k</i></sub>=4"),
+    CPROB5 = html("P<sub><i>k</i></sub>=5"),
+    C = md("*k*")) %>% 
+  tab_row_group(
+    label = "Unconditional response patterns",
+    rows = 1:5) %>%
+  tab_row_group(
+    label = md("*k* = 1 Conditional response patterns"),
+    rows = 6:10) %>% #EDIT THESE VALUES BASED ON THE LAST COLUMN
+  tab_row_group(
+    label = md("*k* = 2 Conditional response patterns"),
+    rows = 11:15)  %>% #EDIT THESE VALUES BASED ON THE LAST COLUMN
+  tab_row_group(
+    label = md("*k* = 3 Conditional response patterns"),
+    rows = 16:20)  %>% #EDIT THESE VALUES BASED ON THE LAST COLUMN  
+  tab_row_group(
+    label = md("*k* = 4 Conditional response patterns"),
+    rows = 21:25)  %>% #EDIT THESE VALUES BASED ON THE LAST COLUMN  
+  tab_row_group(
+    label = md("*k* = 5 Conditional response patterns"),
+    rows = 26:30)  %>% #EDIT THESE VALUES BASED ON THE LAST COLUMN  
+    row_group_order(
+      groups = c("Unconditional response patterns",
+                 md("*k* = 1 Conditional response patterns"),
+                 md("*k* = 2 Conditional response patterns"),
+                 md("*k* = 3 Conditional response patterns"),
+                 md("*k* = 4 Conditional response patterns"),
+                 md("*k* = 5 Conditional response patterns"))) %>% 
+    tab_footnote(
+    footnote = html(
+      "<i>Note.</i> <i>f</i><sub>r</sub> = response pattern frequency; P<sub><i>k</i></sub> = posterior class probabilities"
+    )
+  ) %>% 
+  cols_align(align = "center") %>% 
+  opt_align_table_header(align = "left") %>% 
+  gt::tab_options(table.font.names = "Times New Roman")
+
+resp_table
 ```
 
 ## Visualization

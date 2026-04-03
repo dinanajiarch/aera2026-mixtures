@@ -74,11 +74,6 @@ New (
     diff23 diff24 diff25
     diff34 diff35
     diff45
-
-    ! Female effect differences (6 total for 4 parameters)
-    dfem12 dfem13 dfem14
-    dfem23 dfem24
-    dfem34
   );
   
   ! Distal mean comparisons
@@ -92,14 +87,6 @@ New (
   diff34 = m3-m4;
   diff35 = m3-m5;
   diff45 = m4-m5;
-
-  ! Female effect comparisons
-  dfem12 = f1-f2;
-  dfem13 = f1-f3;
-  dfem14 = f1-f4;
-  dfem23 = f2-f3;
-  dfem24 = f2-f4;
-  dfem34 = f3-f4;
  
 MODEL TEST:
 f1=0; f2=0; f3=0; f4=0;

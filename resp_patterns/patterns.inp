@@ -1,0 +1,27 @@
+TITLE:
+C5 LCA - Save response patterns
+DATA:
+FILE = "C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/resp_patterns/
+patterns.dat"; 
+VARIABLE:
+NAMES = CASENUM COHORT RSTEMM EMTHIRT FEMALE CB28A CB28B CB28C CB28E CB28G CB28H
+     CB28I CB28K CB28L; 
+ MISSING=.;
+ categorical = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L; 
+   usevar = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;
+    
+   classes = c(5);
+ANALYSIS:
+estimator = mlr; 
+    type = mixture;
+    starts = 0;
+    optseed = 345726;
+OUTPUT:
+residual patterns tech11 tech14
+SAVEDATA:
+File=save_resp.dat;
+    Save=cprob;
+    
+    ! Code to save response frequency data 
+    
+    response is resp_patterns.dat;

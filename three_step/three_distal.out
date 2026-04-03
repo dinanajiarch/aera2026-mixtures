@@ -1,6 +1,6 @@
 Mplus VERSION 9
 MUTHEN & MUTHEN
-04/02/2026   7:12 PM
+04/03/2026  12:20 PM
 
 INPUT INSTRUCTIONS
 
@@ -80,11 +80,6 @@ INPUT INSTRUCTIONS
       diff23 diff24 diff25
       diff34 diff35
       diff45
-
-      ! Female effect differences (6 total for 4 parameters)
-      dfem12 dfem13 dfem14
-      dfem23 dfem24
-      dfem34
     );
 
     ! Distal mean comparisons
@@ -98,14 +93,6 @@ INPUT INSTRUCTIONS
     diff34 = m3-m4;
     diff35 = m3-m5;
     diff45 = m4-m5;
-
-    ! Female effect comparisons
-    dfem12 = f1-f2;
-    dfem13 = f1-f3;
-    dfem14 = f1-f4;
-    dfem23 = f2-f3;
-    dfem24 = f2-f4;
-    dfem34 = f3-f4;
 
   MODEL TEST:
        ! omnibus test of distal means
@@ -473,12 +460,6 @@ New/Additional Parameters
     DIFF34            -1.048      1.514     -0.692      0.489
     DIFF35            -6.345      1.372     -4.624      0.000
     DIFF45            -5.297      1.464     -3.619      0.000
-    DFEM12             0.560      0.144      3.880      0.000
-    DFEM13             0.901      0.198      4.558      0.000
-    DFEM14             1.153      0.209      5.514      0.000
-    DFEM23             0.341      0.159      2.148      0.032
-    DFEM24             0.593      0.181      3.279      0.001
-    DFEM34             0.253      0.210      1.204      0.229
 
 
 QUALITY OF NUMERICAL RESULTS
@@ -827,9 +808,9 @@ Parameterization using Reference Class 4
     FEMALE             1.758      0.355      1.184      2.612
 
 
-     Beginning Time:  19:12:11
-        Ending Time:  19:12:12
-       Elapsed Time:  00:00:01
+     Beginning Time:  12:20:58
+        Ending Time:  12:20:58
+       Elapsed Time:  00:00:00
 
 
 

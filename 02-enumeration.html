@@ -366,7 +366,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Latent Class Analysis</h1>
-<h4 class="date">Last Updated: 2026-04-02</h4>
+<h4 class="date">Last Updated: 2026-04-03</h4>
 
 </div>
 
@@ -380,28 +380,29 @@ $(document).ready(function () {
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(sjPlot)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span></code></pre></div>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span></code></pre></div>
 <p>All functions and datasets used in this walkthrough can be found <a
 href="https://github.com/dinanajiarch/aera2026-mixtures">here</a></p>
-<div class="grViz html-widget html-fill-item" id="htmlwidget-7321ed39b17881786d3e" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-7321ed39b17881786d3e">{"x":{"diagram":" digraph lca_model {\n\n# The `graph` statement - No editing needed\n\n    graph [layout = dot, overlap = true]\n \n# Two `node` statements\n \n# One for measured variables (box) \n\n    node [shape=box]\n    CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;\n \n# One for latent variables (circle) \n \n    node [shape=circle]\n    math [label=<C>];\n    \n# `edge` statements\n \n    edge [minlen = 2]\n    math -> {CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L}\n \n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-ee26b01af697c31a552d" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-ee26b01af697c31a552d">{"x":{"diagram":" digraph lca_model {\n\n# The `graph` statement - No editing needed\n\n    graph [layout = dot, overlap = true]\n \n# Two `node` statements\n \n# One for measured variables (box) \n\n    node [shape=box]\n    CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;\n \n# One for latent variables (circle) \n \n    node [shape=circle,  \n          fixedsize=true,\n          width=1,   \n          height=1]\n    math [label=<C>];\n    \n# `edge` statements\n \n    edge [minlen = 2]\n    math -> {CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L}\n \n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <div id="data-wrangling" class="section level2">
 <h2>Data Wrangling</h2>
 <div id="read-in-full-lsay-data-set-and-subset" class="section level4">
 <h4>Read in full LSAY data set and subset</h4>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Read in raw dataset</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>data_raw <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;ICPSR_30263&quot;</span>, <span class="st">&quot;DS0001&quot;</span>, <span class="st">&quot;30263-0001-Data.sav&quot;</span>), <span class="at">user_na =</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#data_raw &lt;- read_sav(here(&quot;data&quot;, &quot;ICPSR_30263&quot;, &quot;DS0001&quot;, &quot;30263-0001-Data.sav&quot;), user_na =TRUE)</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#Select variables from raw dataset</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>lsay_select <span class="ot">&lt;-</span> data_raw <span class="sc">%&gt;%</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="fu">select</span>(CASENUM, COHORT, RSTEMM, EMTHIRT, FEMALE,</span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>         CB28A, CB28B, CB28C, CB28E, CB28G, CB28H, CB28I, CB28K, CB28L) <span class="co"># 12th grade</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#lsay_select &lt;- data_raw %&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#  select(CASENUM, COHORT, RSTEMM, EMTHIRT, FEMALE,</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#         CB28A, CB28B, CB28C, CB28E, CB28G, CB28H, CB28I, CB28K, CB28L) # 12th grade</span></span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># View value labels</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="fu">view_df</span>(lsay_select)</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#view_df(lsay_select)</span></span>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
 <span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co"># write as .csv</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="fu">write_csv</span>(lsay_select, <span class="fu">here</span>(<span class="st">&quot;data&quot;</span>,<span class="st">&quot;lsay_cleaned.csv&quot;</span>))</span></code></pre></div>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#write_csv(lsay_select, here(&quot;data&quot;,&quot;lsay_cleaned.csv&quot;))</span></span></code></pre></div>
 </div>
 <div id="read-in-.csv" class="section level3">
 <h3>Read in .csv</h3>
@@ -665,23 +666,23 @@ class models</p>
 <span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a></span>
 <span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>output_enum <span class="ot">&lt;-</span> <span class="fu">readModels</span>(<span class="fu">here</span>(<span class="st">&quot;lca_enumeration&quot;</span>))</span>
 <span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="fu">enum_table_full</span>(output_enum)</span></code></pre></div>
-<div id="tbnzrybynk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tbnzrybynk table {
+<div id="ogqwxdvnys" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ogqwxdvnys table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tbnzrybynk thead, #tbnzrybynk tbody, #tbnzrybynk tfoot, #tbnzrybynk tr, #tbnzrybynk td, #tbnzrybynk th {
+#ogqwxdvnys thead, #ogqwxdvnys tbody, #ogqwxdvnys tfoot, #ogqwxdvnys tr, #ogqwxdvnys td, #ogqwxdvnys th {
   border-style: none;
 }
 
-#tbnzrybynk p {
+#ogqwxdvnys p {
   margin: 0;
   padding: 0;
 }
 
-#tbnzrybynk .gt_table {
+#ogqwxdvnys .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -707,12 +708,12 @@ class models</p>
   border-left-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_caption {
+#ogqwxdvnys .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tbnzrybynk .gt_title {
+#ogqwxdvnys .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -724,7 +725,7 @@ class models</p>
   border-bottom-width: 0;
 }
 
-#tbnzrybynk .gt_subtitle {
+#ogqwxdvnys .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -736,7 +737,7 @@ class models</p>
   border-top-width: 0;
 }
 
-#tbnzrybynk .gt_heading {
+#ogqwxdvnys .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -748,13 +749,13 @@ class models</p>
   border-right-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_bottom_border {
+#ogqwxdvnys .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_col_headings {
+#ogqwxdvnys .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -769,7 +770,7 @@ class models</p>
   border-right-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_col_heading {
+#ogqwxdvnys .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -789,7 +790,7 @@ class models</p>
   overflow-x: hidden;
 }
 
-#tbnzrybynk .gt_column_spanner_outer {
+#ogqwxdvnys .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -801,15 +802,15 @@ class models</p>
   padding-right: 4px;
 }
 
-#tbnzrybynk .gt_column_spanner_outer:first-child {
+#ogqwxdvnys .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tbnzrybynk .gt_column_spanner_outer:last-child {
+#ogqwxdvnys .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tbnzrybynk .gt_column_spanner {
+#ogqwxdvnys .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -821,11 +822,11 @@ class models</p>
   width: 100%;
 }
 
-#tbnzrybynk .gt_spanner_row {
+#ogqwxdvnys .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tbnzrybynk .gt_group_heading {
+#ogqwxdvnys .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -851,7 +852,7 @@ class models</p>
   text-align: left;
 }
 
-#tbnzrybynk .gt_empty_group_heading {
+#ogqwxdvnys .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -866,15 +867,15 @@ class models</p>
   vertical-align: middle;
 }
 
-#tbnzrybynk .gt_from_md > :first-child {
+#ogqwxdvnys .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tbnzrybynk .gt_from_md > :last-child {
+#ogqwxdvnys .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tbnzrybynk .gt_row {
+#ogqwxdvnys .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -893,7 +894,7 @@ class models</p>
   overflow-x: hidden;
 }
 
-#tbnzrybynk .gt_stub {
+#ogqwxdvnys .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -906,7 +907,7 @@ class models</p>
   padding-right: 5px;
 }
 
-#tbnzrybynk .gt_stub_row_group {
+#ogqwxdvnys .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -920,15 +921,15 @@ class models</p>
   vertical-align: top;
 }
 
-#tbnzrybynk .gt_row_group_first td {
+#ogqwxdvnys .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tbnzrybynk .gt_row_group_first th {
+#ogqwxdvnys .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tbnzrybynk .gt_summary_row {
+#ogqwxdvnys .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -938,16 +939,16 @@ class models</p>
   padding-right: 5px;
 }
 
-#tbnzrybynk .gt_first_summary_row {
+#ogqwxdvnys .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_first_summary_row.thick {
+#ogqwxdvnys .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tbnzrybynk .gt_last_summary_row {
+#ogqwxdvnys .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -957,7 +958,7 @@ class models</p>
   border-bottom-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_grand_summary_row {
+#ogqwxdvnys .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -967,7 +968,7 @@ class models</p>
   padding-right: 5px;
 }
 
-#tbnzrybynk .gt_first_grand_summary_row {
+#ogqwxdvnys .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -977,7 +978,7 @@ class models</p>
   border-top-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_last_grand_summary_row_top {
+#ogqwxdvnys .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -987,11 +988,11 @@ class models</p>
   border-bottom-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_striped {
+#ogqwxdvnys .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tbnzrybynk .gt_table_body {
+#ogqwxdvnys .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1000,7 +1001,7 @@ class models</p>
   border-bottom-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_footnotes {
+#ogqwxdvnys .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1014,7 +1015,7 @@ class models</p>
   border-right-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_footnote {
+#ogqwxdvnys .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1023,7 +1024,7 @@ class models</p>
   padding-right: 5px;
 }
 
-#tbnzrybynk .gt_sourcenotes {
+#ogqwxdvnys .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1037,7 +1038,7 @@ class models</p>
   border-right-color: #D3D3D3;
 }
 
-#tbnzrybynk .gt_sourcenote {
+#ogqwxdvnys .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1045,72 +1046,72 @@ class models</p>
   padding-right: 5px;
 }
 
-#tbnzrybynk .gt_left {
+#ogqwxdvnys .gt_left {
   text-align: left;
 }
 
-#tbnzrybynk .gt_center {
+#ogqwxdvnys .gt_center {
   text-align: center;
 }
 
-#tbnzrybynk .gt_right {
+#ogqwxdvnys .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tbnzrybynk .gt_font_normal {
+#ogqwxdvnys .gt_font_normal {
   font-weight: normal;
 }
 
-#tbnzrybynk .gt_font_bold {
+#ogqwxdvnys .gt_font_bold {
   font-weight: bold;
 }
 
-#tbnzrybynk .gt_font_italic {
+#ogqwxdvnys .gt_font_italic {
   font-style: italic;
 }
 
-#tbnzrybynk .gt_super {
+#ogqwxdvnys .gt_super {
   font-size: 65%;
 }
 
-#tbnzrybynk .gt_footnote_marks {
+#ogqwxdvnys .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tbnzrybynk .gt_asterisk {
+#ogqwxdvnys .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tbnzrybynk .gt_indent_1 {
+#ogqwxdvnys .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tbnzrybynk .gt_indent_2 {
+#ogqwxdvnys .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tbnzrybynk .gt_indent_3 {
+#ogqwxdvnys .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tbnzrybynk .gt_indent_4 {
+#ogqwxdvnys .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tbnzrybynk .gt_indent_5 {
+#ogqwxdvnys .gt_indent_5 {
   text-indent: 25px;
 }
 
-#tbnzrybynk .katex-display {
+#ogqwxdvnys .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#tbnzrybynk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ogqwxdvnys div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1266,86 +1267,1203 @@ VLMR = Vuong-Lo-Mendell-Rubin adjusted likelihood ratio test p-value;
 <p><img src="02-enumeration_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 </div>
+<div id="observed-response-patterns" class="section level2">
+<h2>Observed Response Patterns</h2>
+<p>Save response frequencies for the 5-class model with response is
+_____.dat under SAVEDATA.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>patterns  <span class="ot">&lt;-</span> <span class="fu">mplusObject</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="at">TITLE =</span> <span class="st">&quot;C5 LCA - Save response patterns&quot;</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  </span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="at">VARIABLE =</span> </span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  <span class="st">&quot;categorical = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L; </span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="st">   usevar = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="st">   classes = c(5);&quot;</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  </span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>  <span class="at">ANALYSIS =</span> </span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>   <span class="st">&quot;estimator = mlr; </span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="st">    type = mixture;</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="st">    starts = 0;</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="st">    optseed = 345726;&quot;</span>, <span class="co"># Find the seed for the best log likelihood value in the 5-class solution</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>  </span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a>  <span class="at">SAVEDATA =</span> </span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>   <span class="st">&quot;File=save_resp.dat;</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="st">    Save=cprob;</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="st">    ! Code to save response frequency data </span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="st">    response is resp_patterns.dat;&quot;</span>,</span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a>  </span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a>  <span class="at">OUTPUT =</span> <span class="st">&quot;residual patterns tech11 tech14&quot;</span>,</span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a>  </span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a>  <span class="at">usevariables =</span> <span class="fu">colnames</span>(lsay_cleaned),</span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a>  <span class="at">rdata =</span> lsay_cleaned)</span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a>patterns_fit <span class="ot">&lt;-</span> <span class="fu">mplusModeler</span>(patterns,</span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a>                            <span class="at">dataout=</span><span class="fu">here</span>(<span class="st">&quot;resp_patterns&quot;</span>, <span class="st">&quot;patterns.dat&quot;</span>),</span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a>                            <span class="at">modelout=</span><span class="fu">here</span>(<span class="st">&quot;resp_patterns&quot;</span>, <span class="st">&quot;patterns.inp&quot;</span>) ,</span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a>                            <span class="at">check=</span><span class="cn">TRUE</span>, <span class="at">run =</span> <span class="cn">TRUE</span>, <span class="at">hashfilename =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>Check that log-likelihood values are the same</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>output_patterns <span class="ot">&lt;-</span> <span class="fu">readModels</span>(<span class="fu">here</span>(<span class="st">&quot;resp_patterns&quot;</span>, <span class="st">&quot;patterns.out&quot;</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>output_patterns<span class="sc">$</span>summaries<span class="sc">$</span>LL</span></code></pre></div>
+<pre><code>## [1] -12548.94</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>enumeration_c5 <span class="ot">&lt;-</span> <span class="fu">readModels</span>(<span class="fu">here</span>(<span class="st">&quot;lca_enumeration&quot;</span>, <span class="st">&quot;c5_lsay.out&quot;</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>enumeration_c5<span class="sc">$</span>summaries<span class="sc">$</span>LL</span></code></pre></div>
+<pre><code>## [1] -12548.94</code></pre>
+<p>Read in observed response pattern data and relabel the columns</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># Read in response frequency data that we just created:</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>patterns <span class="ot">&lt;-</span> <span class="fu">read_table</span>(<span class="fu">here</span>(<span class="st">&quot;resp_patterns&quot;</span>, <span class="st">&quot;resp_patterns.dat&quot;</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>                        <span class="at">col_names=</span><span class="cn">FALSE</span>, <span class="at">na =</span> <span class="st">&quot;*&quot;</span>) </span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="co"># Extract the column names</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">readModels</span>(<span class="fu">here</span>(<span class="st">&quot;resp_patterns&quot;</span>, <span class="st">&quot;patterns.out&quot;</span>))[[<span class="st">&#39;savedata&#39;</span>]]) </span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="co"># Add the names back to the dataset</span></span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="fu">colnames</span>(patterns) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Frequency&quot;</span>, names) </span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a><span class="co"># Rename the variable </span></span>
+<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>patterns <span class="ot">&lt;-</span> patterns <span class="sc">%&gt;%</span> </span>
+<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">C =</span> dplyr<span class="sc">::</span><span class="fu">any_of</span>(<span class="fu">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;MLCC&quot;</span>)))</span></code></pre></div>
+<p>Create a table with the top 5 unconditional response pattern, then
+top of conditional response pattern for each modal class assignment</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="co"># Order responses by highest frequency</span></span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>order_highest <span class="ot">&lt;-</span> patterns <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">C =</span> dplyr<span class="sc">::</span><span class="fu">any_of</span>(<span class="fu">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;MLCC&quot;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Frequency))</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="co"># Loop `patterns` data to list top 5 conditional response patterns for each class</span></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>loop_cond  <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">max</span>(patterns<span class="sc">$</span>C), <span class="cf">function</span>(k) {       </span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>order_cond <span class="ot">&lt;-</span> patterns <span class="sc">%&gt;%</span>                    </span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>  <span class="fu">filter</span>(C <span class="sc">==</span> k) <span class="sc">%&gt;%</span>                    </span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Frequency)) <span class="sc">%&gt;%</span>                </span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>)                                     </span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>  })                                          </span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a><span class="co"># Convert loop into data frame</span></span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>table_data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">bind_rows</span>(loop_cond))</span>
+<span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a><span class="co"># Combine unconditional and conditional responses patterns</span></span>
+<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a>response_patterns <span class="ot">&lt;-</span>  <span class="fu">rbind</span>(order_highest[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,], table_data)</span></code></pre></div>
+<p>Finally, use <code>gt</code> to make a nicely formatted table</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>resp_table <span class="ot">&lt;-</span> response_patterns <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>    <span class="fu">tab_header</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Observed Response Patterns&quot;</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">html</span>(<span class="st">&quot;Response patterns, estimated frequencies, estimated posterior class probabilities and modal assignments&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>    <span class="fu">tab_source_note</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>    <span class="at">source_note =</span> <span class="fu">md</span>(<span class="st">&quot;Data Source: **Longitudinal Study of American Youth (LSAY))**&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>    <span class="fu">cols_label</span>(</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>      <span class="at">Frequency =</span> <span class="fu">html</span>(<span class="st">&quot;&lt;i&gt;f&lt;/i&gt;&lt;sub&gt;r&lt;/sub&gt;&quot;</span>),</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>    <span class="at">CPROB1 =</span> <span class="fu">html</span>(<span class="st">&quot;P&lt;sub&gt;&lt;i&gt;k&lt;/i&gt;&lt;/sub&gt;=1&quot;</span>),</span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>    <span class="at">CPROB2 =</span> <span class="fu">html</span>(<span class="st">&quot;P&lt;sub&gt;&lt;i&gt;k&lt;/i&gt;&lt;/sub&gt;=2&quot;</span>),</span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>    <span class="at">CPROB3 =</span> <span class="fu">html</span>(<span class="st">&quot;P&lt;sub&gt;&lt;i&gt;k&lt;/i&gt;&lt;/sub&gt;=3&quot;</span>),</span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>    <span class="at">CPROB4 =</span> <span class="fu">html</span>(<span class="st">&quot;P&lt;sub&gt;&lt;i&gt;k&lt;/i&gt;&lt;/sub&gt;=4&quot;</span>),</span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>    <span class="at">CPROB5 =</span> <span class="fu">html</span>(<span class="st">&quot;P&lt;sub&gt;&lt;i&gt;k&lt;/i&gt;&lt;/sub&gt;=5&quot;</span>),</span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a>    <span class="at">C =</span> <span class="fu">md</span>(<span class="st">&quot;*k*&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">&quot;Unconditional response patterns&quot;</span>,</span>
+<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a>    <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-19"><a href="#cb20-19" tabindex="-1"></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb20-20"><a href="#cb20-20" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">&quot;*k* = 1 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-21"><a href="#cb20-21" tabindex="-1"></a>    <span class="at">rows =</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span> <span class="co">#EDIT THESE VALUES BASED ON THE LAST COLUMN</span></span>
+<span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">&quot;*k* = 2 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a>    <span class="at">rows =</span> <span class="dv">11</span><span class="sc">:</span><span class="dv">15</span>)  <span class="sc">%&gt;%</span> <span class="co">#EDIT THESE VALUES BASED ON THE LAST COLUMN</span></span>
+<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">&quot;*k* = 3 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a>    <span class="at">rows =</span> <span class="dv">16</span><span class="sc">:</span><span class="dv">20</span>)  <span class="sc">%&gt;%</span> <span class="co">#EDIT THESE VALUES BASED ON THE LAST COLUMN  </span></span>
+<span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">&quot;*k* = 4 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-30"><a href="#cb20-30" tabindex="-1"></a>    <span class="at">rows =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">25</span>)  <span class="sc">%&gt;%</span> <span class="co">#EDIT THESE VALUES BASED ON THE LAST COLUMN  </span></span>
+<span id="cb20-31"><a href="#cb20-31" tabindex="-1"></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb20-32"><a href="#cb20-32" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">&quot;*k* = 5 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-33"><a href="#cb20-33" tabindex="-1"></a>    <span class="at">rows =</span> <span class="dv">26</span><span class="sc">:</span><span class="dv">30</span>)  <span class="sc">%&gt;%</span> <span class="co">#EDIT THESE VALUES BASED ON THE LAST COLUMN  </span></span>
+<span id="cb20-34"><a href="#cb20-34" tabindex="-1"></a>    <span class="fu">row_group_order</span>(</span>
+<span id="cb20-35"><a href="#cb20-35" tabindex="-1"></a>      <span class="at">groups =</span> <span class="fu">c</span>(<span class="st">&quot;Unconditional response patterns&quot;</span>,</span>
+<span id="cb20-36"><a href="#cb20-36" tabindex="-1"></a>                 <span class="fu">md</span>(<span class="st">&quot;*k* = 1 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-37"><a href="#cb20-37" tabindex="-1"></a>                 <span class="fu">md</span>(<span class="st">&quot;*k* = 2 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-38"><a href="#cb20-38" tabindex="-1"></a>                 <span class="fu">md</span>(<span class="st">&quot;*k* = 3 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-39"><a href="#cb20-39" tabindex="-1"></a>                 <span class="fu">md</span>(<span class="st">&quot;*k* = 4 Conditional response patterns&quot;</span>),</span>
+<span id="cb20-40"><a href="#cb20-40" tabindex="-1"></a>                 <span class="fu">md</span>(<span class="st">&quot;*k* = 5 Conditional response patterns&quot;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-41"><a href="#cb20-41" tabindex="-1"></a>    <span class="fu">tab_footnote</span>(</span>
+<span id="cb20-42"><a href="#cb20-42" tabindex="-1"></a>    <span class="at">footnote =</span> <span class="fu">html</span>(</span>
+<span id="cb20-43"><a href="#cb20-43" tabindex="-1"></a>      <span class="st">&quot;&lt;i&gt;Note.&lt;/i&gt; &lt;i&gt;f&lt;/i&gt;&lt;sub&gt;r&lt;/sub&gt; = response pattern frequency; P&lt;sub&gt;&lt;i&gt;k&lt;/i&gt;&lt;/sub&gt; = posterior class probabilities&quot;</span></span>
+<span id="cb20-44"><a href="#cb20-44" tabindex="-1"></a>    )</span>
+<span id="cb20-45"><a href="#cb20-45" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-46"><a href="#cb20-46" tabindex="-1"></a>  <span class="fu">cols_align</span>(<span class="at">align =</span> <span class="st">&quot;center&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-47"><a href="#cb20-47" tabindex="-1"></a>  <span class="fu">opt_align_table_header</span>(<span class="at">align =</span> <span class="st">&quot;left&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-48"><a href="#cb20-48" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">tab_options</span>(<span class="at">table.font.names =</span> <span class="st">&quot;Times New Roman&quot;</span>)</span>
+<span id="cb20-49"><a href="#cb20-49" tabindex="-1"></a></span>
+<span id="cb20-50"><a href="#cb20-50" tabindex="-1"></a>resp_table</span></code></pre></div>
+<div id="juywscctth" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#juywscctth table {
+  font-family: 'Times New Roman';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#juywscctth thead, #juywscctth tbody, #juywscctth tfoot, #juywscctth tr, #juywscctth td, #juywscctth th {
+  border-style: none;
+}
+
+#juywscctth p {
+  margin: 0;
+  padding: 0;
+}
+
+#juywscctth .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#juywscctth .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#juywscctth .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#juywscctth .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#juywscctth .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#juywscctth .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#juywscctth .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#juywscctth .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#juywscctth .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#juywscctth .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#juywscctth .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#juywscctth .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#juywscctth .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#juywscctth .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#juywscctth .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#juywscctth .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#juywscctth .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#juywscctth .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#juywscctth .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#juywscctth .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#juywscctth .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#juywscctth .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#juywscctth .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#juywscctth .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#juywscctth .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#juywscctth .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#juywscctth .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#juywscctth .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#juywscctth .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#juywscctth .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#juywscctth .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#juywscctth .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#juywscctth .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#juywscctth .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#juywscctth .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#juywscctth .gt_left {
+  text-align: left;
+}
+
+#juywscctth .gt_center {
+  text-align: center;
+}
+
+#juywscctth .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#juywscctth .gt_font_normal {
+  font-weight: normal;
+}
+
+#juywscctth .gt_font_bold {
+  font-weight: bold;
+}
+
+#juywscctth .gt_font_italic {
+  font-style: italic;
+}
+
+#juywscctth .gt_super {
+  font-size: 65%;
+}
+
+#juywscctth .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#juywscctth .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#juywscctth .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#juywscctth .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#juywscctth .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#juywscctth .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#juywscctth .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#juywscctth .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#juywscctth div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="16" class="gt_heading gt_title gt_font_normal" style>Observed Response Patterns</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="16" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>Response patterns, estimated frequencies, estimated posterior class probabilities and modal assignments</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Frequency"><i>f</i><sub>r</sub></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28A">CB28A</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28B">CB28B</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28C">CB28C</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28E">CB28E</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28G">CB28G</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28H">CB28H</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28I">CB28I</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28K">CB28K</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CB28L">CB28L</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CPROB1">P<sub><i>k</i></sub>=1</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CPROB2">P<sub><i>k</i></sub>=2</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CPROB3">P<sub><i>k</i></sub>=3</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CPROB4">P<sub><i>k</i></sub>=4</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="CPROB5">P<sub><i>k</i></sub>=5</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="C"><span class='gt_from_md'><em>k</em></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="16" class="gt_group_heading" scope="colgroup" id="Unconditional response patterns">Unconditional response patterns</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Unconditional response patterns  Frequency" class="gt_row gt_center">502</td>
+<td headers="Unconditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CPROB1" class="gt_row gt_center">0.000</td>
+<td headers="Unconditional response patterns  CPROB2" class="gt_row gt_center">0.986</td>
+<td headers="Unconditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="Unconditional response patterns  CPROB4" class="gt_row gt_center">0.006</td>
+<td headers="Unconditional response patterns  CPROB5" class="gt_row gt_center">0.008</td>
+<td headers="Unconditional response patterns  C" class="gt_row gt_center">2</td></tr>
+    <tr><td headers="Unconditional response patterns  Frequency" class="gt_row gt_center">111</td>
+<td headers="Unconditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CPROB1" class="gt_row gt_center">0.004</td>
+<td headers="Unconditional response patterns  CPROB2" class="gt_row gt_center">0.027</td>
+<td headers="Unconditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="Unconditional response patterns  CPROB4" class="gt_row gt_center">0.964</td>
+<td headers="Unconditional response patterns  CPROB5" class="gt_row gt_center">0.004</td>
+<td headers="Unconditional response patterns  C" class="gt_row gt_center">4</td></tr>
+    <tr><td headers="Unconditional response patterns  Frequency" class="gt_row gt_center">94</td>
+<td headers="Unconditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CPROB1" class="gt_row gt_center">0.005</td>
+<td headers="Unconditional response patterns  CPROB2" class="gt_row gt_center">0.788</td>
+<td headers="Unconditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="Unconditional response patterns  CPROB4" class="gt_row gt_center">0.191</td>
+<td headers="Unconditional response patterns  CPROB5" class="gt_row gt_center">0.017</td>
+<td headers="Unconditional response patterns  C" class="gt_row gt_center">2</td></tr>
+    <tr><td headers="Unconditional response patterns  Frequency" class="gt_row gt_center">76</td>
+<td headers="Unconditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="Unconditional response patterns  CPROB1" class="gt_row gt_center">0.001</td>
+<td headers="Unconditional response patterns  CPROB2" class="gt_row gt_center">0.918</td>
+<td headers="Unconditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="Unconditional response patterns  CPROB4" class="gt_row gt_center">0.006</td>
+<td headers="Unconditional response patterns  CPROB5" class="gt_row gt_center">0.075</td>
+<td headers="Unconditional response patterns  C" class="gt_row gt_center">2</td></tr>
+    <tr><td headers="Unconditional response patterns  Frequency" class="gt_row gt_center">65</td>
+<td headers="Unconditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28K" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="Unconditional response patterns  CPROB1" class="gt_row gt_center">0.004</td>
+<td headers="Unconditional response patterns  CPROB2" class="gt_row gt_center">0.000</td>
+<td headers="Unconditional response patterns  CPROB3" class="gt_row gt_center">0.996</td>
+<td headers="Unconditional response patterns  CPROB4" class="gt_row gt_center">0.000</td>
+<td headers="Unconditional response patterns  CPROB5" class="gt_row gt_center">0.001</td>
+<td headers="Unconditional response patterns  C" class="gt_row gt_center">3</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="16" class="gt_group_heading" scope="colgroup" id="&lt;span class='gt_from_md'&gt;&lt;em&gt;k&lt;/em&gt; = 1 Conditional response patterns&lt;/span&gt;"><span class='gt_from_md'><em>k</em> = 1 Conditional response patterns</span></th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="*k* = 1 Conditional response patterns  Frequency" class="gt_row gt_center">32</td>
+<td headers="*k* = 1 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB1" class="gt_row gt_center">0.992</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB2" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB4" class="gt_row gt_center">0.007</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB5" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 1 Conditional response patterns  C" class="gt_row gt_center">1</td></tr>
+    <tr><td headers="*k* = 1 Conditional response patterns  Frequency" class="gt_row gt_center">21</td>
+<td headers="*k* = 1 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB1" class="gt_row gt_center">0.996</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB2" class="gt_row gt_center">0.002</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB4" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB5" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 1 Conditional response patterns  C" class="gt_row gt_center">1</td></tr>
+    <tr><td headers="*k* = 1 Conditional response patterns  Frequency" class="gt_row gt_center">20</td>
+<td headers="*k* = 1 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB1" class="gt_row gt_center">0.573</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB2" class="gt_row gt_center">0.398</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB4" class="gt_row gt_center">0.003</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB5" class="gt_row gt_center">0.026</td>
+<td headers="*k* = 1 Conditional response patterns  C" class="gt_row gt_center">1</td></tr>
+    <tr><td headers="*k* = 1 Conditional response patterns  Frequency" class="gt_row gt_center">15</td>
+<td headers="*k* = 1 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB1" class="gt_row gt_center">0.918</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB2" class="gt_row gt_center">0.002</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB4" class="gt_row gt_center">0.078</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB5" class="gt_row gt_center">0.002</td>
+<td headers="*k* = 1 Conditional response patterns  C" class="gt_row gt_center">1</td></tr>
+    <tr><td headers="*k* = 1 Conditional response patterns  Frequency" class="gt_row gt_center">10</td>
+<td headers="*k* = 1 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 1 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB1" class="gt_row gt_center">0.990</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB2" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB3" class="gt_row gt_center">0.007</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB4" class="gt_row gt_center">0.003</td>
+<td headers="*k* = 1 Conditional response patterns  CPROB5" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 1 Conditional response patterns  C" class="gt_row gt_center">1</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="16" class="gt_group_heading" scope="colgroup" id="&lt;span class='gt_from_md'&gt;&lt;em&gt;k&lt;/em&gt; = 2 Conditional response patterns&lt;/span&gt;"><span class='gt_from_md'><em>k</em> = 2 Conditional response patterns</span></th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="*k* = 2 Conditional response patterns  Frequency" class="gt_row gt_center">502</td>
+<td headers="*k* = 2 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB1" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB2" class="gt_row gt_center">0.986</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB4" class="gt_row gt_center">0.006</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB5" class="gt_row gt_center">0.008</td>
+<td headers="*k* = 2 Conditional response patterns  C" class="gt_row gt_center">2</td></tr>
+    <tr><td headers="*k* = 2 Conditional response patterns  Frequency" class="gt_row gt_center">94</td>
+<td headers="*k* = 2 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 2 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB1" class="gt_row gt_center">0.005</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB2" class="gt_row gt_center">0.788</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB4" class="gt_row gt_center">0.191</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB5" class="gt_row gt_center">0.017</td>
+<td headers="*k* = 2 Conditional response patterns  C" class="gt_row gt_center">2</td></tr>
+    <tr><td headers="*k* = 2 Conditional response patterns  Frequency" class="gt_row gt_center">76</td>
+<td headers="*k* = 2 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 2 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB1" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB2" class="gt_row gt_center">0.918</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB4" class="gt_row gt_center">0.006</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB5" class="gt_row gt_center">0.075</td>
+<td headers="*k* = 2 Conditional response patterns  C" class="gt_row gt_center">2</td></tr>
+    <tr><td headers="*k* = 2 Conditional response patterns  Frequency" class="gt_row gt_center">47</td>
+<td headers="*k* = 2 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 2 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB1" class="gt_row gt_center">0.015</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB2" class="gt_row gt_center">0.956</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB4" class="gt_row gt_center">0.004</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB5" class="gt_row gt_center">0.025</td>
+<td headers="*k* = 2 Conditional response patterns  C" class="gt_row gt_center">2</td></tr>
+    <tr><td headers="*k* = 2 Conditional response patterns  Frequency" class="gt_row gt_center">36</td>
+<td headers="*k* = 2 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 2 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB1" class="gt_row gt_center">0.005</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB2" class="gt_row gt_center">0.516</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB4" class="gt_row gt_center">0.447</td>
+<td headers="*k* = 2 Conditional response patterns  CPROB5" class="gt_row gt_center">0.031</td>
+<td headers="*k* = 2 Conditional response patterns  C" class="gt_row gt_center">2</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="16" class="gt_group_heading" scope="colgroup" id="&lt;span class='gt_from_md'&gt;&lt;em&gt;k&lt;/em&gt; = 3 Conditional response patterns&lt;/span&gt;"><span class='gt_from_md'><em>k</em> = 3 Conditional response patterns</span></th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="*k* = 3 Conditional response patterns  Frequency" class="gt_row gt_center">65</td>
+<td headers="*k* = 3 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28K" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB1" class="gt_row gt_center">0.004</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB2" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB3" class="gt_row gt_center">0.996</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB4" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB5" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 3 Conditional response patterns  C" class="gt_row gt_center">3</td></tr>
+    <tr><td headers="*k* = 3 Conditional response patterns  Frequency" class="gt_row gt_center">30</td>
+<td headers="*k* = 3 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 3 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 3 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28K" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB1" class="gt_row gt_center">0.007</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB2" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB3" class="gt_row gt_center">0.974</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB4" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB5" class="gt_row gt_center">0.019</td>
+<td headers="*k* = 3 Conditional response patterns  C" class="gt_row gt_center">3</td></tr>
+    <tr><td headers="*k* = 3 Conditional response patterns  Frequency" class="gt_row gt_center">14</td>
+<td headers="*k* = 3 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 3 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28K" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB1" class="gt_row gt_center">0.006</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB2" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB3" class="gt_row gt_center">0.991</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB4" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB5" class="gt_row gt_center">0.003</td>
+<td headers="*k* = 3 Conditional response patterns  C" class="gt_row gt_center">3</td></tr>
+    <tr><td headers="*k* = 3 Conditional response patterns  Frequency" class="gt_row gt_center">14</td>
+<td headers="*k* = 3 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 3 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 3 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 3 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28K" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB1" class="gt_row gt_center">0.010</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB2" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB3" class="gt_row gt_center">0.669</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB4" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB5" class="gt_row gt_center">0.321</td>
+<td headers="*k* = 3 Conditional response patterns  C" class="gt_row gt_center">3</td></tr>
+    <tr><td headers="*k* = 3 Conditional response patterns  Frequency" class="gt_row gt_center">7</td>
+<td headers="*k* = 3 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 3 Conditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28K" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB1" class="gt_row gt_center">0.003</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB2" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB3" class="gt_row gt_center">0.982</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB4" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 3 Conditional response patterns  CPROB5" class="gt_row gt_center">0.015</td>
+<td headers="*k* = 3 Conditional response patterns  C" class="gt_row gt_center">3</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="16" class="gt_group_heading" scope="colgroup" id="&lt;span class='gt_from_md'&gt;&lt;em&gt;k&lt;/em&gt; = 4 Conditional response patterns&lt;/span&gt;"><span class='gt_from_md'><em>k</em> = 4 Conditional response patterns</span></th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="*k* = 4 Conditional response patterns  Frequency" class="gt_row gt_center">111</td>
+<td headers="*k* = 4 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB1" class="gt_row gt_center">0.004</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB2" class="gt_row gt_center">0.027</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB4" class="gt_row gt_center">0.964</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB5" class="gt_row gt_center">0.004</td>
+<td headers="*k* = 4 Conditional response patterns  C" class="gt_row gt_center">4</td></tr>
+    <tr><td headers="*k* = 4 Conditional response patterns  Frequency" class="gt_row gt_center">19</td>
+<td headers="*k* = 4 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28B" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB1" class="gt_row gt_center">0.179</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB2" class="gt_row gt_center">0.012</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB4" class="gt_row gt_center">0.804</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB5" class="gt_row gt_center">0.005</td>
+<td headers="*k* = 4 Conditional response patterns  C" class="gt_row gt_center">4</td></tr>
+    <tr><td headers="*k* = 4 Conditional response patterns  Frequency" class="gt_row gt_center">12</td>
+<td headers="*k* = 4 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB1" class="gt_row gt_center">0.011</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB2" class="gt_row gt_center">0.025</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB4" class="gt_row gt_center">0.923</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB5" class="gt_row gt_center">0.041</td>
+<td headers="*k* = 4 Conditional response patterns  C" class="gt_row gt_center">4</td></tr>
+    <tr><td headers="*k* = 4 Conditional response patterns  Frequency" class="gt_row gt_center">12</td>
+<td headers="*k* = 4 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28C" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB1" class="gt_row gt_center">0.048</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB2" class="gt_row gt_center">0.010</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB4" class="gt_row gt_center">0.938</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB5" class="gt_row gt_center">0.004</td>
+<td headers="*k* = 4 Conditional response patterns  C" class="gt_row gt_center">4</td></tr>
+    <tr><td headers="*k* = 4 Conditional response patterns  Frequency" class="gt_row gt_center">10</td>
+<td headers="*k* = 4 Conditional response patterns  CB28A" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28E" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28G" class="gt_row gt_center">0</td>
+<td headers="*k* = 4 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB1" class="gt_row gt_center">0.182</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB2" class="gt_row gt_center">0.030</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB4" class="gt_row gt_center">0.771</td>
+<td headers="*k* = 4 Conditional response patterns  CPROB5" class="gt_row gt_center">0.016</td>
+<td headers="*k* = 4 Conditional response patterns  C" class="gt_row gt_center">4</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="16" class="gt_group_heading" scope="colgroup" id="&lt;span class='gt_from_md'&gt;&lt;em&gt;k&lt;/em&gt; = 5 Conditional response patterns&lt;/span&gt;"><span class='gt_from_md'><em>k</em> = 5 Conditional response patterns</span></th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="*k* = 5 Conditional response patterns  Frequency" class="gt_row gt_center">35</td>
+<td headers="*k* = 5 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28L" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB1" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB2" class="gt_row gt_center">0.319</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB4" class="gt_row gt_center">0.004</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB5" class="gt_row gt_center">0.676</td>
+<td headers="*k* = 5 Conditional response patterns  C" class="gt_row gt_center">5</td></tr>
+    <tr><td headers="*k* = 5 Conditional response patterns  Frequency" class="gt_row gt_center">32</td>
+<td headers="*k* = 5 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28K" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB1" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB2" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB3" class="gt_row gt_center">0.005</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB4" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB5" class="gt_row gt_center">0.995</td>
+<td headers="*k* = 5 Conditional response patterns  C" class="gt_row gt_center">5</td></tr>
+    <tr><td headers="*k* = 5 Conditional response patterns  Frequency" class="gt_row gt_center">22</td>
+<td headers="*k* = 5 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB1" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB2" class="gt_row gt_center">0.126</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB4" class="gt_row gt_center">0.003</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB5" class="gt_row gt_center">0.870</td>
+<td headers="*k* = 5 Conditional response patterns  C" class="gt_row gt_center">5</td></tr>
+    <tr><td headers="*k* = 5 Conditional response patterns  Frequency" class="gt_row gt_center">21</td>
+<td headers="*k* = 5 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28H" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28I" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28K" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB1" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB2" class="gt_row gt_center">0.163</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB3" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB4" class="gt_row gt_center">0.004</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB5" class="gt_row gt_center">0.831</td>
+<td headers="*k* = 5 Conditional response patterns  C" class="gt_row gt_center">5</td></tr>
+    <tr><td headers="*k* = 5 Conditional response patterns  Frequency" class="gt_row gt_center">17</td>
+<td headers="*k* = 5 Conditional response patterns  CB28A" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28B" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28C" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28E" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28G" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28H" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28I" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CB28K" class="gt_row gt_center">1</td>
+<td headers="*k* = 5 Conditional response patterns  CB28L" class="gt_row gt_center">0</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB1" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB2" class="gt_row gt_center">0.014</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB3" class="gt_row gt_center">0.001</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB4" class="gt_row gt_center">0.000</td>
+<td headers="*k* = 5 Conditional response patterns  CPROB5" class="gt_row gt_center">0.985</td>
+<td headers="*k* = 5 Conditional response patterns  C" class="gt_row gt_center">5</td></tr>
+  </tbody>
+  <tfoot class="gt_sourcenotes">
+    <tr>
+      <td class="gt_sourcenote" colspan="16"><span class='gt_from_md'>Data Source: <strong>Longitudinal Study of American Youth (LSAY))</strong></span></td>
+    </tr>
+  </tfoot>
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="16"> <i>Note.</i> <i>f</i><sub>r</sub> = response pattern frequency; P<sub><i>k</i></sub> = posterior class probabilities</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
 <div id="visualization" class="section level2">
 <h2>Visualization</h2>
 <div id="plot-lca" class="section level3">
 <h3>Plot LCA</h3>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;functions&quot;</span>,<span class="st">&quot;plot_lca.R&quot;</span>))</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">plot_lca</span>(output_enum<span class="sc">$</span>c5_lsay.out)</span></code></pre></div>
-<p><img src="02-enumeration_files/figure-html/unnamed-chunk-12-1.png" width="960" /></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;functions&quot;</span>,<span class="st">&quot;plot_lca.R&quot;</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="fu">plot_lca</span>(output_enum<span class="sc">$</span>c5_lsay.out)</span></code></pre></div>
+<p><img src="02-enumeration_files/figure-html/unnamed-chunk-17-1.png" width="960" /></p>
 </div>
 <div id="plot-with-labels" class="section level3">
 <h3>Plot with labels</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># Title</span></span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="st">&quot;LSAY example: Model-estimated, class-specific </span><span class="sc">\n</span><span class="st">item probability plot for the five-class unconditional LCA&quot;</span></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># Model</span></span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>model_output <span class="ot">&lt;-</span> output_enum<span class="sc">$</span>c5_lsay.out</span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co"># Item names</span></span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>item_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CB28A&quot;</span> <span class="ot">=</span> <span class="st">&quot;I enjoy math&quot;</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>                 <span class="st">&quot;CB28B&quot;</span> <span class="ot">=</span> <span class="st">&quot;I am good at math&quot;</span>,</span>
-<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>                 <span class="st">&quot;CB28C&quot;</span> <span class="ot">=</span> <span class="st">&quot;I usually understand what we are doing in math&quot;</span>,</span>
-<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>                 <span class="st">&quot;CB28E&quot;</span> <span class="ot">=</span> <span class="st">&quot;Doing math often makes me nervous or upset (R)&quot;</span>,</span>
-<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>                 <span class="st">&quot;CB28G&quot;</span> <span class="ot">=</span> <span class="st">&quot;I often get scared when I open my math book and see a page of problems (R)&quot;</span>,</span>
-<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>                 <span class="st">&quot;CB28H&quot;</span> <span class="ot">=</span> <span class="st">&quot;Math is useful in everyday problems&quot;</span>,</span>
-<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>                 <span class="st">&quot;CB28I&quot;</span> <span class="ot">=</span> <span class="st">&quot;Math helps a person think logically&quot;</span>,</span>
-<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>                 <span class="st">&quot;CB28K&quot;</span> <span class="ot">=</span> <span class="st">&quot;It is important to know math to get a good job&quot;</span>,</span>
-<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>                 <span class="st">&quot;CB28L&quot;</span> <span class="ot">=</span> <span class="st">&quot;Will use math in many ways as an adult&quot;</span>)</span>
-<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co"># Class labels</span></span>
-<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a>class_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;I don&#39;t like math but I know it&#39;s good for me (16.25%)&quot;</span>,</span>
-<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a>                  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;Pro-math without anxiety (39.6%)&quot;</span>,</span>
-<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a>                  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Anti-math with anxiety (10.49%)&quot;</span>,</span>
-<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>                  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;Pro-math with anxiety (12.38%)&quot;</span>,</span>
-<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>                  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;Math lover (21.28%)&quot;</span>)</span>
-<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a></span>
-<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(model_output<span class="sc">$</span>parameters<span class="sc">$</span>probability.scale) <span class="sc">%&gt;%</span></span>
-<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(est, LatentClass, param, category) <span class="sc">%&gt;%</span></span>
-<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a>    <span class="at">est =</span> <span class="fu">as.numeric</span>(est),</span>
-<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a>    <span class="at">items =</span> <span class="fu">factor</span>(item_labels[param], <span class="at">levels =</span> item_labels),   </span>
-<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a>    <span class="at">class =</span> <span class="fu">factor</span>(class_labels[<span class="fu">as.character</span>(LatentClass)],         </span>
-<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a>                   <span class="at">levels =</span> class_labels)</span>
-<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-32"><a href="#cb14-32" tabindex="-1"></a>  <span class="fu">filter</span>(category <span class="sc">==</span> <span class="dv">2</span>)</span>
-<span id="cb14-33"><a href="#cb14-33" tabindex="-1"></a></span>
-<span id="cb14-34"><a href="#cb14-34" tabindex="-1"></a></span>
-<span id="cb14-35"><a href="#cb14-35" tabindex="-1"></a>plot_data <span class="sc">%&gt;%</span></span>
-<span id="cb14-36"><a href="#cb14-36" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
-<span id="cb14-37"><a href="#cb14-37" tabindex="-1"></a>    <span class="at">x =</span> items,</span>
-<span id="cb14-38"><a href="#cb14-38" tabindex="-1"></a>    <span class="at">y =</span> est,</span>
-<span id="cb14-39"><a href="#cb14-39" tabindex="-1"></a>    <span class="at">colour =</span> class,</span>
-<span id="cb14-40"><a href="#cb14-40" tabindex="-1"></a>    <span class="at">group =</span> class</span>
-<span id="cb14-41"><a href="#cb14-41" tabindex="-1"></a>  )) <span class="sc">+</span></span>
-<span id="cb14-42"><a href="#cb14-42" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb14-43"><a href="#cb14-43" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sub</span>(<span class="st">&quot;^0</span><span class="sc">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;.&quot;</span>, <span class="fu">sprintf</span>(<span class="st">&quot;%.2f&quot;</span>, est))), </span>
-<span id="cb14-44"><a href="#cb14-44" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), </span>
-<span id="cb14-45"><a href="#cb14-45" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb14-46"><a href="#cb14-46" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb14-47"><a href="#cb14-47" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(</span>
-<span id="cb14-48"><a href="#cb14-48" tabindex="-1"></a>    <span class="st">&quot;&quot;</span>,</span>
-<span id="cb14-49"><a href="#cb14-49" tabindex="-1"></a>    <span class="at">labels =</span> <span class="cf">function</span>(x)</span>
-<span id="cb14-50"><a href="#cb14-50" tabindex="-1"></a>      <span class="fu">str_wrap</span>(x, <span class="at">width =</span> <span class="dv">20</span>)</span>
-<span id="cb14-51"><a href="#cb14-51" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb14-52"><a href="#cb14-52" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> title,</span>
-<span id="cb14-53"><a href="#cb14-53" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Probability&quot;</span>) <span class="sc">+</span></span>
-<span id="cb14-54"><a href="#cb14-54" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb14-55"><a href="#cb14-55" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
-<span id="cb14-56"><a href="#cb14-56" tabindex="-1"></a>  <span class="co">#scale_fill_grey(start = 0.8, end = 0.2) + # Gives different shades</span></span>
-<span id="cb14-57"><a href="#cb14-57" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb14-58"><a href="#cb14-58" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">&quot;sans&quot;</span>, <span class="at">size =</span> <span class="dv">15</span>),</span>
-<span id="cb14-59"><a href="#cb14-59" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">&quot;sans&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>),</span>
-<span id="cb14-60"><a href="#cb14-60" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb14-61"><a href="#cb14-61" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>,</span>
-<span id="cb14-62"><a href="#cb14-62" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="st">&quot;center&quot;</span>, </span>
-<span id="cb14-63"><a href="#cb14-63" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>),</span>
-<span id="cb14-64"><a href="#cb14-64" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">&quot;italic&quot;</span>, <span class="at">size =</span> <span class="dv">15</span>),</span>
-<span id="cb14-65"><a href="#cb14-65" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
-<span id="cb14-66"><a href="#cb14-66" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">&quot;grey90&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>),</span>
-<span id="cb14-67"><a href="#cb14-67" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>)</span>
-<span id="cb14-68"><a href="#cb14-68" tabindex="-1"></a>  ) </span></code></pre></div>
-<p><img src="02-enumeration_files/figure-html/unnamed-chunk-13-1.png" width="960" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="co"># Title</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="st">&quot;LSAY example: Model-estimated, class-specific </span><span class="sc">\n</span><span class="st">item probability plot for the five-class unconditional LCA&quot;</span></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="co"># Model</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a>model_output <span class="ot">&lt;-</span> output_enum<span class="sc">$</span>c5_lsay.out</span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="co"># Item names</span></span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a>item_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CB28A&quot;</span> <span class="ot">=</span> <span class="st">&quot;I enjoy math&quot;</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a>                 <span class="st">&quot;CB28B&quot;</span> <span class="ot">=</span> <span class="st">&quot;I am good at math&quot;</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a>                 <span class="st">&quot;CB28C&quot;</span> <span class="ot">=</span> <span class="st">&quot;I usually understand what we are doing in math&quot;</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a>                 <span class="st">&quot;CB28E&quot;</span> <span class="ot">=</span> <span class="st">&quot;Doing math often makes me nervous or upset (R)&quot;</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>                 <span class="st">&quot;CB28G&quot;</span> <span class="ot">=</span> <span class="st">&quot;I often get scared when I open my math book and see a page of problems (R)&quot;</span>,</span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a>                 <span class="st">&quot;CB28H&quot;</span> <span class="ot">=</span> <span class="st">&quot;Math is useful in everyday problems&quot;</span>,</span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>                 <span class="st">&quot;CB28I&quot;</span> <span class="ot">=</span> <span class="st">&quot;Math helps a person think logically&quot;</span>,</span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a>                 <span class="st">&quot;CB28K&quot;</span> <span class="ot">=</span> <span class="st">&quot;It is important to know math to get a good job&quot;</span>,</span>
+<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a>                 <span class="st">&quot;CB28L&quot;</span> <span class="ot">=</span> <span class="st">&quot;Will use math in many ways as an adult&quot;</span>)</span>
+<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="co"># Class labels</span></span>
+<span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a>class_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="st">&quot;I don&#39;t like math but I know it&#39;s good for me (16.25%)&quot;</span>,</span>
+<span id="cb22-19"><a href="#cb22-19" tabindex="-1"></a>                  <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="st">&quot;Pro-math without anxiety (39.6%)&quot;</span>,</span>
+<span id="cb22-20"><a href="#cb22-20" tabindex="-1"></a>                  <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="st">&quot;Anti-math with anxiety (10.49%)&quot;</span>,</span>
+<span id="cb22-21"><a href="#cb22-21" tabindex="-1"></a>                  <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="st">&quot;Pro-math with anxiety (12.38%)&quot;</span>,</span>
+<span id="cb22-22"><a href="#cb22-22" tabindex="-1"></a>                  <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="st">&quot;Math lover (21.28%)&quot;</span>)</span>
+<span id="cb22-23"><a href="#cb22-23" tabindex="-1"></a></span>
+<span id="cb22-24"><a href="#cb22-24" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(model_output<span class="sc">$</span>parameters<span class="sc">$</span>probability.scale) <span class="sc">%&gt;%</span></span>
+<span id="cb22-25"><a href="#cb22-25" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(est, LatentClass, param, category) <span class="sc">%&gt;%</span></span>
+<span id="cb22-26"><a href="#cb22-26" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-27"><a href="#cb22-27" tabindex="-1"></a>    <span class="at">est =</span> <span class="fu">as.numeric</span>(est),</span>
+<span id="cb22-28"><a href="#cb22-28" tabindex="-1"></a>    <span class="at">items =</span> <span class="fu">factor</span>(item_labels[param], <span class="at">levels =</span> item_labels),   </span>
+<span id="cb22-29"><a href="#cb22-29" tabindex="-1"></a>    <span class="at">class =</span> <span class="fu">factor</span>(class_labels[<span class="fu">as.character</span>(LatentClass)],         </span>
+<span id="cb22-30"><a href="#cb22-30" tabindex="-1"></a>                   <span class="at">levels =</span> class_labels)</span>
+<span id="cb22-31"><a href="#cb22-31" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-32"><a href="#cb22-32" tabindex="-1"></a>  <span class="fu">filter</span>(category <span class="sc">==</span> <span class="dv">2</span>)</span>
+<span id="cb22-33"><a href="#cb22-33" tabindex="-1"></a></span>
+<span id="cb22-34"><a href="#cb22-34" tabindex="-1"></a></span>
+<span id="cb22-35"><a href="#cb22-35" tabindex="-1"></a>plot_data <span class="sc">%&gt;%</span></span>
+<span id="cb22-36"><a href="#cb22-36" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb22-37"><a href="#cb22-37" tabindex="-1"></a>    <span class="at">x =</span> items,</span>
+<span id="cb22-38"><a href="#cb22-38" tabindex="-1"></a>    <span class="at">y =</span> est,</span>
+<span id="cb22-39"><a href="#cb22-39" tabindex="-1"></a>    <span class="at">colour =</span> class,</span>
+<span id="cb22-40"><a href="#cb22-40" tabindex="-1"></a>    <span class="at">group =</span> class</span>
+<span id="cb22-41"><a href="#cb22-41" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb22-42"><a href="#cb22-42" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb22-43"><a href="#cb22-43" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sub</span>(<span class="st">&quot;^0</span><span class="sc">\\</span><span class="st">.&quot;</span>, <span class="st">&quot;.&quot;</span>, <span class="fu">sprintf</span>(<span class="st">&quot;%.2f&quot;</span>, est))), </span>
+<span id="cb22-44"><a href="#cb22-44" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), </span>
+<span id="cb22-45"><a href="#cb22-45" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb22-46"><a href="#cb22-46" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb22-47"><a href="#cb22-47" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(</span>
+<span id="cb22-48"><a href="#cb22-48" tabindex="-1"></a>    <span class="st">&quot;&quot;</span>,</span>
+<span id="cb22-49"><a href="#cb22-49" tabindex="-1"></a>    <span class="at">labels =</span> <span class="cf">function</span>(x)</span>
+<span id="cb22-50"><a href="#cb22-50" tabindex="-1"></a>      <span class="fu">str_wrap</span>(x, <span class="at">width =</span> <span class="dv">20</span>)</span>
+<span id="cb22-51"><a href="#cb22-51" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-52"><a href="#cb22-52" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> title,</span>
+<span id="cb22-53"><a href="#cb22-53" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Probability&quot;</span>) <span class="sc">+</span></span>
+<span id="cb22-54"><a href="#cb22-54" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb22-55"><a href="#cb22-55" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb22-56"><a href="#cb22-56" tabindex="-1"></a>  <span class="co">#scale_fill_grey(start = 0.8, end = 0.2) + # Gives different shades</span></span>
+<span id="cb22-57"><a href="#cb22-57" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb22-58"><a href="#cb22-58" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">&quot;sans&quot;</span>, <span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb22-59"><a href="#cb22-59" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">&quot;sans&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>),</span>
+<span id="cb22-60"><a href="#cb22-60" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb22-61"><a href="#cb22-61" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>,</span>
+<span id="cb22-62"><a href="#cb22-62" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="st">&quot;center&quot;</span>, </span>
+<span id="cb22-63"><a href="#cb22-63" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>),</span>
+<span id="cb22-64"><a href="#cb22-64" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">&quot;italic&quot;</span>, <span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb22-65"><a href="#cb22-65" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb22-66"><a href="#cb22-66" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">&quot;grey90&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>),</span>
+<span id="cb22-67"><a href="#cb22-67" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>)</span>
+<span id="cb22-68"><a href="#cb22-68" tabindex="-1"></a>  ) </span></code></pre></div>
+<p><img src="02-enumeration_files/figure-html/unnamed-chunk-18-1.png" width="960" /></p>
 <hr />
 <p><img src="figures/UCSB_Navy_mark.png" /></p>
 </div>

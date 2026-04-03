@@ -139,9 +139,10 @@ This step is done after class enumeration (or after you have selected the best l
 
 
 ```{r, eval = FALSE}
-
 step1  <- mplusObject(
+  
   TITLE = "Step 1 - Three-Step using LSAY", 
+  
   VARIABLE = 
   "categorical = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L; 
    usevar = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;
@@ -175,13 +176,19 @@ step1_fit <- mplusModeler(step1,
 
 ------------------------------------------------------------------------
 
-Plot
+Plot LCA
+
+Class 1 = I don't like math but I know it's good for me (16.25%)
+Class 2 = Pro-math without anxiety (39.6%)
+Class 3 = Anti-math with anxiety (10.49%)
+Class 4 = Pro-math with anxiety (12.38%)
+Class 5 = Math lover (21.28%)
 
 ```{r, out.width="90%"}
 source(here("functions", "plot_lca.R"))
-output_stepone <- readModels(here("three_step", "one.out"))
+output_one <- readModels(here("three_step", "one.out"))
 
-plot_lca(model_name = output_stepone)
+plot_lca(model_name = output_one)
 ```
 
 Check that log-likelihood values are the same
@@ -203,7 +210,7 @@ enumeration_c5$summaries$LL
 Extract logits for the classification probabilities for the most likely latent class
 
 ```{r}
-logit_cprobs <- as.data.frame(output_stepone$class_counts$logitProbs.mostLikely)
+logit_cprobs <- as.data.frame(output_one$class_counts$logitProbs.mostLikely)
 logit_cprobs
 ```
 
@@ -306,11 +313,6 @@ step3  <- mplusObject(
     diff23 diff24 diff25
     diff34 diff35
     diff45
-
-    ! Female effect differences (6 total for 4 parameters)
-    dfem12 dfem13 dfem14
-    dfem23 dfem24
-    dfem34
   );
   
   ! Distal mean comparisons
@@ -324,14 +326,6 @@ step3  <- mplusObject(
   diff34 = m3-m4;
   diff35 = m3-m5;
   diff45 = m4-m5;
-
-  ! Female effect comparisons
-  dfem12 = f1-f2;
-  dfem13 = f1-f3;
-  dfem14 = f1-f4;
-  dfem23 = f2-f3;
-  dfem24 = f2-f4;
-  dfem34 = f3-f4;
  ",
   
   MODELTEST = "     ! omnibus test of distal means 
@@ -367,7 +361,6 @@ mplusModeler(step3,
                modelout=here("three_step", "three_female.inp"), 
                check=TRUE, run = TRUE, hashfilename = FALSE)
 ```
-
 
 ------------------------------------------------------------------------
 
@@ -441,7 +434,7 @@ Note: There are two outputs, each containing separate Wald tests (one for Math I
 
 ------------------------------------------------------------------------
 
-#### Covariates Relations
+#### Table of Covariates Relations
 
 Make `predictor_table` function
 
@@ -517,12 +510,92 @@ Use `predictor_table` function
 ```{r}
 output_three <- readModels(here("three_step", "three_distal.out"))
 
-predictor_table(output_three, ref_class = "5", var_labels = c("FEMALE" = "Gender"))
+predictor_table(output_three, ref_class = "5", var_labels = c("FEMALE" = "Female"))
 ```
 
 ------------------------------------------------------------------------
 
-#### Table of Gender Differences
+#### Plot of Gender Differences
+
+```{r}
+output_three <- readModels(here("three_step", "three_distal.out"))
+
+# Extract Centering Values from Univariate Stats
+# These are the values Mplus used for the 'Female' variable after centering
+stats_df <- as.data.frame(output_three$sampstat$univariate.sample.statistics) %>%
+  tibble::rownames_to_column("Variable")
+
+male_x   <- stats_df %>% filter(Variable == "FEMALE") %>% pull(Minimum)
+female_x <- stats_df %>% filter(Variable == "FEMALE") %>% pull(Maximum)
+
+# Extract Intercepts and Slopes from Parameters
+params <- as.data.frame(output_three$parameters$unstandardized)
+
+# Get Intercepts (C#1 to C#4)
+intercepts <- params %>%
+  filter(paramHeader == "Intercepts" & str_detect(param, "C#")) %>%
+  mutate(Class = as.numeric(str_extract(param, "\\d+"))) %>%
+  select(Class, intercept = est)
+
+# Get Slopes (C#1.ON to C#4.ON) 
+slopes <- params %>%
+  filter(str_detect(paramHeader, "C#\\d+\\.ON") & param == "FEMALE") %>%
+  mutate(Class = as.numeric(str_extract(paramHeader, "\\d+"))) %>%
+  select(Class, slope = est)
+
+# Merge and add the Reference Class (Class 5), which is fixed to 0 in your model
+logits_df <- full_join(intercepts, slopes, by = "Class") %>%
+  add_row(Class = 5, intercept = 0, slope = 0) %>%
+  arrange(Class)
+
+# Class labels
+class_labels <- c("1" = "I don't like math but I know it's good for me (16.25%)",
+                  "2" = "Pro-math without anxiety (39.6%)",
+                  "3" = "Anti-math with anxiety (10.49%)",
+                  "4" = "Pro-math with anxiety (12.38%)",
+                  "5" = "Math lover (21.28%)")
+
+# Calculate Predicted Probabilities
+plot_data <- logits_df %>%
+  # Create a row for each gender within each class
+  crossing(Gender = c("Male", "Female")) %>%
+  mutate(
+    # Use centered values: Male (-0.485) and Female (0.515)
+    x_val = ifelse(Gender == "Male", male_x, female_x),
+    logit = intercept + (slope * x_val)
+  ) %>%
+  group_by(Gender) %>%
+  mutate(
+    # Apply Softmax: P = exp(logit) / sum(exp(logits))
+    prob = exp(logit) / sum(exp(logit)),
+    Class_Name = str_wrap(class_labels[as.character(Class)], width = 20)
+  )
+
+# Generate the Plot
+ggplot(plot_data, aes(x = fct_inorder(Class_Name), y = prob, fill = Gender)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9), color = "black") +
+  geom_text(aes(label = sprintf("%.2f", prob)), 
+            position = position_dodge(width = 0.9), 
+            vjust = -0.5, size = 3.5, family = "serif") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Model-Estimated Class Proportions by Gender",
+    subtitle = "Based on Grand-Mean Centered Multinomial Logistic Regression",
+    x = "",
+    y = "Probability",
+    fill = "Gender"
+  ) +
+  theme_cowplot() +
+  theme(
+    text = element_text(family = "serif"),
+    panel.grid.major.x = element_blank(),
+    legend.position = "top"
+  )
+```
+
+------------------------------------------------------------------------
+
+#### Table of Pairwise Distal Outcome Differences
 
 Make `diff_table` function
 
@@ -578,22 +651,6 @@ output_three <- readModels(here("three_step", "three_distal.out"))
 
 diff_table(
   mplus_output = output_three, 
-  prefix = "DFEM", 
-  table_title = "Pairwise Comparisons of Female Covariate Effects"
-)
-```
-
-------------------------------------------------------------------------
-
-#### Table of Pairwise Distal Outcome Differences
-
-Use `diff_table` function
-
-```{r}
-output_three <- readModels(here("three_step", "three_distal.out"))
-
-diff_table(
-  mplus_output = output_three, 
   prefix = "DIFF", 
   table_title = "Pairwise Comparisons of Distal Outcome (Math IRT Scores)"
 )
@@ -606,30 +663,26 @@ diff_table(
 ```{r}
 output_three <- readModels(here("three_step", "three_distal.out"))
 
+# Class labels
+class_labels <- c("1" = "I don't like math but I know it's good for me (16.25%)",
+                  "2" = "Pro-math without anxiety (39.6%)",
+                  "3" = "Anti-math with anxiety (10.49%)",
+                  "4" = "Pro-math with anxiety (12.38%)",
+                  "5" = "Math lover (21.28%)")
+
 # Extract class size 
-c_size <- as.data.frame(output_three[["class_counts"]][["modelEstimated"]][["proportion"]]) %>% 
-  rename("cs" = 1) %>% 
-  mutate(cs = round(cs*100, 2))
-
-c_size_val <- paste0("C", 1:nrow(c_size), glue(" ({c_size[1:nrow(c_size),]}%)"))
-
-
-# Extract information as data frame
 estimates <- as.data.frame(output_three[["parameters"]][["unstandardized"]]) %>%
   filter(paramHeader == "Intercepts") %>%
-  dplyr::select(param, est, se) %>% 
+  dplyr::select(param, est, se, LatentClass) %>% 
   filter(param == "EMTHIRT") %>% 
   mutate(across(c(est, se), as.numeric)) %>% 
-  mutate(LatentClass = c_size_val)
+  mutate(class_w_label = str_wrap(class_labels[as.character(LatentClass)], width = 20),
+         class_w_label = fct_reorder(class_w_label, as.numeric(LatentClass)))
 
-# Add labels (NOTE: You must change the labels to match the significance testing!!) 
-#value_labels <- paste0(estimates$est, c("a"," bc"," abd"," cd"))
-
-estimates$LatentClass <- fct_inorder(estimates$LatentClass)
 
 # Plot bar graphs
 estimates %>%
-  ggplot(aes(x=LatentClass, y = est, fill = LatentClass)) +
+  ggplot(aes(x=class_w_label, y = est, fill = class_w_label)) +
   geom_col(position = "dodge", stat = "identity", color = "black") +
   geom_errorbar(aes(ymin=est-se, ymax=est+se),
                 size=.3,    # Thinner lines
@@ -640,10 +693,10 @@ estimates %>%
             position=position_dodge(.9),
             vjust = 8) +  
  # scale_fill_grey(start = .4, end = .7) + # Remove for colorful bars
-  labs(y="Math Scores", x="") +
+  labs(y="Math Scores", x="",
+           title = "Distal Mean Comparision for Math IRT Scores") +
   theme_cowplot() +
-  theme(text = element_text(family = "serif", size = 15),
-        axis.text.x = element_text(size=15),
+  theme(text = element_text(family = "serif"),
         legend.position="none")
 ```
 
