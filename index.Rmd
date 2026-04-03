@@ -12,6 +12,10 @@ This website was made for the 2026 AERA Workshop, "The Utility of Mixture Modeli
 
 <img src="images/immerse_hex.png" class="cover" width="250" height="193" style="float: left; margin-right: 20px; margin-bottom: 10px;"/> This course introduces educational researchers to mixture modeling, a powerful statistical method for exploring unobserved heterogeneity in diverse populations. Led by experienced methodologists, the course will provide a hands-on introduction to person-centered approaches that go beyond traditional statistical methods. The first portion of the course will cover foundational concepts in mixture modeling and latent class analysis, emphasizing their logic, assumptions, and potential in education research. The second portion will walk participants through a demonstration of model estimation in Mplus using sample data. The final portion will include a discussion of mixture modeling extensions and how to apply mixture models in R. This lecture-style course is designed for graduate students, early-career scholars, and advanced researchers who are familiar with latent variable modeling. Laptops are encouraged for hands-on coding, though Mplus is not required.
 
+## Materials for the course
+
+[AERA 2026 Slides (Wednesday, April 8th, 2026)](https://docs.google.com/presentation/d/1ZHpcKpBV-D_ans4ORdbhdL500hHpecVJU6GsWHRHaU0/edit?usp=sharing)
+
 ### More tutorials
 
 For more in-depth code and walkthroughs, visit our Bookdown: <https://mixture-modeling.netlify.app/>
