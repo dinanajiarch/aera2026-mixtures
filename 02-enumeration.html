@@ -30,6 +30,11 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/viz-1.8.2/viz.js"></script>
+<link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="site_libs/grViz-binding-1.0.11/grViz.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -361,7 +366,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Latent Class Analysis</h1>
-<h4 class="date">Last Updated: 2026-04-01</h4>
+<h4 class="date">Last Updated: 2026-04-02</h4>
 
 </div>
 
@@ -374,23 +379,29 @@ $(document).ready(function () {
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(here)</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(sjPlot)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span></code></pre></div>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(DiagrammeR)</span></code></pre></div>
 <p>All functions and datasets used in this walkthrough can be found <a
 href="https://github.com/dinanajiarch/aera2026-mixtures">here</a></p>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-7321ed39b17881786d3e" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-7321ed39b17881786d3e">{"x":{"diagram":" digraph lca_model {\n\n# The `graph` statement - No editing needed\n\n    graph [layout = dot, overlap = true]\n \n# Two `node` statements\n \n# One for measured variables (box) \n\n    node [shape=box]\n    CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;\n \n# One for latent variables (circle) \n \n    node [shape=circle]\n    math [label=<C>];\n    \n# `edge` statements\n \n    edge [minlen = 2]\n    math -> {CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L}\n \n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <div id="data-wrangling" class="section level2">
 <h2>Data Wrangling</h2>
 <div id="read-in-full-lsay-data-set-and-subset" class="section level4">
 <h4>Read in full LSAY data set and subset</h4>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">#Select variables from raw dataset</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Read in raw dataset</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>data_raw <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;ICPSR_30263&quot;</span>, <span class="st">&quot;DS0001&quot;</span>, <span class="st">&quot;30263-0001-Data.sav&quot;</span>), <span class="at">user_na =</span><span class="cn">TRUE</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>lsay_select <span class="ot">&lt;-</span> data_raw <span class="sc">%&gt;%</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="fu">select</span>(CASENUM, COHORT, RSTEMM, </span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>         CB28A, CB28B, CB28C, CB28E, CB28G, CB28H, CB28I, CB28K, CB28L) <span class="co"># 12th grade</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="fu">view_df</span>(lsay_select)</span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="fu">write_csv</span>(lsay_select, <span class="fu">here</span>(<span class="st">&quot;data&quot;</span>,<span class="st">&quot;lsay_cleaned.csv&quot;</span>))</span></code></pre></div>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#Select variables from raw dataset</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>lsay_select <span class="ot">&lt;-</span> data_raw <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="fu">select</span>(CASENUM, COHORT, RSTEMM, EMTHIRT, FEMALE,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>         CB28A, CB28B, CB28C, CB28E, CB28G, CB28H, CB28I, CB28K, CB28L) <span class="co"># 12th grade</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># View value labels</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="fu">view_df</span>(lsay_select)</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co"># write as .csv</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="fu">write_csv</span>(lsay_select, <span class="fu">here</span>(<span class="st">&quot;data&quot;</span>,<span class="st">&quot;lsay_cleaned.csv&quot;</span>))</span></code></pre></div>
 </div>
 <div id="read-in-.csv" class="section level3">
 <h3>Read in .csv</h3>
@@ -401,8 +412,8 @@ href="https://github.com/dinanajiarch/aera2026-mixtures">here</a></p>
 <p><strong>Latent Class Indicators</strong></p>
 <table>
 <colgroup>
-<col width="20%" />
-<col width="79%" />
+<col width="23%" />
+<col width="76%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -450,7 +461,7 @@ problems</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Response options</strong></p>
+<p><strong>Indicator Response options</strong></p>
 <table>
 <thead>
 <tr class="header">
@@ -479,6 +490,10 @@ problems</td>
 <td>5</td>
 <td>Strongly Disagree</td>
 </tr>
+<tr class="even">
+<td>5</td>
+<td>Strongly Disagree</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -488,29 +503,29 @@ problems</td>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>lsay_csv <span class="sc">%&gt;%</span> </span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">&quot;CB&quot;</span>), <span class="sc">~</span> <span class="fu">as.factor</span>(.x))) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code></pre></div>
-<pre><code>##     CASENUM         COHORT          RSTEMM        CB28A       CB28B     
-##  Min.   :1001   Min.   :1.000   Min.   :0.0000   1   : 661   1   : 622  
-##  1st Qu.:2487   1st Qu.:1.000   1st Qu.:0.0000   2   :1123   2   :1228  
-##  Median :3973   Median :2.000   Median :0.0000   3   : 363   3   : 450  
-##  Mean   :3973   Mean   :1.524   Mean   :0.0624   4   : 369   4   : 265  
-##  3rd Qu.:5459   3rd Qu.:2.000   3rd Qu.:0.0000   5   : 152   5   : 105  
-##  Max.   :6945   Max.   :2.000   Max.   :1.0000   NA&#39;s:3277   NA&#39;s:3275  
-##                                 NA&#39;s   :1666                            
-##   CB28C       CB28E       CB28G       CB28H       CB28I       CB28K     
-##  1   : 608   1   : 152   1   : 139   1   : 743   1   : 619   1   : 956  
-##  2   :1412   2   : 454   2   : 331   2   :1092   2   :1067   2   : 991  
-##  3   : 331   3   : 470   3   : 360   3   : 572   3   : 733   3   : 495  
-##  4   : 194   4   : 993   4   :1076   4   : 156   4   : 145   4   : 123  
-##  5   : 103   5   : 553   5   : 745   5   :  79   5   :  71   5   :  56  
-##  NA&#39;s:3297   NA&#39;s:3323   NA&#39;s:3294   NA&#39;s:3303   NA&#39;s:3310   NA&#39;s:3324  
-##                                                                         
-##   CB28L     
-##  1   : 902  
-##  2   : 956  
-##  3   : 623  
-##  4   : 108  
-##  5   :  59  
-##  NA&#39;s:3297  
+<pre><code>##     CASENUM         COHORT          RSTEMM          EMTHIRT     
+##  Min.   :1001   Min.   :1.000   Min.   :0.0000   Min.   :26.60  
+##  1st Qu.:2487   1st Qu.:1.000   1st Qu.:0.0000   1st Qu.:49.97  
+##  Median :3973   Median :2.000   Median :0.0000   Median :59.30  
+##  Mean   :3973   Mean   :1.524   Mean   :0.0624   Mean   :58.82  
+##  3rd Qu.:5459   3rd Qu.:2.000   3rd Qu.:0.0000   3rd Qu.:68.28  
+##  Max.   :6945   Max.   :2.000   Max.   :1.0000   Max.   :94.27  
+##                                 NA&#39;s   :1666     NA&#39;s   :3704   
+##      FEMALE       CB28A       CB28B       CB28C       CB28E       CB28G     
+##  Min.   :0.000   1   : 661   1   : 622   1   : 608   1   : 152   1   : 139  
+##  1st Qu.:0.000   2   :1123   2   :1228   2   :1412   2   : 454   2   : 331  
+##  Median :0.000   3   : 363   3   : 450   3   : 331   3   : 470   3   : 360  
+##  Mean   :0.491   4   : 369   4   : 265   4   : 194   4   : 993   4   :1076  
+##  3rd Qu.:1.000   5   : 152   5   : 105   5   : 103   5   : 553   5   : 745  
+##  Max.   :1.000   NA&#39;s:3277   NA&#39;s:3275   NA&#39;s:3297   NA&#39;s:3323   NA&#39;s:3294  
+##                                                                             
+##   CB28H       CB28I       CB28K       CB28L     
+##  1   : 743   1   : 619   1   : 956   1   : 902  
+##  2   :1092   2   :1067   2   : 991   2   : 956  
+##  3   : 572   3   : 733   3   : 495   3   : 623  
+##  4   : 156   4   : 145   4   : 123   4   : 108  
+##  5   :  79   5   :  71   5   :  56   5   :  59  
+##  NA&#39;s:3303   NA&#39;s:3310   NA&#39;s:3324   NA&#39;s:3297  
 ## </code></pre>
 <p>Plot</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>data_long <span class="ot">&lt;-</span> lsay_csv <span class="sc">%&gt;%</span></span>
@@ -529,7 +544,7 @@ problems</td>
 <span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Count&quot;</span></span>
 <span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>()</span></code></pre></div>
-<p><img src="02-enumeration_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="02-enumeration_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="recode-variables" class="section level3">
 <h3>Recode variables</h3>
@@ -558,29 +573,29 @@ problems</td>
 <span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>lsay_cleaned <span class="sc">%&gt;%</span> </span>
 <span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">&quot;CB&quot;</span>), <span class="sc">~</span> <span class="fu">as.factor</span>(.x))) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code></pre></div>
-<pre><code>##     CASENUM         COHORT      RSTEMM         CB28A       CB28B     
-##  Min.   :1002   Min.   :2   Min.   :0.00000   0   : 884   0   : 820  
-##  1st Qu.:2493   1st Qu.:2   1st Qu.:0.00000   1   :1784   1   :1850  
-##  Median :3974   Median :2   Median :0.00000   NA&#39;s: 448   NA&#39;s: 446  
-##  Mean   :3976   Mean   :2   Mean   :0.06521                          
-##  3rd Qu.:5462   3rd Qu.:2   3rd Qu.:0.00000                          
-##  Max.   :6943   Max.   :2   Max.   :1.00000                          
-##                             NA&#39;s   :877                              
-##   CB28C       CB28E       CB28G       CB28H       CB28I       CB28K     
-##  0   : 628   0   :1076   0   : 830   0   : 807   0   : 949   0   : 674  
-##  1   :2020   1   :1546   1   :1821   1   :1835   1   :1686   1   :1947  
-##  NA&#39;s: 468   NA&#39;s: 494   NA&#39;s: 465   NA&#39;s: 474   NA&#39;s: 481   NA&#39;s: 495  
+<pre><code>##     CASENUM         COHORT      RSTEMM           EMTHIRT          FEMALE      
+##  Min.   :1002   Min.   :2   Min.   :0.00000   Min.   :26.60   Min.   :0.0000  
+##  1st Qu.:2493   1st Qu.:2   1st Qu.:0.00000   1st Qu.:49.97   1st Qu.:0.0000  
+##  Median :3974   Median :2   Median :0.00000   Median :59.30   Median :0.0000  
+##  Mean   :3976   Mean   :2   Mean   :0.06521   Mean   :58.82   Mean   :0.4779  
+##  3rd Qu.:5462   3rd Qu.:2   3rd Qu.:0.00000   3rd Qu.:68.28   3rd Qu.:1.0000  
+##  Max.   :6943   Max.   :2   Max.   :1.00000   Max.   :94.27   Max.   :1.0000  
+##                             NA&#39;s   :877       NA&#39;s   :875                     
+##   CB28A       CB28B       CB28C       CB28E       CB28G       CB28H     
+##  0   : 884   0   : 820   0   : 628   0   :1076   0   : 830   0   : 807  
+##  1   :1784   1   :1850   1   :2020   1   :1546   1   :1821   1   :1835  
+##  NA&#39;s: 448   NA&#39;s: 446   NA&#39;s: 468   NA&#39;s: 494   NA&#39;s: 465   NA&#39;s: 474  
 ##                                                                         
 ##                                                                         
 ##                                                                         
 ##                                                                         
-##   CB28L     
-##  0   : 790  
-##  1   :1858  
-##  NA&#39;s: 468  
-##             
-##             
-##             
+##   CB28I       CB28K       CB28L     
+##  0   : 949   0   : 674   0   : 790  
+##  1   :1686   1   :1947   1   :1858  
+##  NA&#39;s: 481   NA&#39;s: 495   NA&#39;s: 468  
+##                                     
+##                                     
+##                                     
 ## </code></pre>
 <p>Plot</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>data_long <span class="ot">&lt;-</span> lsay_cleaned <span class="sc">%&gt;%</span></span>
@@ -599,7 +614,7 @@ problems</td>
 <span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Count&quot;</span></span>
 <span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>  <span class="fu">theme_cowplot</span>()</span></code></pre></div>
-<p><img src="02-enumeration_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="02-enumeration_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 </div>
 <div id="enumeration-1" class="section level2">
@@ -648,25 +663,25 @@ class models</p>
 <span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co"># Extract Sample_Size from final_data</span></span>
 <span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>sample_size <span class="ot">&lt;-</span> <span class="fu">unique</span>(final_data<span class="sc">$</span>Sample_Size)</span>
 <span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a></span>
-<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>output_enum <span class="ot">&lt;-</span> <span class="fu">readModels</span>(<span class="fu">here</span>(<span class="st">&quot;lca_enumeration&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>output_enum <span class="ot">&lt;-</span> <span class="fu">readModels</span>(<span class="fu">here</span>(<span class="st">&quot;lca_enumeration&quot;</span>))</span>
 <span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="fu">enum_table_full</span>(output_enum)</span></code></pre></div>
-<div id="zhgcnvuwsz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zhgcnvuwsz table {
+<div id="tbnzrybynk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tbnzrybynk table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zhgcnvuwsz thead, #zhgcnvuwsz tbody, #zhgcnvuwsz tfoot, #zhgcnvuwsz tr, #zhgcnvuwsz td, #zhgcnvuwsz th {
+#tbnzrybynk thead, #tbnzrybynk tbody, #tbnzrybynk tfoot, #tbnzrybynk tr, #tbnzrybynk td, #tbnzrybynk th {
   border-style: none;
 }
 
-#zhgcnvuwsz p {
+#tbnzrybynk p {
   margin: 0;
   padding: 0;
 }
 
-#zhgcnvuwsz .gt_table {
+#tbnzrybynk .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -692,12 +707,12 @@ class models</p>
   border-left-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_caption {
+#tbnzrybynk .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zhgcnvuwsz .gt_title {
+#tbnzrybynk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -709,7 +724,7 @@ class models</p>
   border-bottom-width: 0;
 }
 
-#zhgcnvuwsz .gt_subtitle {
+#tbnzrybynk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -721,7 +736,7 @@ class models</p>
   border-top-width: 0;
 }
 
-#zhgcnvuwsz .gt_heading {
+#tbnzrybynk .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -733,13 +748,13 @@ class models</p>
   border-right-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_bottom_border {
+#tbnzrybynk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_col_headings {
+#tbnzrybynk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -754,7 +769,7 @@ class models</p>
   border-right-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_col_heading {
+#tbnzrybynk .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -774,7 +789,7 @@ class models</p>
   overflow-x: hidden;
 }
 
-#zhgcnvuwsz .gt_column_spanner_outer {
+#tbnzrybynk .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -786,15 +801,15 @@ class models</p>
   padding-right: 4px;
 }
 
-#zhgcnvuwsz .gt_column_spanner_outer:first-child {
+#tbnzrybynk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zhgcnvuwsz .gt_column_spanner_outer:last-child {
+#tbnzrybynk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zhgcnvuwsz .gt_column_spanner {
+#tbnzrybynk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -806,11 +821,11 @@ class models</p>
   width: 100%;
 }
 
-#zhgcnvuwsz .gt_spanner_row {
+#tbnzrybynk .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zhgcnvuwsz .gt_group_heading {
+#tbnzrybynk .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -836,7 +851,7 @@ class models</p>
   text-align: left;
 }
 
-#zhgcnvuwsz .gt_empty_group_heading {
+#tbnzrybynk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -851,15 +866,15 @@ class models</p>
   vertical-align: middle;
 }
 
-#zhgcnvuwsz .gt_from_md > :first-child {
+#tbnzrybynk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zhgcnvuwsz .gt_from_md > :last-child {
+#tbnzrybynk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zhgcnvuwsz .gt_row {
+#tbnzrybynk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -878,7 +893,7 @@ class models</p>
   overflow-x: hidden;
 }
 
-#zhgcnvuwsz .gt_stub {
+#tbnzrybynk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -891,7 +906,7 @@ class models</p>
   padding-right: 5px;
 }
 
-#zhgcnvuwsz .gt_stub_row_group {
+#tbnzrybynk .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -905,15 +920,15 @@ class models</p>
   vertical-align: top;
 }
 
-#zhgcnvuwsz .gt_row_group_first td {
+#tbnzrybynk .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zhgcnvuwsz .gt_row_group_first th {
+#tbnzrybynk .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zhgcnvuwsz .gt_summary_row {
+#tbnzrybynk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -923,16 +938,16 @@ class models</p>
   padding-right: 5px;
 }
 
-#zhgcnvuwsz .gt_first_summary_row {
+#tbnzrybynk .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_first_summary_row.thick {
+#tbnzrybynk .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zhgcnvuwsz .gt_last_summary_row {
+#tbnzrybynk .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -942,7 +957,7 @@ class models</p>
   border-bottom-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_grand_summary_row {
+#tbnzrybynk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -952,7 +967,7 @@ class models</p>
   padding-right: 5px;
 }
 
-#zhgcnvuwsz .gt_first_grand_summary_row {
+#tbnzrybynk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -962,7 +977,7 @@ class models</p>
   border-top-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_last_grand_summary_row_top {
+#tbnzrybynk .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -972,11 +987,11 @@ class models</p>
   border-bottom-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_striped {
+#tbnzrybynk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zhgcnvuwsz .gt_table_body {
+#tbnzrybynk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -985,7 +1000,7 @@ class models</p>
   border-bottom-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_footnotes {
+#tbnzrybynk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -999,7 +1014,7 @@ class models</p>
   border-right-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_footnote {
+#tbnzrybynk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1008,7 +1023,7 @@ class models</p>
   padding-right: 5px;
 }
 
-#zhgcnvuwsz .gt_sourcenotes {
+#tbnzrybynk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1022,7 +1037,7 @@ class models</p>
   border-right-color: #D3D3D3;
 }
 
-#zhgcnvuwsz .gt_sourcenote {
+#tbnzrybynk .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1030,72 +1045,72 @@ class models</p>
   padding-right: 5px;
 }
 
-#zhgcnvuwsz .gt_left {
+#tbnzrybynk .gt_left {
   text-align: left;
 }
 
-#zhgcnvuwsz .gt_center {
+#tbnzrybynk .gt_center {
   text-align: center;
 }
 
-#zhgcnvuwsz .gt_right {
+#tbnzrybynk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zhgcnvuwsz .gt_font_normal {
+#tbnzrybynk .gt_font_normal {
   font-weight: normal;
 }
 
-#zhgcnvuwsz .gt_font_bold {
+#tbnzrybynk .gt_font_bold {
   font-weight: bold;
 }
 
-#zhgcnvuwsz .gt_font_italic {
+#tbnzrybynk .gt_font_italic {
   font-style: italic;
 }
 
-#zhgcnvuwsz .gt_super {
+#tbnzrybynk .gt_super {
   font-size: 65%;
 }
 
-#zhgcnvuwsz .gt_footnote_marks {
+#tbnzrybynk .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zhgcnvuwsz .gt_asterisk {
+#tbnzrybynk .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zhgcnvuwsz .gt_indent_1 {
+#tbnzrybynk .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zhgcnvuwsz .gt_indent_2 {
+#tbnzrybynk .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zhgcnvuwsz .gt_indent_3 {
+#tbnzrybynk .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zhgcnvuwsz .gt_indent_4 {
+#tbnzrybynk .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zhgcnvuwsz .gt_indent_5 {
+#tbnzrybynk .gt_indent_5 {
   text-indent: 25px;
 }
 
-#zhgcnvuwsz .katex-display {
+#tbnzrybynk .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#zhgcnvuwsz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#tbnzrybynk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1248,7 +1263,7 @@ VLMR = Vuong-Lo-Mendell-Rubin adjusted likelihood ratio test p-value;
 <h3>IC Plot</h3>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;functions&quot;</span>,<span class="st">&quot;ic_plot_lca.R&quot;</span>))</span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">ic_plot</span>(output_enum)</span></code></pre></div>
-<p><img src="02-enumeration_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="02-enumeration_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 </div>
 <div id="visualization" class="section level2">
@@ -1258,7 +1273,7 @@ VLMR = Vuong-Lo-Mendell-Rubin adjusted likelihood ratio test p-value;
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;functions&quot;</span>,<span class="st">&quot;plot_lca.R&quot;</span>))</span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">plot_lca</span>(output_enum<span class="sc">$</span>c5_lsay.out)</span></code></pre></div>
-<p><img src="02-enumeration_files/figure-html/unnamed-chunk-11-1.png" width="960" /></p>
+<p><img src="02-enumeration_files/figure-html/unnamed-chunk-12-1.png" width="960" /></p>
 </div>
 <div id="plot-with-labels" class="section level3">
 <h3>Plot with labels</h3>
@@ -1330,7 +1345,7 @@ VLMR = Vuong-Lo-Mendell-Rubin adjusted likelihood ratio test p-value;
 <span id="cb14-66"><a href="#cb14-66" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">&quot;grey90&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>),</span>
 <span id="cb14-67"><a href="#cb14-67" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>)</span>
 <span id="cb14-68"><a href="#cb14-68" tabindex="-1"></a>  ) </span></code></pre></div>
-<p><img src="02-enumeration_files/figure-html/unnamed-chunk-12-1.png" width="960" /></p>
+<p><img src="02-enumeration_files/figure-html/unnamed-chunk-13-1.png" width="960" /></p>
 <hr />
 <p><img src="figures/UCSB_Navy_mark.png" /></p>
 </div>

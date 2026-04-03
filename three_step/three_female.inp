@@ -1,0 +1,105 @@
+TITLE:
+Step 3 - Three-Step using LSAY
+DATA:
+FILE = "C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/three_step/
+Step3.dat"; 
+VARIABLE:
+NAMES = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L FEMALE EMTHIRT CPROB1
+     CPROB2 CPROB3 CPROB4 CPROB5 N; 
+ MISSING=.;
+ nominal=N;
+  classes = c(5);
+  usevar = N FEMALE EMTHIRT;
+DEFINE:
+center FEMALE (grandmean);
+ANALYSIS:
+estimator = mlr; 
+  type = mixture; 
+  starts = 0;
+MODEL:
+%OVERALL%
+
+ EMTHIRT on FEMALE; ! covariate as a related to the distal outcome
+ C on female (f1-f4);
+
+    %C#1%
+ [n#1@2.693]; ! MUST EDIT if you do not have a 5-class model. 
+ [n#2@-0.328];
+ [n#3@-0.504];
+ [n#4@-0.316];
+ 
+ [EMTHIRT](m1);    ! conditional distal mean 
+ EMTHIRT;          ! conditional distal variance (freely estimated)
+
+ %C#2%
+ [n#1@-0.748];
+ [n#2@3.095];
+ [n#3@-8.98];
+ [n#4@-1.265];
+ 
+ [EMTHIRT](m2);
+ EMTHIRT;
+ 
+ %C#3%
+ [n#1@-0.265];
+ [n#2@-6.861];
+ [n#3@2.548];
+ [n#4@-4.052];
+ 
+ [EMTHIRT](m3);
+ EMTHIRT;
+
+ %C#4%
+ [n#1@-0.144];
+ [n#2@1.356];
+ [n#3@-4.438];
+ [n#4@2.688];
+ 
+ [EMTHIRT](m4);
+ EMTHIRT;
+
+ %C#5%
+ [n#1@-2.782];
+ [n#2@-1.878];
+ [n#3@-3.031];
+ [n#4@-3.014];
+ 
+ [EMTHIRT](m5);
+ EMTHIRT; 
+
+MODEL CONSTRAINT:
+New (
+    ! Distal mean differences (10 total for 5 classes)
+    diff12 diff13 diff14 diff15
+    diff23 diff24 diff25
+    diff34 diff35
+    diff45
+
+    ! Female effect differences (6 total for 4 parameters)
+    dfem12 dfem13 dfem14
+    dfem23 dfem24
+    dfem34
+  );
+  
+  ! Distal mean comparisons
+  diff12 = m1-m2;
+  diff13 = m1-m3;
+  diff14 = m1-m4;
+  diff15 = m1-m5;
+  diff23 = m2-m3;
+  diff24 = m2-m4;
+  diff25 = m2-m5;
+  diff34 = m3-m4;
+  diff35 = m3-m5;
+  diff45 = m4-m5;
+
+  ! Female effect comparisons
+  dfem12 = f1-f2;
+  dfem13 = f1-f3;
+  dfem14 = f1-f4;
+  dfem23 = f2-f3;
+  dfem24 = f2-f4;
+  dfem34 = f3-f4;
+ 
+MODEL TEST:
+f1=0; f2=0; f3=0; f4=0;

@@ -362,7 +362,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Introduction to Mplus and
 <code>MplusAutomation</code></h1>
-<h4 class="date">Last Updated: 2026-04-01</h4>
+<h4 class="date">Last Updated: 2026-04-02</h4>
 
 </div>
 
@@ -528,14 +528,17 @@ you will be using. To insert a code chunk, etiher use the keyboard
 shortcut ctrl + alt + i or Code –&gt; Insert Chunk or click the green
 box with the letter C on it. There are a few packages we want our
 markdown to read in:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(MplusAutomation)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co">#collection of R packages designed for data science</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co">#helps with filepaths</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(haven) <span class="co"># read_sav()</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(psych) <span class="co"># describe()</span></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(ggpubr) <span class="co"># ggdensity() and ggqqplot()</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(corrplot) <span class="co"># corrplot()</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">i_am</span>(<span class="st">&quot;01-intro-to-mplusautomation.Rmd&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co">#install.packages(&quot;devtools&quot;)</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">&quot;michaelhallquist/MplusAutomation&quot;</span>) <span class="co"># Highly recommend installing the developers version</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(MplusAutomation)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co">#collection of R packages designed for data science</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co">#helps with filepaths</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(haven) <span class="co"># read_sav()</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(psych) <span class="co"># describe()</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">library</span>(ggpubr) <span class="co"># ggdensity() and ggqqplot()</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="fu">library</span>(corrplot) <span class="co"># corrplot()</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">i_am</span>(<span class="st">&quot;01-intro-to-mplusautomation.Rmd&quot;</span>)</span></code></pre></div>
 <p>As a reminder, if a function does not work and you receive an error
 like this: <code>could not find function "random_function"</code>; or if
 you try to load a package and you receive an error like this:

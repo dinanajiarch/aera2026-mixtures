@@ -146,6 +146,9 @@ To insert a code chunk, etiher use the keyboard shortcut ctrl + alt + i or Code 
 There are a few packages we want our markdown to read in:
 
 ```{r}
+#install.packages("devtools")
+library(devtools)
+install_github("michaelhallquist/MplusAutomation") # Highly recommend installing the developers version
 library(MplusAutomation)
 library(tidyverse) #collection of R packages designed for data science
 library(here) #helps with filepaths

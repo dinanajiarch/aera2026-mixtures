@@ -1,0 +1,845 @@
+Mplus VERSION 9
+MUTHEN & MUTHEN
+04/02/2026   7:12 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+  Step 3 - Three-Step using LSAY
+  DATA:
+  FILE = "C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/three_step/
+  Step3.dat";
+  VARIABLE:
+  NAMES = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L FEMALE EMTHIRT CPROB1
+       CPROB2 CPROB3 CPROB4 CPROB5 N;
+   MISSING=.;
+   nominal=N;
+    classes = c(5);
+    usevar = N FEMALE EMTHIRT;
+  DEFINE:
+  center FEMALE (grandmean);
+  ANALYSIS:
+  estimator = mlr;
+    type = mixture;
+    starts = 0;
+  MODEL:
+  %OVERALL%
+
+   EMTHIRT on FEMALE; ! covariate as a related to the distal outcome
+   C on female (f1-f4);
+
+      %C#1%
+   [n#1@2.693]; ! MUST EDIT if you do not have a 5-class model.
+   [n#2@-0.328];
+   [n#3@-0.504];
+   [n#4@-0.316];
+
+   [EMTHIRT](m1);    ! conditional distal mean
+   EMTHIRT;          ! conditional distal variance (freely estimated)
+
+   %C#2%
+   [n#1@-0.748];
+   [n#2@3.095];
+   [n#3@-8.98];
+   [n#4@-1.265];
+
+   [EMTHIRT](m2);
+   EMTHIRT;
+
+   %C#3%
+   [n#1@-0.265];
+   [n#2@-6.861];
+   [n#3@2.548];
+   [n#4@-4.052];
+
+   [EMTHIRT](m3);
+   EMTHIRT;
+
+   %C#4%
+   [n#1@-0.144];
+   [n#2@1.356];
+   [n#3@-4.438];
+   [n#4@2.688];
+
+   [EMTHIRT](m4);
+   EMTHIRT;
+
+   %C#5%
+   [n#1@-2.782];
+   [n#2@-1.878];
+   [n#3@-3.031];
+   [n#4@-3.014];
+
+   [EMTHIRT](m5);
+   EMTHIRT;
+
+  MODEL CONSTRAINT:
+  New (
+      ! Distal mean differences (10 total for 5 classes)
+      diff12 diff13 diff14 diff15
+      diff23 diff24 diff25
+      diff34 diff35
+      diff45
+
+      ! Female effect differences (6 total for 4 parameters)
+      dfem12 dfem13 dfem14
+      dfem23 dfem24
+      dfem34
+    );
+
+    ! Distal mean comparisons
+    diff12 = m1-m2;
+    diff13 = m1-m3;
+    diff14 = m1-m4;
+    diff15 = m1-m5;
+    diff23 = m2-m3;
+    diff24 = m2-m4;
+    diff25 = m2-m5;
+    diff34 = m3-m4;
+    diff35 = m3-m5;
+    diff45 = m4-m5;
+
+    ! Female effect comparisons
+    dfem12 = f1-f2;
+    dfem13 = f1-f3;
+    dfem14 = f1-f4;
+    dfem23 = f2-f3;
+    dfem24 = f2-f4;
+    dfem34 = f3-f4;
+
+  MODEL TEST:
+       ! omnibus test of distal means
+      m1=m2;
+      m2=m3;
+      m3=m4;
+      m3=m5;
+
+      !f1=0;       ! omnibus test of covariate logits (female)
+      !f2=0;
+      !f3=0;
+      !f4=0;
+
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+Step 3 - Three-Step using LSAY
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2675
+
+Number of dependent variables                                    2
+Number of independent variables                                  1
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Continuous
+   EMTHIRT
+
+  Unordered categorical (nominal)
+   N
+
+Observed independent variables
+   FEMALE
+
+Categorical latent variables
+   C
+
+Variables with special functions
+
+  Centering (GRANDMEAN)
+   FEMALE
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent Variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/three_step/Step3.dat
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             2
+     Number of y missing data patterns           2
+     Number of u missing data patterns           0
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR Y
+
+
+           Covariance Coverage
+              EMTHIRT       FEMALE
+              ________      ________
+ EMTHIRT        0.771
+ FEMALE         0.771         1.000
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    N
+      Category 1    0.163          437.000
+      Category 2    0.422         1128.000
+      Category 3    0.105          282.000
+      Category 4    0.108          290.000
+      Category 5    0.201          538.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     EMTHIRT              58.838      -0.064      26.600    0.05%      47.240     55.710     59.230
+            2063.000     158.356      -0.547      94.270    0.05%      62.910     70.160
+     FEMALE                0.000       0.061      -0.485   51.51%      -0.485     -0.485     -0.485
+            2675.000       0.250      -1.996       0.515   48.49%       0.515      0.515
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       19
+
+Loglikelihood
+
+          H0 Value                      -11924.253
+          H0 Scaling Correction Factor      0.9116
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   23886.507
+          Bayesian (BIC)                 23998.449
+          Sample-Size Adjusted BIC       23938.080
+            (n* = (n + 2) / 24)
+
+Wald Test of Parameter Constraints
+
+          Value                            223.193
+          Degrees of Freedom                     4
+          P-Value                           0.0000
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1        436.59325          0.16321
+       2       1059.53305          0.39609
+       3        280.19204          0.10474
+       4        330.04678          0.12338
+       5        568.63488          0.21257
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1        436.59320          0.16321
+       2       1059.53269          0.39609
+       3        280.19172          0.10474
+       4        330.04606          0.12338
+       5        568.63633          0.21257
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1              437          0.16336
+       2             1128          0.42168
+       3              282          0.10542
+       4              290          0.10841
+       5              538          0.20112
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         0.641
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3        4        5
+
+    1   0.828    0.046    0.034    0.032    0.060
+    2   0.016    0.870    0.000    0.055    0.059
+    3   0.053    0.000    0.872    0.001    0.075
+    4   0.061    0.044    0.001    0.819    0.074
+    5   0.045    0.083    0.036    0.030    0.806
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3        4        5
+
+    1   0.829    0.041    0.034    0.041    0.056
+    2   0.019    0.927    0.000    0.012    0.042
+    3   0.052    0.000    0.877    0.001    0.069
+    4   0.042    0.188    0.001    0.720    0.049
+    5   0.046    0.116    0.037    0.038    0.762
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3        4        5
+
+    1      2.700   -0.309   -0.494   -0.316    0.000
+    2     -0.790    3.093   -8.948   -1.241    0.000
+    3     -0.277   -6.886    2.541   -4.057    0.000
+    4     -0.156    1.337   -4.452    2.679    0.000
+    5     -2.803   -1.879   -3.018   -3.005    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ EMTHIRT    ON
+    FEMALE             0.894      0.561      1.594      0.111
+
+ Means
+    N#1                2.693      0.000    999.000    999.000
+    N#2               -0.328      0.000    999.000    999.000
+    N#3               -0.504      0.000    999.000    999.000
+    N#4               -0.316      0.000    999.000    999.000
+
+ Intercepts
+    EMTHIRT           54.072      0.757     71.417      0.000
+
+ Residual Variances
+    EMTHIRT          112.867      7.999     14.111      0.000
+
+Latent Class 2
+
+ EMTHIRT    ON
+    FEMALE             0.894      0.561      1.594      0.111
+
+ Means
+    N#1               -0.748      0.000    999.000    999.000
+    N#2                3.095      0.000    999.000    999.000
+    N#3               -8.980      0.000    999.000    999.000
+    N#4               -1.265      0.000    999.000    999.000
+
+ Intercepts
+    EMTHIRT           63.892      0.465    137.294      0.000
+
+ Residual Variances
+    EMTHIRT          125.589      6.572     19.109      0.000
+
+Latent Class 3
+
+ EMTHIRT    ON
+    FEMALE             0.894      0.561      1.594      0.111
+
+ Means
+    N#1               -0.265      0.000    999.000    999.000
+    N#2               -6.861      0.000    999.000    999.000
+    N#3                2.548      0.000    999.000    999.000
+    N#4               -4.052      0.000    999.000    999.000
+
+ Intercepts
+    EMTHIRT           52.337      1.027     50.961      0.000
+
+ Residual Variances
+    EMTHIRT          164.317     12.548     13.095      0.000
+
+Latent Class 4
+
+ EMTHIRT    ON
+    FEMALE             0.894      0.561      1.594      0.111
+
+ Means
+    N#1               -0.144      0.000    999.000    999.000
+    N#2                1.356      0.000    999.000    999.000
+    N#3               -4.438      0.000    999.000    999.000
+    N#4                2.688      0.000    999.000    999.000
+
+ Intercepts
+    EMTHIRT           53.385      1.142     46.751      0.000
+
+ Residual Variances
+    EMTHIRT          148.932     12.721     11.708      0.000
+
+Latent Class 5
+
+ EMTHIRT    ON
+    FEMALE             0.894      0.561      1.594      0.111
+
+ Means
+    N#1               -2.782      0.000    999.000    999.000
+    N#2               -1.878      0.000    999.000    999.000
+    N#3               -3.031      0.000    999.000    999.000
+    N#4               -3.014      0.000    999.000    999.000
+
+ Intercepts
+    EMTHIRT           58.682      0.784     74.891      0.000
+
+ Residual Variances
+    EMTHIRT          153.169     10.276     14.906      0.000
+
+Categorical Latent Variables
+
+ C#1        ON
+    FEMALE             0.589      0.176      3.353      0.001
+
+ C#2        ON
+    FEMALE             0.029      0.141      0.205      0.837
+
+ C#3        ON
+    FEMALE            -0.312      0.192     -1.620      0.105
+
+ C#4        ON
+    FEMALE            -0.564      0.202     -2.795      0.005
+
+ Intercepts
+    C#1               -0.306      0.087     -3.529      0.000
+    C#2                0.622      0.069      8.988      0.000
+    C#3               -0.720      0.094     -7.650      0.000
+    C#4               -0.584      0.099     -5.896      0.000
+
+New/Additional Parameters
+    DIFF12            -9.820      0.882    -11.132      0.000
+    DIFF13             1.735      1.333      1.301      0.193
+    DIFF14             0.687      1.448      0.474      0.635
+    DIFF15            -4.610      1.131     -4.076      0.000
+    DIFF23            11.555      1.125     10.269      0.000
+    DIFF24            10.507      1.308      8.035      0.000
+    DIFF25             5.210      0.964      5.406      0.000
+    DIFF34            -1.048      1.514     -0.692      0.489
+    DIFF35            -6.345      1.372     -4.624      0.000
+    DIFF45            -5.297      1.464     -3.619      0.000
+    DFEM12             0.560      0.144      3.880      0.000
+    DFEM13             0.901      0.198      4.558      0.000
+    DFEM14             1.153      0.209      5.514      0.000
+    DFEM23             0.341      0.159      2.148      0.032
+    DFEM24             0.593      0.181      3.279      0.001
+    DFEM34             0.253      0.210      1.204      0.229
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.182E-03
+       (ratio of smallest to largest eigenvalue)
+
+
+LATENT CLASS INDICATOR MEANS AND PROBABILITIES FOR EACH LATENT CLASS
+
+     MEAN/PROBABILITY PROFILES FOR C
+                       Latent class
+                     1      2      3      4      5
+     EMTHIRT      54.199 63.897 52.267 53.262 58.681
+
+
+RESULTS IN PROBABILITY SCALE
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ N
+    Category 1         0.829      0.000      0.000      1.000
+    Category 2         0.040      0.000      0.000      1.000
+    Category 3         0.034      0.000      0.000      1.000
+    Category 4         0.041      0.000      0.000      1.000
+    Category 5         0.056      0.000      0.000      1.000
+
+Latent Class 2
+
+ N
+    Category 1         0.020      0.000      0.000      1.000
+    Category 2         0.926      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+    Category 4         0.012      0.000      0.000      1.000
+    Category 5         0.042      0.000      0.000      1.000
+
+Latent Class 3
+
+ N
+    Category 1         0.053      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         0.877      0.000      0.000      1.000
+    Category 4         0.001      0.000      0.000      1.000
+    Category 5         0.069      0.000      0.000      1.000
+
+Latent Class 4
+
+ N
+    Category 1         0.042      0.000      0.000      1.000
+    Category 2         0.190      0.000      0.000      1.000
+    Category 3         0.001      0.000      0.000      1.000
+    Category 4         0.719      0.000      0.000      1.000
+    Category 5         0.049      0.000      0.000      1.000
+
+Latent Class 5
+
+ N
+    Category 1         0.047      0.000      0.000      1.000
+    Category 2         0.117      0.000      0.000      1.000
+    Category 3         0.037      0.000      0.000      1.000
+    Category 4         0.037      0.000      0.000      1.000
+    Category 5         0.762      0.000      0.000      1.000
+
+
+EQUALITY TESTS OF INTERCEPTS ACROSS THE LATENT CLASSES
+
+                    Chi-Square     P-Value   Degrees of Freedom
+
+
+EMTHIRT
+  Overall test        223.193      0.000        4
+  Class 1 vs. 2       123.928      0.000        1
+  Class 1 vs. 3         1.694      0.193        1
+  Class 1 vs. 4         0.225      0.635        1
+  Class 1 vs. 5        16.610      0.000        1
+  Class 2 vs. 3       105.447      0.000        1
+  Class 2 vs. 4        64.560      0.000        1
+  Class 2 vs. 5        29.220      0.000        1
+  Class 3 vs. 4         0.479      0.489        1
+  Class 3 vs. 5        21.385      0.000        1
+  Class 4 vs. 5        13.098      0.000        1
+
+
+LATENT CLASS INDICATOR ODDS RATIOS FOR THE LATENT CLASSES
+
+                                                95% C.I.
+                    Estimate       S.E.  Lower 2.5% Upper 2.5%
+
+Latent Class 1 Compared to Latent Class 2
+
+ N
+    Category = 1     238.922      0.000    238.922    238.922
+    Category = 2       0.003      0.000      0.003      0.003
+    Category = 3    6641.538      0.000   6641.538   6641.538
+    Category = 4       3.559      0.000      3.559      3.559
+    Category = 5       1.357      0.000      1.357      1.357
+
+Latent Class 1 Compared to Latent Class 3
+
+ N
+    Category = 1      87.040      0.000     87.040     87.040
+    Category = 2     585.278      0.000    585.278    585.278
+    Category = 3       0.005      0.000      0.005      0.005
+    Category = 4      35.676      0.000     35.676     35.676
+    Category = 5       0.806      0.000      0.806      0.806
+
+Latent Class 1 Compared to Latent Class 4
+
+ N
+    Category = 1     109.504      0.000    109.504    109.504
+    Category = 2       0.180      0.000      0.180      0.180
+    Category = 3      60.676      0.000     60.676     60.676
+    Category = 4       0.017      0.000      0.017      0.017
+    Category = 5       1.156      0.000      1.156      1.156
+
+Latent Class 1 Compared to Latent Class 5
+
+ N
+    Category = 1      97.715      0.000     97.715     97.715
+    Category = 2       0.319      0.000      0.319      0.319
+    Category = 3       0.918      0.000      0.918      0.918
+    Category = 4       1.097      0.000      1.097      1.097
+    Category = 5       0.019      0.000      0.019      0.019
+
+Latent Class 2 Compared to Latent Class 3
+
+ N
+    Category = 1       0.364      0.000      0.364      0.364
+    Category = 2   *********      0.000  *********  *********
+    Category = 3       0.000      0.000      0.000      0.000
+    Category = 4      10.024      0.000     10.024     10.024
+    Category = 5       0.594      0.000      0.594      0.594
+
+Latent Class 2 Compared to Latent Class 4
+
+ N
+    Category = 1       0.458      0.000      0.458      0.458
+    Category = 2      53.750      0.000     53.750     53.750
+    Category = 3       0.009      0.000      0.009      0.009
+    Category = 4       0.005      0.000      0.005      0.005
+    Category = 5       0.852      0.000      0.852      0.852
+
+Latent Class 2 Compared to Latent Class 5
+
+ N
+    Category = 1       0.409      0.000      0.409      0.409
+    Category = 2      95.387      0.000     95.387     95.387
+    Category = 3       0.000      0.000      0.000      0.000
+    Category = 4       0.308      0.000      0.308      0.308
+    Category = 5       0.014      0.000      0.014      0.014
+
+Latent Class 3 Compared to Latent Class 4
+
+ N
+    Category = 1       1.258      0.000      1.258      1.258
+    Category = 2       0.000      0.000      0.000      0.000
+    Category = 3   12383.815      0.000  12383.817  12383.817
+    Category = 4       0.000      0.000      0.000      0.000
+    Category = 5       1.434      0.000      1.434      1.434
+
+Latent Class 3 Compared to Latent Class 5
+
+ N
+    Category = 1       1.123      0.000      1.123      1.123
+    Category = 2       0.001      0.000      0.001      0.001
+    Category = 3     187.434      0.000    187.434    187.434
+    Category = 4       0.031      0.000      0.031      0.031
+    Category = 5       0.023      0.000      0.023      0.023
+
+Latent Class 4 Compared to Latent Class 5
+
+ N
+    Category = 1       0.892      0.000      0.892      0.892
+    Category = 2       1.775      0.000      1.775      1.775
+    Category = 3       0.015      0.000      0.015      0.015
+    Category = 4      65.687      0.000     65.687     65.687
+    Category = 5       0.016      0.000      0.016      0.016
+
+
+LOGISTIC REGRESSION ODDS RATIO RESULTS FOR LATENT CLASS VARIABLES
+
+                                                95% C.I.
+                    Estimate       S.E.  Lower 2.5% Upper 2.5%
+
+ C#1      ON
+    FEMALE             1.802      0.316      1.277      2.542
+
+ C#2      ON
+    FEMALE             1.029      0.146      0.780      1.358
+
+ C#3      ON
+    FEMALE             0.732      0.141      0.502      1.068
+
+ C#4      ON
+    FEMALE             0.569      0.115      0.383      0.845
+
+
+ALTERNATIVE PARAMETERIZATIONS FOR THE CATEGORICAL LATENT VARIABLE REGRESSION
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Parameterization using Reference Class 1
+
+ C#2      ON
+    FEMALE            -0.560      0.144     -3.880      0.000
+
+ C#3      ON
+    FEMALE            -0.901      0.198     -4.558      0.000
+
+ C#4      ON
+    FEMALE            -1.153      0.209     -5.514      0.000
+
+ C#5      ON
+    FEMALE            -0.589      0.176     -3.353      0.001
+
+ Intercepts
+    C#2                0.929      0.072     12.881      0.000
+    C#3               -0.414      0.098     -4.238      0.000
+    C#4               -0.278      0.103     -2.688      0.007
+    C#5                0.306      0.087      3.529      0.000
+
+Parameterization using Reference Class 2
+
+ C#1      ON
+    FEMALE             0.560      0.144      3.880      0.000
+
+ C#3      ON
+    FEMALE            -0.341      0.159     -2.148      0.032
+
+ C#4      ON
+    FEMALE            -0.593      0.181     -3.279      0.001
+
+ C#5      ON
+    FEMALE            -0.029      0.141     -0.205      0.837
+
+ Intercepts
+    C#1               -0.929      0.072    -12.881      0.000
+    C#3               -1.343      0.078    -17.203      0.000
+    C#4               -1.206      0.089    -13.530      0.000
+    C#5               -0.622      0.069     -8.988      0.000
+
+Parameterization using Reference Class 3
+
+ C#1      ON
+    FEMALE             0.901      0.198      4.558      0.000
+
+ C#2      ON
+    FEMALE             0.341      0.159      2.148      0.032
+
+ C#4      ON
+    FEMALE            -0.253      0.210     -1.204      0.229
+
+ C#5      ON
+    FEMALE             0.312      0.192      1.620      0.105
+
+ Intercepts
+    C#1                0.414      0.098      4.238      0.000
+    C#2                1.343      0.078     17.203      0.000
+    C#4                0.136      0.104      1.314      0.189
+    C#5                0.720      0.094      7.650      0.000
+
+Parameterization using Reference Class 4
+
+ C#1      ON
+    FEMALE             1.153      0.209      5.514      0.000
+
+ C#2      ON
+    FEMALE             0.593      0.181      3.279      0.001
+
+ C#3      ON
+    FEMALE             0.253      0.210      1.204      0.229
+
+ C#5      ON
+    FEMALE             0.564      0.202      2.795      0.005
+
+ Intercepts
+    C#1                0.278      0.103      2.688      0.007
+    C#2                1.206      0.089     13.530      0.000
+    C#3               -0.136      0.104     -1.314      0.189
+    C#5                0.584      0.099      5.896      0.000
+
+
+ODDS RATIOS FOR THE ALTERNATIVE PARAMETERIZATIONS FOR THE CATEGORICAL LATENT VARIABLE REGRESSION
+
+                                                95% C.I.
+                    Estimate       S.E.  Lower 2.5% Upper 2.5%
+
+Parameterization using Reference Class 1
+
+ C#2      ON
+    FEMALE             0.571      0.082      0.431      0.758
+
+ C#3      ON
+    FEMALE             0.406      0.080      0.276      0.599
+
+ C#4      ON
+    FEMALE             0.316      0.066      0.209      0.476
+
+ C#5      ON
+    FEMALE             0.555      0.097      0.393      0.783
+
+Parameterization using Reference Class 2
+
+ C#1      ON
+    FEMALE             1.750      0.253      1.319      2.322
+
+ C#3      ON
+    FEMALE             0.711      0.113      0.521      0.971
+
+ C#4      ON
+    FEMALE             0.552      0.100      0.387      0.788
+
+ C#5      ON
+    FEMALE             0.971      0.137      0.736      1.282
+
+Parameterization using Reference Class 3
+
+ C#1      ON
+    FEMALE             2.461      0.486      1.671      3.625
+
+ C#2      ON
+    FEMALE             1.406      0.223      1.030      1.919
+
+ C#4      ON
+    FEMALE             0.777      0.163      0.515      1.172
+
+ C#5      ON
+    FEMALE             1.366      0.263      0.937      1.991
+
+Parameterization using Reference Class 4
+
+ C#1      ON
+    FEMALE             3.169      0.663      2.103      4.774
+
+ C#2      ON
+    FEMALE             1.810      0.328      1.270      2.581
+
+ C#3      ON
+    FEMALE             1.288      0.270      0.853      1.943
+
+ C#5      ON
+    FEMALE             1.758      0.355      1.184      2.612
+
+
+     Beginning Time:  19:12:11
+        Ending Time:  19:12:12
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2025 Muthen & Muthen

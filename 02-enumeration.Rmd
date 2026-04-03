@@ -17,24 +17,55 @@ library(here)
 library(sjPlot)
 library(glue)
 library(cowplot)
+library(DiagrammeR)
 ```
+
 All functions and datasets used in this walkthrough can be found [here](https://github.com/dinanajiarch/aera2026-mixtures)
 
+```{r, echo=FALSE, eval=TRUE, fig.align='center'}
+grViz(" digraph lca_model {
+
+# The `graph` statement - No editing needed
+
+    graph [layout = dot, overlap = true]
+ 
+# Two `node` statements
+ 
+# One for measured variables (box) 
+
+    node [shape=box]
+    CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;
+ 
+# One for latent variables (circle) 
+ 
+    node [shape=circle]
+    math [label=<C>];
+    
+# `edge` statements
+ 
+    edge [minlen = 2]
+    math -> {CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L}
+ 
+ }") 
+```
 
 ## Data Wrangling
 
 #### Read in full LSAY data set and subset
 
 ```{r, eval = FALSE}
-#Select variables from raw dataset
+# Read in raw dataset
 data_raw <- read_sav(here("data", "ICPSR_30263", "DS0001", "30263-0001-Data.sav"), user_na =TRUE)
 
+#Select variables from raw dataset
 lsay_select <- data_raw %>%
-  select(CASENUM, COHORT, RSTEMM, 
+  select(CASENUM, COHORT, RSTEMM, EMTHIRT, FEMALE,
          CB28A, CB28B, CB28C, CB28E, CB28G, CB28H, CB28I, CB28K, CB28L) # 12th grade
 
+# View value labels
 view_df(lsay_select)
 
+# write as .csv
 write_csv(lsay_select, here("data","lsay_cleaned.csv"))
 ```
 
@@ -50,7 +81,7 @@ lsay_csv <- read_csv(here("data", "lsay_cleaned.csv")) %>%
 **Latent Class Indicators**
 
 | Variable | Item Label |
-|---------------|---------------------------------------------------------|
+|-----------------|-------------------------------------------------------|
 | CB28A | I enjoy math |
 | CB28B | I usually understand what we are doing in math |
 | CB28C | Doing math often makes me nervous or upset |
@@ -61,7 +92,7 @@ lsay_csv <- read_csv(here("data", "lsay_cleaned.csv")) %>%
 | CB28K | It is important to know math to get a good job |
 | CB28L | I will use math in many ways as an adult |
 
-**Response options**
+**Indicator Response options**
 
 | Level | Label             |
 |-------|-------------------|
@@ -69,6 +100,7 @@ lsay_csv <- read_csv(here("data", "lsay_cleaned.csv")) %>%
 | 2     | Agree             |
 | 3     | Not Sure          |
 | 4     | Disagree          |
+| 5     | Strongly Disagree |
 | 5     | Strongly Disagree |
 
 ### Descriptive Statistics
@@ -101,7 +133,6 @@ ggplot(data_long, aes(x = factor(value))) +
   ) +
   theme_cowplot()
 ```
-
 
 ### Recode variables
 
@@ -206,7 +237,7 @@ final_data <- map_dfr(output_files, extract_mplus_info_extended)
 # Extract Sample_Size from final_data
 sample_size <- unique(final_data$Sample_Size)
 
-output_enum <- readModels(here("lca_enumeration"), quiet = TRUE)
+output_enum <- readModels(here("lca_enumeration"))
 enum_table_full(output_enum)
 ```
 

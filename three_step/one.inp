@@ -1,0 +1,27 @@
+TITLE:
+Step 1 - Three-Step using LSAY
+DATA:
+FILE = "C:/Users/dnajiarch/Box/AERA 2026/aera2026-mixtures/three_step/
+Step1.dat"; 
+VARIABLE:
+NAMES = CASENUM COHORT RSTEMM EMTHIRT FEMALE CB28A CB28B CB28C CB28E CB28G CB28H
+     CB28I CB28K CB28L; 
+ MISSING=.;
+ categorical = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L; 
+   usevar = CB28A CB28B CB28C CB28E CB28G CB28H CB28I CB28K CB28L;
+    
+   classes = c(5); 
+    
+   auxiliary = ! list all potential covariates and distals here
+   FEMALE      ! covariate
+   EMTHIRT;    ! distal math test score in 12th grade 
+ANALYSIS:
+estimator = mlr; 
+    type = mixture;
+    starts = 0;
+    optseed = 345726;
+OUTPUT:
+residual tech11 tech14
+SAVEDATA:
+File=savedata.dat;
+    Save=cprob;
