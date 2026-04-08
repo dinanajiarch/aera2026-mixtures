@@ -18,7 +18,7 @@ This website was made for the 2026 AERA Workshop, "The Utility of Mixture Modeli
 
 [Google Doc for Questions](https://docs.google.com/document/d/1pUOgRwGQQVVqZFSPGnMVpBAh48bsMDpvt5W5OvfVQOQ/edit?usp=sharing)
 
-For all code and materials found in this workshop, see [here](ttps://github.com/dinanajiarch/aera2026-mixtures).
+For all code and materials found in this workshop, see [here](https://github.com/dinanajiarch/aera2026-mixtures).
 
 ## More tutorials
 
